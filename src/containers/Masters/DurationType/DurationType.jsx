@@ -15,7 +15,7 @@ import {
 
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
-import { AddItemButtonWrapper } from "../../../components/uielements/DataTableStyle/DataTable.Style";
+import { AddItemButtonWrapper,ActionWrapper } from "../../../components/uielements/DataTableStyle/DataTable.Style";
 import {COMMON} from '../../Constant/Index'
 export default function DurationType() {
   const [modalActive, setModalActive] = useState(false);
@@ -128,18 +128,17 @@ export default function DurationType() {
       sorter: true,
     },
     {
-      title: "Action",
-      key: "action",
-      render: (text, record) => (
-        <>
-          <span>
+      title: 'Actions',
+      key: 'action',
+      className: 'noWrapCell',
+      render: (text, record) => {
+        return (
+          <ActionWrapper>
             <DeleteCell handleDelete={() => handleDelete(record.id)} />
-          </span>
-          <span>
             <EditCell handleEdit={() => handleUpdate(record)} />
-          </span>
-        </>
-      ),
+          </ActionWrapper>
+        );
+      },
     },
   ];
   const handlePage = (pagination, filters, sorter) => {

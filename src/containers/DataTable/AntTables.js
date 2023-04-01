@@ -1,6 +1,6 @@
 import React from "react";
 import TableWrapper from "./AntTables.styles";
-
+import './CommonDataTable.css'
 export default function ({ columns, data, pagination, handlePage ,rowKey}) {
   return (
     <TableWrapper
