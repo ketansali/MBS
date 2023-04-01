@@ -5,7 +5,7 @@ import { store } from "./redux/store";
 import Boot from "./redux/boot";
 import Routes from "./router";
 import AppProvider from "./AppProvider";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 const App = () => (
   <Provider store={store}>
     <AppProvider>

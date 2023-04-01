@@ -5,7 +5,6 @@ import {
   TitleWrapper,
   ComponentTitle,
 } from "@iso/components/uielements/InputStyle/Input.style";
-
 export default function AntTable({
   columns,
   data,
