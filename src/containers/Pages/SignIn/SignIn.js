@@ -33,6 +33,7 @@ export default function SignIn() {
       .then(async (values) => {
         axios.post("/User/Login", values).then((res) => {
           if (!res.data.isSuccess) {
+
             notification("error", res.data.message);
           } else {
             dispatch(login(res.data.responseData));
@@ -48,7 +49,6 @@ export default function SignIn() {
       });
   };
   let { from } = location.state || { from: { pathname: "/dashboard" } };
-
   if (redirectToReferrer) {
     return <Redirect to={from} />;
   }

@@ -1,5 +1,10 @@
 const options = [
   {
+		key: '',
+		label: 'sidebar.dashboard',
+		leftIcon: 'ion-bag',
+	},
+  {
     key: "master",
     label: "sidebar.master",
     leftIcon: "ion-bag",
@@ -22,21 +27,21 @@ const options = [
       },
     ],
   },
-  // {
-  //   key: "table",
-  //   label: "sidebar.tables",
-  //   leftIcon: "ion-android-menu",
-  //   children: [
-  //     {
-  //       key: "table_ant",
-  //       label: "sidebar.antTables",
-  //     },
-  //     {
-  //       key: "quiz",
-  //       label: "quiz",
-  //     },
-  //   ],
-  // },
+  {
+    key: "table",
+    label: "sidebar.tables",
+    leftIcon: "ion-android-menu",
+    children: [
+      {
+        key: "table_ant",
+        label: "sidebar.antTables",
+      },
+      {
+        key: "quiz",
+        label: "quiz",
+      },
+    ],
+  },
   // {
   //   key: "pages",
   //   label: "sidebar.pages",

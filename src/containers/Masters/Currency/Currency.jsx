@@ -129,6 +129,7 @@ export default function Currency() {
       title: 'Actions',
       key: 'action',
       className: 'noWrapCell',
+      width:"15%",
       render: (text, record) => {
         return (
           <ActionWrapper>

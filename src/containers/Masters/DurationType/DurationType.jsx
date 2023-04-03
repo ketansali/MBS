@@ -131,6 +131,7 @@ export default function DurationType() {
       title: 'Actions',
       key: 'action',
       className: 'noWrapCell',
+      width:"15%",
       render: (text, record) => {
         return (
           <ActionWrapper>

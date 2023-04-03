@@ -4,6 +4,11 @@ import Loader from "@iso/components/utility/loader";
 
 const routes = [
   {
+		path: '',
+		component: lazy(() => import('@iso/containers/Widgets/Widgets')),
+		exact: true,
+	},
+  {
     path: "table_ant",
     component: lazy(() => import("@iso/containers/Tables/AntTables/AntTables")),
   },

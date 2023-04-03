@@ -45,10 +45,10 @@ export default function ThemeSwitcher() {
           changeTheme={(attr, theme) => dispatch(changeTheme(attr, theme))}
           selectedId={layoutTheme.themeName}
         />
-        <LanguageSwitcher />
+        {/* <LanguageSwitcher /> */}
       </div>
 
-      <div className="purchaseBtnWrapper">
+      {/* <div className="purchaseBtnWrapper">
         <a
           href="https://themeforest.net/item/isomorphic-react-redux-admin-dashboard/20262330?ref=redqteam"
           className="purchaseBtn"
@@ -58,7 +58,7 @@ export default function ThemeSwitcher() {
         >
           <IntlMessages id="themeSwitcher.purchase" />
         </a>
-      </div>
+      </div> */}
 
       <button
         type="primary"

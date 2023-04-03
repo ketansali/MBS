@@ -37,7 +37,6 @@ export default function Product() {
   };
   const getData = () => {
     setLoading(true);
-    console.log(COMMON.getTableParams(tableParams));
     GetAllProductCategory(COMMON.getTableParams(tableParams)).then((res) => {
       setCategories(res?.responseData);
       setTableParams({
@@ -118,6 +117,7 @@ export default function Product() {
       title: 'Actions',
       key: 'action',
       className: 'noWrapCell',
+      width:"15%",
       render: (text, record) => {
         return (
           <ActionWrapper>
