@@ -1,4 +1,8 @@
-.anticon {
+.anticon.anticon-right {
+    display: block;
+    text-anchor: middle;
+}
+.anticon.anticon-left{
     display: block;
     text-anchor: middle;
 }

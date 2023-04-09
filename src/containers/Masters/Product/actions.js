@@ -41,3 +41,14 @@ export const UpdateProductCategory = (data) => {
       notification("error", err.message);
     });
 };
+
+export const UpdateCategoryOrders = (data) => {
+  return axios
+    .post("/Master/UpdateCategoryOrders", data)
+    .then((res) => { 
+      notification("success", res.data.message);
+    })
+    .catch((err) => {
+      notification("error", err.message);
+    });
+};

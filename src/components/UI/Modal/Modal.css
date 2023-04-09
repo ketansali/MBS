@@ -1,0 +1,9 @@
+.ant-modal-content, .ant-modal-header{
+    border-radius: 7px !important;
+}
+.ant-btn {
+    border-radius: 4px;
+    padding: 0 15px;
+}
+
+

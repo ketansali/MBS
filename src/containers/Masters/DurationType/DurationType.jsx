@@ -5,7 +5,9 @@ import LayoutContentWrapper from "@iso/components/utility/layoutWrapper";
 import Box from "@iso/components/utility/box";
 import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
-import { Form, Input,Spin } from "antd";
+import { Form, Spin } from "antd";
+import Input from "@iso/components/uielements/input";
+
 import {
   CreateDurationType,
   DeleteDurationType,
@@ -15,8 +17,15 @@ import {
 
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
-import { AddItemButtonWrapper,ActionWrapper } from "../../../components/uielements/DataTableStyle/DataTable.Style";
-import {COMMON} from '../../Constant/Index'
+import {
+  AddItemButtonWrapper,
+  ActionWrapper,
+} from "../../../components/uielements/DataTableStyle/DataTable.Style";
+import {
+  SimpleSelect,
+  Option,
+} from "../../../components/uielements/InputElement/Select";
+import { COMMON } from "../../Constant/Index";
 export default function DurationType() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +40,7 @@ export default function DurationType() {
 
   const handleModal = () => {
     if (!modalActive) {
-      form.setFieldsValue({ id: "" ,name:"",value:"",type:""});
+      form.setFieldsValue({ id: "", name: "", value: "", type: "" });
     }
     setModalActive(!modalActive);
   };
@@ -47,14 +56,17 @@ export default function DurationType() {
         },
       });
       setLoading(false);
+    }).catch(()=>{ 
+      setLoading(false);
     });
   };
   const handleSubmit = () => {
     form
       .validateFields()
       .then(async (values) => {
+        debugger
         setLoading(true);
-        const { id, name,value,type } = form.getFieldValue();
+        const { id, name, value, type } = form.getFieldValue();
 
         if (!id) {
           CreateDurationType(values).then(() => {
@@ -92,7 +104,7 @@ export default function DurationType() {
     });
   };
   const handleUpdate = (record) => {
-    form.setFieldsValue({ category: record.category, id: record.id });
+    form.setFieldsValue({ id: record.id,name: record.name,value:record.value,type:record.type});
     setModalActive(!modalActive);
   };
   const handleSearch = (e) => {
@@ -104,34 +116,22 @@ export default function DurationType() {
 
   const columns = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
-      sorter: true,
-    },
-    {
       title: "Name",
       dataIndex: "name",
       key: "name",
       sorter: true,
     },
     {
-      title: "Value",
-      dataIndex: "value",
-      key: "value",
+      title: "Validity",
+      dataIndex: "validity",
+      key: "validity",
       sorter: true,
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      sorter: true,
-    },
-    {
-      title: 'Actions',
-      key: 'action',
-      className: 'noWrapCell',
-      width:"15%",
+      title: "Actions",
+      key: "action",
+      className: "noWrapCell",
+      width: "15%",
       render: (text, record) => {
         return (
           <ActionWrapper>
@@ -154,16 +154,26 @@ export default function DurationType() {
       setDurationType([]);
     }
   };
+  const handleChangeType =(value)=>{
+    form.setFieldsValue({type:value});
+  }
   const modal = () => (
     <Modal
       open={modalActive}
       onClose={handleModal}
-      title={form.getFieldValue().id ? "Update DurationType" : "Add New DurationType"}
+      title={
+        form.getFieldValue().id ? "Update DurationType" : "Add New DurationType"
+      }
       okText={form.getFieldValue().id ? "Update" : "Add"}
       onOk={handleSubmit}
       onCancel={handleModal}
     >
-      <Form form={form} name="durationType" layout="vertical" scrollToFirstError>
+      <Form
+        form={form}
+        name="durationType"
+        layout="vertical"
+        scrollToFirstError
+      >
         <Form.Item
           name="name"
           label="Name"
@@ -175,7 +185,7 @@ export default function DurationType() {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Enter Name" />
         </Form.Item>
         <Form.Item
           name="value"
@@ -188,20 +198,27 @@ export default function DurationType() {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Enter Value" />
         </Form.Item>
         <Form.Item
           name="type"
           label="Type"
-          placeholder="Enter Type"
           rules={[
             {
               required: true,
-              message: "Enter Type!",
+              message: "Select Type"
             },
           ]}
         >
-          <Input />
+          <SimpleSelect
+            placeholder="Select Type"
+            handleChange={handleChangeType}
+            allowClear
+          >
+            <Option value="Days">Days</Option>
+            <Option value="Months">Months</Option>
+            <Option value="Years">Years</Option>
+          </SimpleSelect>
         </Form.Item>
       </Form>
     </Modal>
@@ -220,17 +237,17 @@ export default function DurationType() {
           {modal()}
           {
             <Spin spinning={loading}>
-              {
-                durationType && <DataTable
-                columns={columns}
-                data={durationType.data}
-                title="DurationType"
-                handleSearch={handleSearch}
-                handlePage={handlePage}
-                pagination={tableParams.pagination}
-                rowKey="id"
-              />
-              }
+              {durationType && (
+                <DataTable
+                  columns={columns}
+                  data={durationType.data}
+                  title="DurationType"
+                  handleSearch={handleSearch}
+                  handlePage={handlePage}
+                  pagination={tableParams.pagination}
+                  rowKey="id"
+                />
+              )}
             </Spin>
           }
         </ContentHolder>

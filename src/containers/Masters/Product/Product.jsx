@@ -3,20 +3,29 @@ import Modal from "@iso/components/UI/Modal/Modal";
 import Swal from "@iso/components/UI/Swal/Swal";
 import LayoutContentWrapper from "@iso/components/utility/layoutWrapper";
 import Box from "@iso/components/utility/box";
+import {
+  InputNumber
+} from "../../../components/uielements/InputElement/InputNumber";
 import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
-import { Form, Input,Spin } from "antd";
+import { Form, Spin } from "antd";
+import Input from "@iso/components/uielements/input";
+import { StatusTag } from "@iso/components/uielements/styles/Statustag.style";
 import {
   CreateProductCategory,
   DeleteProductCategory,
   GetAllProductCategory,
   UpdateProductCategory,
+  UpdateCategoryOrders,
 } from "./actions";
 
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
-import { AddItemButtonWrapper,ActionWrapper } from "../../../components/uielements/DataTableStyle/DataTable.Style";
-import {COMMON} from '../../Constant/Index'
+import {
+  AddItemButtonWrapper,
+  ActionWrapper,
+} from "../../../components/uielements/DataTableStyle/DataTable.Style";
+import { COMMON } from "../../Constant/Index";
 export default function Product() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,6 +36,7 @@ export default function Product() {
       pageSize: 10,
     },
   });
+  let sortArray =[];
   const [form] = Form.useForm();
 
   const handleModal = () => {
@@ -47,6 +57,8 @@ export default function Product() {
         },
       });
       setLoading(false);
+    }).catch(()=>{
+      setLoading(false)
     });
   };
   const handleSubmit = () => {
@@ -99,25 +111,67 @@ export default function Product() {
       setLoading(false);
     });
   };
-
+  
+  const handleSortOrder = (Order, id) => {
+    const orderData = sortArray.filter((e, index) => {
+      if (e && e.id === id) {
+        return {
+          e,index
+        }
+      }
+    });
+    if(orderData.length !== 0) {
+      sortArray.splice(orderData.index,1);
+      sortArray.push({id:id,sortOrder:Order});
+    }
+    if(orderData.length === 0){
+      sortArray.push({id:id,sortOrder:Order});
+    }
+  };
+  const handleUpdateSortOrder = () => {
+    UpdateCategoryOrders(sortArray).then(() => {
+      getData(COMMON.getTableParams(tableParams));
+    });
+  };
   const columns = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
-      sorter: true,
+      title: "Status",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (text, record) => {
+        return record.isActive ? (
+          <StatusTag className="active">Active</StatusTag>
+        ) : (
+          <StatusTag className="inActive">InActive</StatusTag>
+        );
+      },
     },
     {
-      title: "Product",
+      title: "Name",
       dataIndex: "category",
       key: "category",
       sorter: true,
     },
     {
-      title: 'Actions',
-      key: 'action',
-      className: 'noWrapCell',
-      width:"15%",
+      title: "Sort order",
+      dataIndex: "sortOrder",
+      key: "sortOrder",
+      render: (text, record) => {
+        return (
+          <InputNumber
+            defaultValue={text}
+            min={1}
+            width={70}
+            onChange={(e) => handleSortOrder(e, record.id)}
+          />
+        );
+      },
+    },
+    {
+      title: "Actions",
+      key: "action",
+      className: "noWrapCell",
+      width: "15%",
       render: (text, record) => {
         return (
           <ActionWrapper>
@@ -148,12 +202,12 @@ export default function Product() {
       okText={form.getFieldValue().id ? "Update" : "Add"}
       onOk={handleSubmit}
       onCancel={handleModal}
+      bodyStyle={{ borderRadius: "50px" }}
     >
       <Form form={form} name="product" layout="vertical" scrollToFirstError>
         <Form.Item
           name="category"
           label="Product"
-          placeholder="Enter Product"
           rules={[
             {
               required: true,
@@ -161,25 +215,32 @@ export default function Product() {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Enter Product" />
         </Form.Item>
       </Form>
+      
     </Modal>
   );
   return (
     <LayoutContentWrapper>
       <AddItemButtonWrapper>
         <div></div>
-        <ActionBtn type="primary" onClick={handleModal}>
-          Add Product
-        </ActionBtn>
+        <div>
+          <ActionBtn type="primary" onClick={handleUpdateSortOrder}>
+            UPDATE SORT ORDER
+          </ActionBtn>
+          <ActionBtn type="primary" onClick={handleModal}>
+            ADD PRODUCT
+          </ActionBtn>
+        </div>
       </AddItemButtonWrapper>
 
       <Box>
         <ContentHolder style={{ marginTop: 0, overflow: "hidden" }}>
           {modal()}
           <Spin spinning={loading}>
-            {categories && <DataTable
+            {categories && (
+              <DataTable
                 columns={columns}
                 data={categories.data}
                 title="Product"
@@ -187,7 +248,8 @@ export default function Product() {
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"
-              />}
+              />
+            )}
           </Spin>
         </ContentHolder>
       </Box>

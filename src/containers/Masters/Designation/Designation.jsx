@@ -5,7 +5,9 @@ import LayoutContentWrapper from "@iso/components/utility/layoutWrapper";
 import Box from "@iso/components/utility/box";
 import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
-import { Form, Input,Spin } from "antd";
+import { Form,Spin } from "antd";
+import Input from "@iso/components/uielements/input";
+import {Textarea} from '@iso/components/uielements/input';
 import {
   CreateDesignation,
   DeleteDesignation,
@@ -17,7 +19,6 @@ import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import { AddItemButtonWrapper,ActionWrapper } from "../../../components/uielements/DataTableStyle/DataTable.Style";
 import {COMMON} from '../../Constant/Index'
-const { TextArea } = Input;
 export default function Designation() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,8 @@ export default function Designation() {
         },
       });
       setLoading(false);
+    }).catch(()=>{
+      setLoading(false)
     });
   };
   const handleSubmit = () => {
@@ -173,7 +176,7 @@ export default function Designation() {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Enter Name" />
         </Form.Item>
         <Form.Item
           name="description"
@@ -186,7 +189,7 @@ export default function Designation() {
             },
           ]}
         >
-          <TextArea />
+          <Textarea placeholder="Enter Description"/>
         </Form.Item>
       </Form>
     </Modal>

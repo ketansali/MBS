@@ -11,11 +11,9 @@ export const CreateDurationType= (data) => {
     });
 };
 export const GetAllDurationType= (body) => {
-  debugger
   return axios
     .post("/Master/GetAllDurationType", body)
     .then((res) => {
-      debugger
       return res.data;
     })
     .catch((err) => {
