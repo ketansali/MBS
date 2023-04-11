@@ -28,20 +28,25 @@ const options = [
     ],
   },
   {
-    key: "table",
-    label: "sidebar.tables",
-    leftIcon: "ion-android-menu",
-    children: [
-      {
-        key: "table_ant",
-        label: "sidebar.antTables",
-      },
-      {
-        key: "quiz",
-        label: "quiz",
-      },
-    ],
-  },
+		key: 'client',
+		label: 'sidebar.client',
+		leftIcon: 'ion-bag',
+	},
+  // {
+  //   key: "table",
+  //   label: "sidebar.tables",
+  //   leftIcon: "ion-android-menu",
+  //   children: [
+  //     {
+  //       key: "table_ant",
+  //       label: "sidebar.antTables",
+  //     },
+  //     {
+  //       key: "quiz",
+  //       label: "quiz",
+  //     },
+  //   ],
+  // },
   // {
   //   key: "pages",
   //   label: "sidebar.pages",

@@ -1,5 +1,6 @@
 {
   "sidebar.dashboard":"Dashboard",
+  "sidebar.client":"Client",
   "sidebar.email": "Email",
   "sidebar.chat": "Chat",
   "sidebar.ecommerce": "Ecommerce",
@@ -228,6 +229,7 @@
   "forms.button.LoadingButton": "Button Loading",
   "forms.button.MultipleButton": "Multiple Button",
   "forms.button.groupButton": "Button Group",
+  "forms.Tabs.client": "Client",
   "forms.Tabs.header": "Tabs",
   "forms.Tabs.simpleTabTitle": "search",
   "forms.Tabs.simpleTabSubTitle": "Disabled Tabs",

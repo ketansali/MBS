@@ -29,6 +29,10 @@ const routes = [
     path: "durationType",
     component: lazy(() => import("@iso/containers/Masters/DurationType/DurationType")),
   },
+  {
+    path: "client",
+    component: lazy(() => import("@iso/containers/Client/Index")),
+  },
 ];
 
 export default function AppRouter() {
