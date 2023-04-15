@@ -1,5 +1,6 @@
 import React from "react";
 import { InputSearch } from "@iso/components/uielements/input";
+import SearchInput from '@iso/components/uielements/InputElement/SearchInput/SearchInput';
 import AntTables from "./AntTables";
 import {
   TitleWrapper,
@@ -19,8 +20,8 @@ export default function AntTable({
       <TitleWrapper>
         <ComponentTitle>{title}</ComponentTitle>
         <div>
-          <InputSearch
-            placeholder="input search text"
+          <SearchInput
+            placeholder="search..."
             onChange={handleSearch}
           />
         </div>

@@ -16,8 +16,8 @@ const AntSelect = (ComponentName) => styled(ComponentName)`
 
     .ant-select-selector {
       background-color: #fff;
-      border-radius: 4px;
-      /* height: 35px !important; */
+      border-radius: 4px !important;
+      height: 35px !important; 
       border: 1px solid ${palette('border', 0)};
       ${transition()};
 

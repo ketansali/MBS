@@ -20,12 +20,10 @@ import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import {
   AddItemButtonWrapper,
   ActionWrapper,
-} from "../../../components/uielements/DataTableStyle/DataTable.Style";
-import {
-  SimpleSelect,
-  Option,
-} from "../../../components/uielements/InputElement/Select";
+} from "@iso/components/uielements/DataTableStyle/DataTable.Style";
+import Select, { SelectOption } from '@iso/components/uielements/select';
 import { COMMON } from "../../Constant/Index";
+const Option = SelectOption;
 export default function DurationType() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -210,7 +208,8 @@ export default function DurationType() {
             },
           ]}
         >
-          <SimpleSelect
+          <Select
+            defaultValue="Days"
             placeholder="Select Type"
             handleChange={handleChangeType}
             allowClear
@@ -218,7 +217,7 @@ export default function DurationType() {
             <Option value="Days">Days</Option>
             <Option value="Months">Months</Option>
             <Option value="Years">Years</Option>
-          </SimpleSelect>
+          </Select>
         </Form.Item>
       </Form>
     </Modal>

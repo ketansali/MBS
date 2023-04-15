@@ -24,7 +24,7 @@ import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import {
   AddItemButtonWrapper,
   ActionWrapper,
-} from "../../../components/uielements/DataTableStyle/DataTable.Style";
+} from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { COMMON } from "../../Constant/Index";
 export default function Product() {
   const [modalActive, setModalActive] = useState(false);
