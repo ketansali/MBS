@@ -37,6 +37,7 @@ export default function DurationType() {
   const [form] = Form.useForm();
 
   const handleModal = () => {
+    form.resetFields();
     if (!modalActive) {
       form.setFieldsValue({ id: "", name: "", value: "", type: "" });
     }

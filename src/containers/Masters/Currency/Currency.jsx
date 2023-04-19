@@ -8,19 +8,19 @@ import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
 import { Form, Spin } from "antd";
 import Input from "@iso/components/uielements/input";
+import InputNumber from "@iso/components/uielements/InputNumber";
 import {
   CreateCurrency,
   DeleteCurrency,
   GetAllCurrency,
   UpdateCurrency,
 } from "./action";
-import { InputNumber } from "../../../components/uielements/InputElement/InputNumber";
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import {
   AddItemButtonWrapper,
   ActionWrapper,
-} from "../../../components/uielements/DataTableStyle/DataTable.Style";
+} from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { COMMON } from "../../Constant/Index";
 export default function Currency() {
   const [modalActive, setModalActive] = useState(false);
@@ -35,6 +35,7 @@ export default function Currency() {
   const [form] = Form.useForm();
 
   const handleModal = () => {
+    form.resetFields();
     if (!modalActive) {
       form.setFieldsValue({
         id: "",
@@ -271,7 +272,7 @@ export default function Currency() {
             },
           ]}
         >
-          <InputNumber placeholder="Enter Decimal Place" min={1} width={230} />
+          <InputNumber placeholder="Enter Decimal Place" min={1}  className="inputNumber" width={90} />
         </FromLeftItem>
       </Form>
     </Modal>

@@ -1,19 +1,24 @@
 import React from "react";
-import { Title, Filters, Header, HeaderSecondary } from "../AppLayout.style";
+import { Title, Filters, Header, HeaderSecondary } from "./ViewClients.style";
 import SearchInput from "@iso/components/uielements/InputElement/SearchInput/SearchInput";
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import Select, { SelectOption } from "@iso/components/uielements/select";
+import { Layout } from "antd";
+import { useHistory, useRouteMatch } from "react-router";
 const Option = SelectOption;
-const ViewClients = ({handleComponent}) => {
+const ViewClients = () => {
+  const history = useHistory();
+  const match = useRouteMatch();
+  
   return (
-    <>
+    <Layout style={{ backgroundColor: "#fff", minHeight: "100vh" }}>
       <Header>
         <Title>Clients</Title>
         <div>
-          <ActionBtn type="primary" style={{ marginRight: "10px" }} onClick={handleComponent}>
+          <ActionBtn type="primary" style={{ marginRight: "10px" }} onClick={()=>history.push(`${match.url}/new`)}>
             ADD NEW CLIENT
           </ActionBtn>
-          <ActionBtn type="primary" onClick={handleComponent}>ADD MEMBERSHIP</ActionBtn>
+          <ActionBtn type="primary" onClick={()=>history.push(`${match.url}/membership`)}>ADD MEMBERSHIP</ActionBtn>
         </div>
       </Header>
       <HeaderSecondary>
@@ -43,7 +48,7 @@ const ViewClients = ({handleComponent}) => {
           </Select>
         </Filters>
       </HeaderSecondary>
-    </>
+    </Layout>
   );
 };
 

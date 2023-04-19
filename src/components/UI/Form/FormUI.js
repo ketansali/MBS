@@ -1,34 +1,29 @@
 import React from "react";
 import { Form } from "antd";
-
+import { FromLeftItemStyle, FromRightItemStyle } from "./FormUI.style";
 const FromLeftItem = ({ name, label, placeholder, rules, children }) => (
-  <Form.Item
-    name={name}
-    label={label}
-    placeholder={placeholder}
-    rules={rules}
-    style={{
-      display: "inline-block",
-      width: "calc(50% - 8px)",
-    }}
-  >
-    {children}
-  </Form.Item>
+  <FromLeftItemStyle>
+    <Form.Item
+      name={name}
+      label={label}
+      placeholder={placeholder}
+      rules={rules}
+    >
+      {children}
+    </Form.Item>
+  </FromLeftItemStyle>
 );
 
 const FromRightItem = ({ name, label, placeholder, rules, children }) => (
-  <Form.Item
-    name={name}
-    label={label}
-    placeholder={placeholder}
-    rules={rules}
-    style={{
-      display: "inline-block",
-      width: "calc(50% - 8px)",
-      margin: "0 8px",
-    }}
-  >
-    {children}
-  </Form.Item>
+  <FromRightItemStyle>
+    <Form.Item
+      name={name}
+      label={label}
+      placeholder={placeholder}
+      rules={rules}
+    >
+      {children}
+    </Form.Item>
+  </FromRightItemStyle>
 );
 export { FromLeftItem, FromRightItem };

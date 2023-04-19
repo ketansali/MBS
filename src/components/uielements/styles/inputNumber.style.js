@@ -8,8 +8,9 @@ const AntInputNumber = ComponentName => styled(ComponentName)`
     font-size: 13px;
     height: 35px !important;
     border: 1px solid ${palette('border', 0)};
+    border-radius:4px;
     width: 100%;
-    max-width: 80px;
+    max-width: 100%;
 
     .ant-input-number-input {
       height: 33px;

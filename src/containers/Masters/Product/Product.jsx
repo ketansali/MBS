@@ -3,9 +3,6 @@ import Modal from "@iso/components/UI/Modal/Modal";
 import Swal from "@iso/components/UI/Swal/Swal";
 import LayoutContentWrapper from "@iso/components/utility/layoutWrapper";
 import Box from "@iso/components/utility/box";
-import {
-  InputNumber
-} from "../../../components/uielements/InputElement/InputNumber";
 import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
 import { Form, Spin } from "antd";
@@ -18,7 +15,7 @@ import {
   UpdateProductCategory,
   UpdateCategoryOrders,
 } from "./actions";
-
+import InputNumber from "@iso/components/uielements/InputNumber";
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import {
@@ -40,6 +37,7 @@ export default function Product() {
   const [form] = Form.useForm();
 
   const handleModal = () => {
+    form.resetFields();
     if (!modalActive) {
       form.setFieldsValue({ category: "", id: "" });
     }
@@ -161,7 +159,7 @@ export default function Product() {
           <InputNumber
             defaultValue={text}
             min={1}
-            width={70}
+            style={{width:"20%"}}
             onChange={(e) => handleSortOrder(e, record.id)}
           />
         );

@@ -5,6 +5,8 @@ import { transition, borderRadius } from '@iso/lib/helpers/style_utils';
 const AntDatePicker = (ComponentName) => styled(ComponentName)`
   &.ant-picker {
     height: 35px;
+    border-radius:4px;
+    width:100%;
   }
   .ant-input {
     padding: 4px 10px;

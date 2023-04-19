@@ -32,6 +32,7 @@ export default function Designation() {
   const [form] = Form.useForm();
 
   const handleModal = () => {
+    form.resetFields();
     if (!modalActive) {
       form.setFieldsValue({ id: "", name: "", description: "" });
     }
