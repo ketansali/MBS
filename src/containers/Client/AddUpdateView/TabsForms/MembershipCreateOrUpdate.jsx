@@ -11,21 +11,21 @@ import {
   PaymentBTN,
   StatusAndEmailWrapper,
   MainWrapper,
-} from "./Membership.style";
+} from "../../Membership/Membership.style";
 import Button from "@iso/components/uielements/button";
 import Input, { Textarea } from "@iso/components/uielements/input";
 import { DateRangepicker } from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
 import { Form, Radio } from "antd";
 import Checkbox from "@iso/components/uielements/checkbox";
-import "./Membership.css";
+import "../../Membership/Membership.css";
 const Option = SelectOption;
 const MembershipCreateOrUpdate = () => {
   const [form] = Form.useForm();
   return (
-    <LayoutWrapper>
-      <PageHeader>ADD MEMBERSHIP</PageHeader>
-      <Box>
+
+
+      <>
         <div className="PageContent">
           <div className="BillingInformation">
             <Form
@@ -361,8 +361,7 @@ const MembershipCreateOrUpdate = () => {
             </Form>
           </div>
         </div>
-      </Box>
-    </LayoutWrapper>
+      </>
   );
 };
 

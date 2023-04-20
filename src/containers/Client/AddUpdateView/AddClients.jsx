@@ -2,17 +2,21 @@ import React from "react";
 import Box from "@iso/components/utility/box";
 import LayoutWrapper from "@iso/components/utility/layoutWrapper.js";
 import IntlMessages from "@iso/components/utility/intlMessages";
-import Tabs, { TabPane } from "@iso/components/UI/Tabs/Tabs4";
-
+import Tabs, { TabPane } from "../Tabs/Tabs";
+import PageHeader from "@iso/components/utility/pageHeader";
+import MembershipCreateOrUpdate from './TabsForms/MembershipCreateOrUpdate';
+import BasicInfoTab from "./TabsForms/BasicInfoTab";
 const AddClients = () => {
   return (
-      <Box title={<IntlMessages id="forms.Tabs.client" />}>
+    <LayoutWrapper>
+      <PageHeader>CLIENTS</PageHeader>
+       <Box>
         <Tabs>
           <TabPane tab="BASIC INFORMATION" key="1">
-            Content of Tab Pane 1
+            <BasicInfoTab/>
           </TabPane>
           <TabPane tab="CLASS SERIES/MEMBERSHIP" key="2">
-            Content of Tab Pane 2
+              <MembershipCreateOrUpdate/>
           </TabPane>
           <TabPane tab="APPOINTMENT" key="3">
             Content of Tab Pane 3
@@ -22,6 +26,8 @@ const AddClients = () => {
           </TabPane>
         </Tabs>
       </Box>
+    </LayoutWrapper>
+     
   );
 };
 
