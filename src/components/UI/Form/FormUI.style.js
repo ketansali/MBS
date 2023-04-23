@@ -14,3 +14,8 @@ export const TwoElementWrapper = Style.div`
   }
   }
 `
+
+export const TwoElementInnerWrapper = Style.div`
+    display:flex;
+    justify-content:space-between;
+`

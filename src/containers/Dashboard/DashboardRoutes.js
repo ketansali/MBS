@@ -32,7 +32,7 @@ const routes = [
   {
     path: "client",
     component: lazy(() => import("@iso/containers/Client/Index")),
-  },
+  }
 ];
 
 export default function AppRouter() {
