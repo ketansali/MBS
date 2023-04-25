@@ -4,8 +4,9 @@ import LayoutWrapper from "@iso/components/utility/layoutWrapper.js";
 import IntlMessages from "@iso/components/utility/intlMessages";
 import Tabs, { TabPane } from "../Tabs/Tabs";
 import PageHeader from "@iso/components/utility/pageHeader";
-import MembershipCreateOrUpdate from './TabsForms/MembershipCreateOrUpdate';
+import MembershipCreateOrUpdate from './TabsForms/MembershipTab';
 import BasicInfoTab from "./TabsForms/BasicInfoTab";
+import AppointmentTab from "./TabsForms/AppointmentTab";
 const AddClients = () => {
   return (
     <LayoutWrapper>
@@ -19,7 +20,7 @@ const AddClients = () => {
               <MembershipCreateOrUpdate/>
           </TabPane>
           <TabPane tab="APPOINTMENT" key="3">
-            Content of Tab Pane 3
+            <AppointmentTab/>
           </TabPane>
           <TabPane tab="NETWORK" key="4">
             Content of Tab Pane 3

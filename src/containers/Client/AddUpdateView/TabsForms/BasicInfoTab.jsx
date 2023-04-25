@@ -5,26 +5,16 @@ import {
 } from "@iso/components/UI/Form/FormUI.style";
 import {
   BottomButtonWrapper,
-  OtherFeesWrapper,
-  OtherFeesInnerElement,
-  AmountWrapper,
-  PaymentBTN,
-  StatusAndEmailWrapper,
-  MainWrapper,
 } from "../../Membership/Membership.style";
-import { ImCross } from "react-icons/im";
-import { BiPlusMedical } from "react-icons/bi";
-import { AiOutlineUpload } from "react-icons/ai";
 import Button from "@iso/components/uielements/button";
-import Input, { Textarea } from "@iso/components/uielements/input";
+import Input from "@iso/components/uielements/input";
 import Datepicker from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
 import { Form, Radio, Upload } from "antd";
 import Checkbox,{CheckboxGroup} from "@iso/components/uielements/checkbox";
-import "../../Membership/Membership.css";
 import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined,PlusOutlined,CloseOutlined } from '@ant-design/icons';
 const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
@@ -244,7 +234,7 @@ const BasicInfoTab = () => {
               <Button
                 style={{ marginLeft: "10px" }}
                 type="primary"
-                icon={<BiPlusMedical size={13} />}
+                icon={<PlusOutlined />}
                 shape="circle"
                 onClick={handleMobileAndTypeField}
               />
@@ -308,7 +298,7 @@ const BasicInfoTab = () => {
                 </Form.Item>
                 <Button
                   type="danger"
-                  icon={<ImCross size={10} />}
+                  icon={<CloseOutlined  />}
                   shape="circle"
                   onClick={() => handleDeleteMobileAndTypeField(i)}
                 />

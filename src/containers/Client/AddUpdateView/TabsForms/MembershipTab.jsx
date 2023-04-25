@@ -8,14 +8,13 @@ import {
   PaymentBTN,
   StatusAndEmailWrapper,
   MainWrapper,
-} from "../../Membership/Membership.style";
+} from "./Styles/Membership.style";
 import Button from "@iso/components/uielements/button";
 import Input, { Textarea } from "@iso/components/uielements/input";
 import { DateRangepicker } from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
 import { Form, Radio } from "antd";
 import Checkbox from "@iso/components/uielements/checkbox";
-// import "../../Membership/Membership.css";
 const Option = SelectOption;
 const MembershipCreateOrUpdate = () => {
   const [form] = Form.useForm();
@@ -142,7 +141,7 @@ const MembershipCreateOrUpdate = () => {
                   ]}
                   className="elementWidth"
                 >
-                  <Input prefix={<b>DISCOUNT:</b>} placeholder="Username" />
+                  <Input prefix={<b>DISCOUNT:</b>} placeholder="DISCOUNT" />
                 </Form.Item>
               </TwoElementWrapper>
 
@@ -158,7 +157,7 @@ const MembershipCreateOrUpdate = () => {
                   ]}
                   className="elementWidth"
                 >
-                  <Input prefix={<b>ADJUSTMENT :</b>} placeholder="Username" />
+                  <Input prefix={<b>ADJUSTMENT :</b>} placeholder="ADJUSTMENT" />
                 </Form.Item>
                 <Form.Item
                   name="discount"
