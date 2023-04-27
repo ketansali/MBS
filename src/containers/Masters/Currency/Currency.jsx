@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@iso/components/UI/Modal/Modal";
-import { FromLeftItem, FromRightItem } from "@iso/components/UI/Form/FormUI";
+import { TwoElementWrapper } from "@iso/components/UI/Form/FormUI.style";
 import Swal from "@iso/components/UI/Swal/Swal";
 import LayoutContentWrapper from "@iso/components/utility/layoutWrapper";
 import Box from "@iso/components/utility/box";
@@ -8,19 +8,19 @@ import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
 import { Form, Spin } from "antd";
 import Input from "@iso/components/uielements/input";
+import InputNumber from "@iso/components/uielements/InputNumber";
 import {
   CreateCurrency,
   DeleteCurrency,
   GetAllCurrency,
   UpdateCurrency,
 } from "./action";
-import { InputNumber } from "../../../components/uielements/InputElement/InputNumber";
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import {
   AddItemButtonWrapper,
   ActionWrapper,
-} from "../../../components/uielements/DataTableStyle/DataTable.Style";
+} from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { COMMON } from "../../Constant/Index";
 export default function Currency() {
   const [modalActive, setModalActive] = useState(false);
@@ -35,6 +35,7 @@ export default function Currency() {
   const [form] = Form.useForm();
 
   const handleModal = () => {
+    form.resetFields();
     if (!modalActive) {
       form.setFieldsValue({
         id: "",
@@ -52,19 +53,21 @@ export default function Currency() {
   };
   const getData = () => {
     setLoading(true);
-    GetAllCurrency(COMMON.getTableParams(tableParams)).then((res) => {
-      setCurrency(res?.responseData);
-      setTableParams({
-        ...tableParams,
-        pagination: {
-          ...tableParams.pagination,
-          total: res.responseData.totalRecords,
-        },
+    GetAllCurrency(COMMON.getTableParams(tableParams))
+      .then((res) => {
+        setCurrency(res?.responseData);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res.responseData.totalRecords,
+          },
+        });
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
       });
-      setLoading(false);
-    }).catch(()=>{
-      setLoading(false)
-    });
   };
   const handleSubmit = () => {
     form
@@ -207,72 +210,105 @@ export default function Currency() {
       onCancel={handleModal}
     >
       <Form form={form} name="currency" layout="vertical" scrollToFirstError>
-        <FromLeftItem
-          name="name"
-          label="Name"
-          rules={[
-            {
-              required: true,
-              message: "Enter Name!",
-            },
-          ]}
-        >
-          <Input placeholder="Enter Name" />
-        </FromLeftItem>
-        <FromRightItem
-          name="code"
-          label="Code"
-          rules={[
-            {
-              required: true,
-              message: "Enter Code!",
-            },
-          ]}
-        >
-          <Input placeholder="Enter Code" />
-        </FromRightItem>
-        <FromLeftItem name="symbolLeft" label="Symbol Left">
-          <Input placeholder="Enter Symbol Left" />
-        </FromLeftItem>
-        <FromRightItem name="symbolRight" label="Symbol Right">
-          <Input placeholder="Enter Symbol Right" />
-        </FromRightItem>
-        <FromLeftItem
-          name="decimalPoint"
-          label="Decimal Point"
-          rules={[
-            {
-              required: true,
-              message: "Enter Decimal Point!",
-            },
-          ]}
-        >
-          <Input placeholder="Enter Decimal Point" onKeyDown={handleKeyDown} />
-        </FromLeftItem>
-        <FromRightItem
-          name="thousandPoint"
-          label="Thousand Point"
-          rules={[
-            {
-              required: true,
-              message: "Enter Thousand Point!",
-            },
-          ]}
-        >
-          <Input placeholder="Enter Thousand Point" onKeyDown={handleKeyDown} />
-        </FromRightItem>
-        <FromLeftItem
-          name="decimalPlace"
-          label="Decimal Place"
-          rules={[
-            {
-              required: true,
-              message: "Enter Decimal Place!",
-            },
-          ]}
-        >
-          <InputNumber placeholder="Enter Decimal Place" min={1} width={230} />
-        </FromLeftItem>
+        <TwoElementWrapper>
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[
+              {
+                required: true,
+                message: "Enter Name!",
+              },
+            ]}
+            className="elementWidth"
+          >
+            <Input placeholder="Enter Name" />
+          </Form.Item>
+          <Form.Item
+            name="code"
+            label="Code"
+            rules={[
+              {
+                required: true,
+                message: "Enter Code!",
+              },
+            ]}
+            className="elementWidth"
+          >
+            <Input placeholder="Enter Code" />
+          </Form.Item>
+        </TwoElementWrapper>
+        <TwoElementWrapper>
+          <Form.Item
+            name="symbolLeft"
+            label="Symbol Left"
+            className="elementWidth"
+          >
+            <Input placeholder="Enter Symbol Left" />
+          </Form.Item>
+          <Form.Item
+            name="symbolRight"
+            label="Symbol Right"
+            className="elementWidth"
+          >
+            <Input placeholder="Enter Symbol Right" />
+          </Form.Item>
+        </TwoElementWrapper>
+
+        <TwoElementWrapper>
+          <Form.Item
+            name="decimalPoint"
+            label="Decimal Point"
+            rules={[
+              {
+                required: true,
+                message: "Enter Decimal Point!",
+              },
+            ]}
+            className="elementWidth"
+          >
+            <Input
+              placeholder="Enter Decimal Point"
+              onKeyDown={handleKeyDown}
+            />
+          </Form.Item>
+          <Form.Item
+            name="thousandPoint"
+            label="Thousand Point"
+            rules={[
+              {
+                required: true,
+                message: "Enter Thousand Point!",
+              },
+            ]}
+            className="elementWidth"
+          >
+            <Input
+              placeholder="Enter Thousand Point"
+              onKeyDown={handleKeyDown}
+            />
+          </Form.Item>
+        </TwoElementWrapper>
+        <TwoElementWrapper>
+          <Form.Item
+            name="decimalPlace"
+            label="Decimal Place"
+            rules={[
+              {
+                required: true,
+                message: "Enter Decimal Place!",
+              },
+            ]}
+            className="elementWidth"
+          >
+            <InputNumber
+              placeholder="Enter Decimal Place"
+              min={1}
+              className="inputNumber"
+              width={90}
+            />
+          </Form.Item>
+        </TwoElementWrapper>
       </Form>
     </Modal>
   );

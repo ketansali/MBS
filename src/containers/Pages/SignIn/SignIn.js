@@ -33,8 +33,8 @@ export default function SignIn() {
       .then(async (values) => {
         axios.post("/User/Login", values).then((res) => {
           if (!res.data.isSuccess) {
-
             notification("error", res.data.message);
+            setLoading(false)
           } else {
             dispatch(login(res.data.responseData));
             dispatch(clearMenu());
