@@ -33,6 +33,10 @@ const routes = [
     path: "client",
     component: lazy(() => import("@iso/containers/Client/Index")),
   },
+  {
+    path: "instructors",
+    component: lazy(() => import("@iso/containers/Instructor/Index")),
+  },
 ];
 
 export default function AppRouter() {

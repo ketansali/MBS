@@ -32,6 +32,11 @@ const options = [
 		label: 'sidebar.client',
 		leftIcon: 'ion-bag',
 	},
+  {
+		key: 'Instructors',
+		label: 'Instructors',
+		leftIcon: 'ion-bag',
+	},
   // {
   //   key: "table",
   //   label: "sidebar.tables",
