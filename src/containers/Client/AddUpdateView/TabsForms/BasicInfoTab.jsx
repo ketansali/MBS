@@ -3,18 +3,16 @@ import {
   TwoElementWrapper,
   TwoElementInnerWrapper,
 } from "@iso/components/UI/Form/FormUI.style";
-import {
-  BottomButtonWrapper,
-} from "../../Membership/Membership.style";
+import { BottomButtonWrapper } from "../../Membership/Membership.style";
 import Button from "@iso/components/uielements/button";
 import Input from "@iso/components/uielements/input";
 import Datepicker from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
 import { Form, Radio, Upload } from "antd";
-import Checkbox,{CheckboxGroup} from "@iso/components/uielements/checkbox";
+import Checkbox, { CheckboxGroup } from "@iso/components/uielements/checkbox";
 import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
-import { UploadOutlined,PlusOutlined,CloseOutlined } from '@ant-design/icons';
+import { UploadOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
 const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
@@ -35,13 +33,15 @@ const BasicInfoTab = () => {
     setCHData(onChangeVal);
   };
   const marketing = [
-    { label: 'EMAIL', value: 'EMAIL' },
-    { label: 'MAIL', value: 'MAIL' },
-    { label: 'SMS', value: 'SMS' },
-    { label: 'WHATSAPP', value: 'WHATSAPP' },
+    { label: "EMAIL", value: "EMAIL" },
+    { label: "MAIL", value: "MAIL" },
+    { label: "SMS", value: "SMS" },
+    { label: "WHATSAPP", value: "WHATSAPP" },
   ];
+  const handleCheckIsVaccinated = (e)=>{
+    console.log({e});
+  }
   return (
-    <>
       <Form form={form} name="currency" layout="vertical" scrollToFirstError>
         <TwoElementWrapper>
           <Form.Item
@@ -241,6 +241,7 @@ const BasicInfoTab = () => {
               <Form.Item
                 name="textMe"
                 // label="Select Class Series / Membership"
+                valuePropName="checked"
                 rules={[
                   {
                     required: true,
@@ -249,7 +250,9 @@ const BasicInfoTab = () => {
                 ]}
                 className="elementWidth"
               >
-                <Checkbox className="clsTextMe"><h4>TEXT ME</h4></Checkbox>
+                <Checkbox className="clsTextMe">
+                  <h4>TEXT ME</h4>
+                </Checkbox>
               </Form.Item>
             </TwoElementInnerWrapper>
           </div>
@@ -298,7 +301,7 @@ const BasicInfoTab = () => {
                 </Form.Item>
                 <Button
                   type="danger"
-                  icon={<CloseOutlined  />}
+                  icon={<CloseOutlined />}
                   shape="circle"
                   onClick={() => handleDeleteMobileAndTypeField(i)}
                 />
@@ -360,24 +363,26 @@ const BasicInfoTab = () => {
           <div style={{ display: "flex", alignItems: "baseline" }}>
             <h4 style={{ marginRight: "10px" }}>Photo :</h4>
             <Form.Item
-            name="photo"
-            // label="Photo"
-            rules={[
-              {
-                required: true,
-                message: "Select Photo!",
-              },
-            ]}
-            style={{width:"70%"}}
-          >
-            <Upload style={{width:"70%"}}>
-              <Button>
-                <UploadOutlined /> Click to Upload
-              </Button>
-            </Upload>
-            <span style={{fontSize:"13px", fontWeight:"300"}} >(File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)</span>
-          </Form.Item>
-            </div>
+              name="photo"
+              // label="Photo"
+              rules={[
+                {
+                  required: true,
+                  message: "Select Photo!",
+                },
+              ]}
+              style={{ width: "70%" }}
+            >
+              <Upload style={{ width: "70%" }} >
+                <Button>
+                  <UploadOutlined /> Click to Upload
+                </Button>
+              </Upload>
+              <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                (File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)
+              </span>
+            </Form.Item>
+          </div>
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
@@ -403,26 +408,64 @@ const BasicInfoTab = () => {
               <Option value="Paper Contract">Paper Contract</Option>
               <Option value="Studio Policy">Studio Policy</Option>
             </Select>
-            <Checkbox><span style={{fontSize:"13px", fontWeight:"300"}}> I agree to all the terms and conditions</span></Checkbox>
+            {/* <Checkbox>
+              <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                {" "}
+                I agree to all the terms and conditions
+              </span>
+            </Checkbox> */}
           </Form.Item>
-            <Form.Item
-            name="isVaccinated"
-            // label="Photo"
-            rules={[
-              {
-                required: true,
-                message: "Check Is Vaccinated!",
-              },
-            ]}
-            className="elementWidth"
-          >
-           <Checkbox><h4>Is Vaccinated</h4></Checkbox>
-          </Form.Item>
+          <div className="elementWidth">
+            <TwoElementInnerWrapper>
+              <Form.Item
+                name="isVaccinated"
+                // label="Select Class Series / Membership"
+                valuePropName="checked"
+                rules={[
+                  {
+                    required: true,
+                    message: "Check Is Vaccinated!",
+                  },
+                ]}
+                className="elementWidth"
+              >
+                <Checkbox >
+                  <h4>Is Vaccinated</h4>
+                </Checkbox>
+              </Form.Item>
+              <div
+                className="elementWidth"
+                style={{ display: "flex", alignItems: "baseline" }}
+              >
+                <div style={{ marginLeft: "10px", paddingRight: "10px" }}>
+                  <h4>Proof :</h4>{" "}
+                </div>
+                <Form.Item
+                  name="Proof"
+                  // label="Select Class Series / Membership"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Select Proof!",
+                    },
+                  ]}
+                  className="elementWidth"
+                >
+                  <Upload>
+                    <Button>
+                      <UploadOutlined /> Click to Upload
+                    </Button>
+                  </Upload>
+                </Form.Item>
+              </div>
+            </TwoElementInnerWrapper>
+          </div>
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
             name="contract"
             // label="Select Start And End Date"
+            valuePropName="checked"
             rules={[
               {
                 required: true,
@@ -431,12 +474,27 @@ const BasicInfoTab = () => {
             ]}
             className="elementWidth"
           >
-            <div><Checkbox><h4>CLIENT NOTIFICATION</h4></Checkbox></div>
-            <div><span style={{fontSize:"13px", fontWeight:"300", marginLeft:"25px"}}>Select this option to enable email and text.</span></div>
+            <div>
+              <Checkbox>
+                <h4>CLIENT NOTIFICATION</h4>
+              </Checkbox>
+            </div>
+            <div>
+              <span
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "300",
+                  marginLeft: "25px",
+                }}
+              >
+                Select this option to enable email and text.
+              </span>
+            </div>
           </Form.Item>
-            <Form.Item
+          <Form.Item
             name="isVaccinated"
             // label="Photo"
+            valuePropName="checked"
             rules={[
               {
                 required: true,
@@ -445,13 +503,16 @@ const BasicInfoTab = () => {
             ]}
             className="elementWidth"
           >
-           <Checkbox><h4>LIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
+            <Checkbox>
+              <h4>LIENT IS UNDER 18 YEARS OLD</h4>
+            </Checkbox>
           </Form.Item>
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
             name="marketingPreference"
             label="MARKETING PREFERENCE"
+            valuePropName="checked"
             rules={[
               {
                 required: true,
@@ -460,10 +521,13 @@ const BasicInfoTab = () => {
             ]}
             className="elementWidth"
           >
-            <CheckboxGroup options={marketing}/>
+            <CheckboxGroup options={marketing} />
           </Form.Item>
-          <div style={{ display: "flex", alignItems: "baseline" }} className="elementWidth">
-            <h4 style={{marginRight:"20px"}}>Status :</h4>
+          <div
+            style={{ display: "flex", alignItems: "baseline" }}
+            className="elementWidth"
+          >
+            <h4 style={{ marginRight: "20px" }}>Status :</h4>
             <Form.Item
               //   label="Gender :"
               name="status"
@@ -473,7 +537,7 @@ const BasicInfoTab = () => {
                   message: "Please Select Status!",
                 },
               ]}
-              style={{width:"70%"}}
+              style={{ width: "70%" }}
             >
               <Radio.Group>
                 <Radio value="male">ACTIVE</Radio>
@@ -544,7 +608,6 @@ const BasicInfoTab = () => {
           </Button>
         </BottomButtonWrapper>
       </Form>
-    </>
   );
 };
 
