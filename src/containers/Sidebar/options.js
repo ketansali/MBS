@@ -37,6 +37,18 @@ const options = [
         key: "relation",
         label: "sidebar.relation",
       },
+      {
+        key: "country",
+        label: "sidebar.country",
+      },
+      {
+        key: "state",
+        label: "sidebar.state",
+      },
+      {
+        key: "city",
+        label: "sidebar.city",
+      }
     ],
   },
   {

@@ -37,6 +37,10 @@ const routes = [
     component: lazy(() => import("@iso/containers/Masters/DurationType/DurationType")),
   },
   {
+    path: "country",
+    component: lazy(() => import("@iso/containers/Masters/Country/Country")),
+  },
+  {
     path: "client",
     component: lazy(() => import("@iso/containers/Client/Index")),
   },

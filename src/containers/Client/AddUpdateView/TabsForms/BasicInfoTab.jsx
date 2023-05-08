@@ -1,24 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TwoElementWrapper,
   TwoElementInnerWrapper,
 } from "@iso/components/UI/Form/FormUI.style";
-import {
-  BottomButtonWrapper,
-} from "../../Membership/Membership.style";
+import { BottomButtonWrapper } from "../../Membership/Membership.style";
 import Button from "@iso/components/uielements/button";
 import Input from "@iso/components/uielements/input";
 import Datepicker from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
 import { Form, Radio, Upload } from "antd";
-import Checkbox,{CheckboxGroup} from "@iso/components/uielements/checkbox";
+import Checkbox, { CheckboxGroup } from "@iso/components/uielements/checkbox";
 import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
-import { UploadOutlined,PlusOutlined,CloseOutlined } from '@ant-design/icons';
+import { UploadOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import { GetCountry, GetCountryByState, GetStateByCity } from "../../../Masters/Country/actions";
 const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
   const [chData, setCHData] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [city, setCity] = useState([]);
 
   const handleMobileAndTypeField = () => {
     setCHData([...chData, { contact: "", contactType: "" }]);
@@ -35,13 +37,60 @@ const BasicInfoTab = () => {
     setCHData(onChangeVal);
   };
   const marketing = [
-    { label: 'EMAIL', value: 'EMAIL' },
-    { label: 'MAIL', value: 'MAIL' },
-    { label: 'SMS', value: 'SMS' },
-    { label: 'WHATSAPP', value: 'WHATSAPP' },
+    { label: "EMAIL", value: "EMAIL" },
+    { label: "MAIL", value: "MAIL" },
+    { label: "SMS", value: "SMS" },
+    { label: "WHATSAPP", value: "WHATSAPP" },
   ];
+  const onCountrySearch = (name) => {
+     GetCountry(name).then((res) => {
+      setCountries([]);
+      setCountries(res?.responseData);
+    });
+  }
+  const onStateSearch = (name) => {
+    const {country } = form.getFieldValue();
+     GetCountryByState(country,name).then((res) => {
+      setStates([]);
+      setStates(res?.responseData);
+    });
+  }
+  const onCitySearch = (name) => {
+    const {state } = form.getFieldValue();
+     GetStateByCity(state,name).then((res) => {
+       setCity([]);
+       setCity(res?.responseData);
+    });
+  }
+  useEffect(() => {
+    GetCountry("").then((res) => {
+      setCountries(res?.responseData);
+      setStates([]);
+      setCity([]);
+    });
+  }, [])
+
+  const handleChangeCountryByState = (id)=>{
+      if(id){
+        GetCountryByState(id,"").then(res=> {
+          form.resetFields(['state']);
+          form.resetFields(['city']);
+          setStates([]);
+          setCity([]);
+          setStates(res?.responseData);
+        });
+      }
+  }
+  const handleChangeStateByCity = (id)=>{
+      if(id){
+        GetStateByCity(id).then(res=> {
+          form.resetFields(['city']);
+          setCity([]);
+          setCity(res?.responseData);
+        });
+      }
+  }
   return (
-    <>
       <Form form={form} name="currency" layout="vertical" scrollToFirstError>
         <TwoElementWrapper>
           <Form.Item
@@ -121,47 +170,94 @@ const BasicInfoTab = () => {
           >
             <Input placeholder="Address" />
           </Form.Item>
-          <Form.Item
-            name="city"
-            // label="Select Class Series / Membership"
-            rules={[
-              {
-                required: true,
-                message: "Enter City!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="City" />
-          </Form.Item>
+
+          <div className="elementWidth">
+            <TwoElementInnerWrapper>
+              <Form.Item
+                name="country"
+                // label="Select Start And End Date"
+                rules={[
+                  {
+                    required: true,
+                    message: "Select Country!",
+                  },
+                ]}
+                className="elementWidth"
+              >
+                <Select
+                  showSearch
+                  placeholder="Select Country"
+                  onChange={handleChangeCountryByState}
+                  onSearch={onCountrySearch}
+                  allowClear
+                  filterOption={false}
+                >
+                  {
+                    countries && countries.map((c) => (
+                      <Option value={c.id} key={c.id}>{c.country}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="state"
+                // label="Select Start And End Date"
+                rules={[
+                  {
+                    required: true,
+                    message: "Select State!",
+                  },
+                ]}
+                className="elementWidth"
+              >
+                <Select
+                  showSearch
+                  placeholder="Select State"
+                  onChange={handleChangeStateByCity}
+                  onSearch={onStateSearch}
+                  allowClear
+                  filterOption={false}
+                >
+                  {
+                    states.map((e)=>(
+                      <Option value={e.id} key={e.id}>{e.state}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>
+            </TwoElementInnerWrapper>
+          </div>
+
         </TwoElementWrapper>
 
         <TwoElementWrapper>
-          <Form.Item
-            name="state"
-            // label="Select Start And End Date"
-            rules={[
-              {
-                required: true,
-                message: "Select State!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Select
-              showSearch
-              defaultValue="State"
-              placeholder="Select State"
-              // handleChange={handleChangeType}
-              allowClear
-            >
-              <Option value="Days">Clifornia</Option>
-              <Option value="Months">Los Angel</Option>
-              <Option value="Years">Years</Option>
-            </Select>
-          </Form.Item>
           <div className="elementWidth">
             <TwoElementInnerWrapper>
+              <Form.Item
+                name="city"
+                // label="Select Class Series / Membership"
+                rules={[
+                  {
+                    required: true,
+                    message: "Select city!",
+                  },
+                ]}
+                className="elementWidth"
+              >
+                <Select
+                  showSearch
+                  placeholder="Select City"
+                  allowClear
+                  onSearch={onCitySearch}
+                  filterOption={false}
+                >
+                  {
+                    city.map((e)=>(
+                      <Option value={e.id} key={e.id}>{e.city}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>
               <Form.Item
                 name="zip"
                 // label="Select Class Series / Membership"
@@ -175,34 +271,9 @@ const BasicInfoTab = () => {
               >
                 <Input placeholder="Zip" />
               </Form.Item>
-              <Form.Item
-                name="zip"
-                // label="Select Class Series / Membership"
-                rules={[
-                  {
-                    required: true,
-                    message: "ZIP!",
-                  },
-                ]}
-                className="elementWidth"
-              >
-                <Select
-                  showSearch
-                  defaultValue="Country"
-                  placeholder="Select Country"
-                  // handleChange={handleChangeType}
-                  allowClear
-                >
-                  <Option value="Days">US</Option>
-                  <Option value="Months">Canada</Option>
-                  <Option value="Years">Years</Option>
-                </Select>
-              </Form.Item>
+
             </TwoElementInnerWrapper>
           </div>
-        </TwoElementWrapper>
-
-        <TwoElementWrapper>
           <Form.Item
             name="email"
             // label="Select Start And End Date"
@@ -215,6 +286,22 @@ const BasicInfoTab = () => {
             className="elementWidth"
           >
             <Input placeholder="Email" />
+          </Form.Item>
+        </TwoElementWrapper>
+
+        <TwoElementWrapper>
+          <Form.Item
+            name="phone"
+            // label="Select Start And End Date"
+            rules={[
+              {
+                required: true,
+                message: "Enter Phone!",
+              },
+            ]}
+            className="elementWidth"
+          >
+            <Input placeholder="Phone" />
           </Form.Item>
           <div className="elementWidth">
             <TwoElementInnerWrapper>
@@ -240,7 +327,8 @@ const BasicInfoTab = () => {
               />
               <Form.Item
                 name="textMe"
-                // label="Select Class Series / Membership"
+                // label="TEXT ME"
+                valuePropName="checked"
                 rules={[
                   {
                     required: true,
@@ -249,13 +337,15 @@ const BasicInfoTab = () => {
                 ]}
                 className="elementWidth"
               >
-                <Checkbox className="clsTextMe"><h4>TEXT ME</h4></Checkbox>
+                <Checkbox className="clsTextMe">
+                  <h4>TEXT ME</h4>
+                </Checkbox>
               </Form.Item>
             </TwoElementInnerWrapper>
           </div>
         </TwoElementWrapper>
         {chData.map((val, i) => (
-          <TwoElementWrapper>
+          <TwoElementWrapper key={i}>
             <div className="elementWidth"></div>
             <div className="elementWidth">
               <TwoElementInnerWrapper>
@@ -273,8 +363,8 @@ const BasicInfoTab = () => {
                   <InputNumber placeholder="Mobile" />
                 </Form.Item>
                 <Form.Item
-                  name="contactType"
-                  // label="Select Class Series / Membership"
+                  name="Mobile Type"
+                  // label="Type"
                   rules={[
                     {
                       required: true,
@@ -285,7 +375,6 @@ const BasicInfoTab = () => {
                 >
                   <Select
                     showSearch
-                    defaultValue="Type"
                     placeholder="Select Type"
                     // handleChange={handleChangeType}
                     allowClear
@@ -298,7 +387,7 @@ const BasicInfoTab = () => {
                 </Form.Item>
                 <Button
                   type="danger"
-                  icon={<CloseOutlined  />}
+                  icon={<CloseOutlined />}
                   shape="circle"
                   onClick={() => handleDeleteMobileAndTypeField(i)}
                 />
@@ -321,23 +410,8 @@ const BasicInfoTab = () => {
             <Input placeholder="Referred By" />
           </Form.Item>
           <Form.Item
-            name="phone"
-            // label="Select Start And End Date"
-            rules={[
-              {
-                required: true,
-                message: "Enter Phone!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Phone" />
-          </Form.Item>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
-          <Form.Item
             name="prefLocation"
-            // label="Select Start And End Date"
+            // label="Pref Location"
             rules={[
               {
                 required: true,
@@ -348,7 +422,6 @@ const BasicInfoTab = () => {
           >
             <Select
               showSearch
-              defaultValue="Los Angeles"
               placeholder="Select Pref Location"
               // handleChange={handleChangeType}
               allowClear
@@ -357,43 +430,46 @@ const BasicInfoTab = () => {
               <Option value="Los Angeles">Los Angeles</Option>
             </Select>
           </Form.Item>
-          <div style={{ display: "flex", alignItems: "baseline" }}>
-            <h4 style={{ marginRight: "10px" }}>Photo :</h4>
-            <Form.Item
-            name="photo"
-            // label="Photo"
-            rules={[
-              {
-                required: true,
-                message: "Select Photo!",
-              },
-            ]}
-            style={{width:"70%"}}
-          >
-            <Upload style={{width:"70%"}}>
-              <Button>
-                <UploadOutlined /> Click to Upload
-              </Button>
-            </Upload>
-            <span style={{fontSize:"13px", fontWeight:"300"}} >(File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)</span>
-          </Form.Item>
-            </div>
         </TwoElementWrapper>
-        <TwoElementWrapper>
+        <TwoElementWrapper style={{marginBottom:'24px'}}>
+          <div  className="elementWidth">
+            <div style={{ display: "flex", alignItems: "baseline" }}>
+            <div><h4 style={{ marginRight: "10px" }}>Photo :</h4></div>
+            <Form.Item
+              name="image"
+              // label="Photo"
+              valuePropName="fileList"
+              rules={[
+                {
+                  required: true,
+                  message: "Select Image!",
+                },
+              ]}
+              style={{ width: "70%" , marginBottom:"5px" }}
+            >
+              <Upload style={{ width: "70%" }}>
+                <Button>
+                  <UploadOutlined /> Click to Upload
+                </Button>
+              </Upload>
+            </Form.Item>
+            </div>
+            <div style={{fontSize:"13px", fontWeight:"300"}} >(File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)</div>
+          </div>
+          <div className="elementWidth">
           <Form.Item
             name="contract"
-            // label="Select Start And End Date"
+            // label="Contract"
             rules={[
               {
                 required: true,
                 message: "Select Contract!",
               },
             ]}
-            className="elementWidth"
+            style={{width:"100%", marginBottom:"5px"}}
           >
             <Select
               showSearch
-              defaultValue="Cancelation Policy"
               placeholder="Select Contract"
               // handleChange={handleChangeType}
               allowClear
@@ -403,11 +479,32 @@ const BasicInfoTab = () => {
               <Option value="Paper Contract">Paper Contract</Option>
               <Option value="Studio Policy">Studio Policy</Option>
             </Select>
-            <Checkbox><span style={{fontSize:"13px", fontWeight:"300"}}> I agree to all the terms and conditions</span></Checkbox>
           </Form.Item>
+            <Checkbox><span style={{fontSize:"13px", fontWeight:"300"}}> I agree to all the terms and conditions</span></Checkbox>
+          </div>
+        </TwoElementWrapper>
+        <TwoElementWrapper>
+          <div className="elementWidth">
+          <Form.Item
+            name="clientNotification"
+            // label="CLIENT NOTIFICATION"
+            valuePropName="checked"
+            rules={[
+              {
+                required: true,
+                message: "Select Contract!",
+              }  
+            ]}
+            style={{marginBottom:"2px"}}
+          >
+            <Checkbox><h4>CLIENT NOTIFICATION</h4></Checkbox>
+          </Form.Item>
+            <div><span style={{fontSize:"13px", fontWeight:"300", marginLeft:"25px"}}>Select this option to enable email and text.</span></div>
+          </div>
             <Form.Item
             name="isVaccinated"
             // label="Photo"
+            valuePropName="checked"
             rules={[
               {
                 required: true,
@@ -418,40 +515,95 @@ const BasicInfoTab = () => {
           >
            <Checkbox><h4>Is Vaccinated</h4></Checkbox>
           </Form.Item>
+          <div className="elementWidth">
+            <TwoElementInnerWrapper>
+              <Form.Item
+                name="isVaccinated"
+                // label="Select Class Series / Membership"
+                valuePropName="checked"
+                rules={[
+                  {
+                    required: true,
+                    message: "Check Is Vaccinated!",
+                  },
+                ]}
+                className="elementWidth"
+              >
+                <Checkbox >
+                  <h4>Is Vaccinated</h4>
+                </Checkbox>
+              </Form.Item>
+              <div
+                className="elementWidth"
+                style={{ display: "flex", alignItems: "baseline" }}
+              >
+                <div style={{ marginLeft: "10px", paddingRight: "10px" }}>
+                  <h4>Proof :</h4>{" "}
+                </div>
+                <Form.Item
+                  name="Proof"
+                  // label="Select Class Series / Membership"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Select Proof!",
+                    },
+                  ]}
+                  className="elementWidth"
+                >
+                  <Upload>
+                    <Button>
+                      <UploadOutlined /> Click to Upload
+                    </Button>
+                  </Upload>
+                </Form.Item>
+              </div>
+            </TwoElementInnerWrapper>
+          </div>
         </TwoElementWrapper>
         <TwoElementWrapper>
-          <Form.Item
-            name="contract"
-            // label="Select Start And End Date"
-            rules={[
-              {
-                required: true,
-                message: "Select Contract!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <div><Checkbox><h4>CLIENT NOTIFICATION</h4></Checkbox></div>
-            <div><span style={{fontSize:"13px", fontWeight:"300", marginLeft:"25px"}}>Select this option to enable email and text.</span></div>
-          </Form.Item>
             <Form.Item
-            name="isVaccinated"
+            name="age"
             // label="Photo"
+            valuePropName="checked"
             rules={[
               {
                 required: true,
-                message: "Select Photo!",
+                message: "CHECK CLIENT IS UNDER 18 YEARS OLD!",
               },
             ]}
             className="elementWidth"
           >
-           <Checkbox><h4>LIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
+           <Checkbox><h4>CLIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
           </Form.Item>
+          <div
+            style={{ display: "flex", alignItems: "baseline" }}
+            className="elementWidth"
+          >
+            <h4 style={{ marginRight: "20px" }}>Status :</h4>
+            <Form.Item
+              //   label="Gender :"
+              name="status"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Select Status!",
+                },
+              ]}
+              style={{ width: "70%" }}
+            >
+              <Radio.Group>
+                <Radio value="male">ACTIVE</Radio>
+                <Radio value="female">INACTIVE</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </div>
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
             name="marketingPreference"
-            label="MARKETING PREFERENCE"
+            label={<h4>MARKETING PREFERENCE</h4>}
+            valuePropName="checked"
             rules={[
               {
                 required: true,
@@ -462,25 +614,6 @@ const BasicInfoTab = () => {
           >
             <CheckboxGroup options={marketing}/>
           </Form.Item>
-          <div style={{ display: "flex", alignItems: "baseline" }} className="elementWidth">
-            <h4 style={{marginRight:"20px"}}>Status :</h4>
-            <Form.Item
-              //   label="Gender :"
-              name="status"
-              rules={[
-                {
-                  required: true,
-                  message: "Please Select Status!",
-                },
-              ]}
-              style={{width:"70%"}}
-            >
-              <Radio.Group>
-                <Radio value="male">ACTIVE</Radio>
-                <Radio value="female">INACTIVE</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </div>
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
@@ -544,7 +677,6 @@ const BasicInfoTab = () => {
           </Button>
         </BottomButtonWrapper>
       </Form>
-    </>
   );
 };
 
