@@ -42,7 +42,6 @@ const MembershipCreateOrUpdate = () => {
                 >
                   <Select
                     showSearch
-                    defaultValue="Client"
                     placeholder="Select Client"
                     // handleChange={handleChangeType}
                     allowClear
@@ -64,7 +63,6 @@ const MembershipCreateOrUpdate = () => {
                   className="elementWidth"
                 >
                   <Select
-                    defaultValue="Days"
                     placeholder="Select Class Series / Membership"
                     // handleChange={handleChangeType}
                     allowClear
@@ -120,7 +118,6 @@ const MembershipCreateOrUpdate = () => {
                   className="elementWidth"
                 >
                   <Select
-                    defaultValue="%"
                     placeholder="Select Discount Type"
                     // handleChange={handleChangeType}
                     allowClear
@@ -197,7 +194,19 @@ const MembershipCreateOrUpdate = () => {
                         suffix={<b>%</b>}
                       />
                     </Form.Item>
-                    <Checkbox style={{ marginLeft: "50px" }}>No Tax</Checkbox>
+                    <Form.Item
+                      // label="GST"
+                      name="noTax"
+                      valuePropName="Checked"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please Check Tax!",
+                        },
+                      ]}
+                    >
+                      <Checkbox style={{ marginLeft: "50px" }}>No Tax</Checkbox>
+                    </Form.Item>
                   </OtherFeesInnerElement>
                   <OtherFeesInnerElement>
                     <Form.Item
@@ -216,7 +225,20 @@ const MembershipCreateOrUpdate = () => {
                         suffix={<b>%</b>}
                       />
                     </Form.Item>
-                    <Checkbox style={{ marginLeft: "50px" }}>No CC</Checkbox>
+                    <Form.Item
+                      // label="GST"
+                      name="cc"
+                      valuePropName="Checked"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please Check CC!",
+                        },
+                      ]}
+                    >
+                      <Checkbox style={{ marginLeft: "50px" }}>No CC</Checkbox>
+                    </Form.Item>
+                    
                   </OtherFeesInnerElement>
                   <h3 style={{ marginBottom: "2px" }}>SELECT PAYMENT :</h3>
                   <PaymentBTN>
