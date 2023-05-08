@@ -3,14 +3,11 @@ import { Tabs } from 'antd';
 import './Tabs.css';
 const { TabPane } = Tabs;
 function callback(key) {}
-const ClientTabs = ({children}) => {
+const ClientTabs = ({tabsOptions}) => {
     
   return (
-    <Tabs onChange={callback} type="card" tabBarGutter={5}  >
-        {children}
-      </Tabs>
+    <Tabs onChange={callback} defaultActiveKey="1" items={tabsOptions}  type="card" tabBarGutter={5}  />
   )
 }
 
 export default ClientTabs
-export {TabPane}

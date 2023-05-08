@@ -4,7 +4,11 @@ export const CreateDesignation= (data) => {
   return axios
     .post("/Master/CreateDesignation", data)
     .then((res) => {
-      notification("success", res.data.message);
+      if(res.data.isSuccess){
+        notification("success", res.data.message);
+    }else{
+        notification("error", res.data.message);
+    }
     })
     .catch((err) => {
       notification("error", err.message);

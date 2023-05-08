@@ -4,7 +4,11 @@ export const CreateProductCategory = (data) => {
   return axios
     .post("/Master/CreateProductCategory", data)
     .then((res) => {
-      notification("success", res.data.message);
+      if (res.data.isSuccess) {
+        notification("success", res.data.message);
+      } else {
+        notification("error", res.data.message);
+      }
     })
     .catch((err) => {
       notification("error", err.message);
@@ -34,7 +38,7 @@ export const DeleteProductCategory = async (id) => {
 export const UpdateProductCategory = (data) => {
   return axios
     .post("/Master/UpdateProductCategory", data)
-    .then((res) => { 
+    .then((res) => {
       notification("success", res.data.message);
     })
     .catch((err) => {
@@ -45,7 +49,7 @@ export const UpdateProductCategory = (data) => {
 export const UpdateCategoryOrders = (data) => {
   return axios
     .post("/Master/UpdateCategoryOrders", data)
-    .then((res) => { 
+    .then((res) => {
       notification("success", res.data.message);
     })
     .catch((err) => {
