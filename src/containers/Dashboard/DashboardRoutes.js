@@ -4,15 +4,22 @@ import Loader from "@iso/components/utility/loader";
 
 const routes = [
   {
-		path: '',
-		component: lazy(() => import('@iso/containers/Widgets/Widgets')),
-		exact: true,
-	},
+    path: '',
+    component: lazy(() => import('@iso/containers/Widgets/Widgets')),
+    exact: true,
+  },
   {
     path: "table_ant",
     component: lazy(() => import("@iso/containers/Tables/AntTables/AntTables")),
   },
-  
+  {
+    path: "state",
+    component: lazy(() => import("@iso/containers/Masters/State/State")),
+  },
+  {
+    path: "city",
+    component: lazy(() => import("@iso/containers/Masters/City/City")),
+  },
   {
     path: "product",
     component: lazy(() => import("@iso/containers/Masters/Product/Product")),
@@ -26,7 +33,7 @@ const routes = [
     component: lazy(() => import("@iso/containers/Masters/Designation/Designation")),
   },
   {
-    path: "durationType",
+    path: "duration Type",
     component: lazy(() => import("@iso/containers/Masters/DurationType/DurationType")),
   },
   {
@@ -36,6 +43,10 @@ const routes = [
   {
     path: "instructors",
     component: lazy(() => import("@iso/containers/Instructor/Index")),
+  },
+  {
+    path: "relation",
+    component: lazy(() => import("@iso/containers/Masters/Relation/Relation")),
   },
 ];
 
