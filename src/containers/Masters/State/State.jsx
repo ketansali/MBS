@@ -23,10 +23,12 @@ import {
 } from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { COMMON } from "../../Constant/Index";
 import { Option } from "antd/lib/mentions";
+import { GetCountry } from "../Country/actions";
 export default function Product() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState({});
+  const [countries, setCountries] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -39,10 +41,20 @@ export default function Product() {
   const handleModal = () => {
     form.resetFields();
     if (!modalActive) {
-      form.setFieldsValue({ category: "", id: "" });
+      debugger
+      form.setFieldsValue({ category: "", id: "", state: "", stateCode: "" });
     }
     setModalActive(!modalActive);
   };
+  useEffect(() => {
+    onCountrySearch();
+  }, []);
+  const onCountrySearch = (name) => {
+    GetCountry(name).then((res) => {
+      setCountries([]);
+      setCountries(res?.responseData);
+    });
+  }
   const getData = () => {
     setLoading(true);
     GetAllState(COMMON.getTableParams(tableParams)).then((res) => {
@@ -64,8 +76,8 @@ export default function Product() {
       .validateFields()
       .then(async (values) => {
         setLoading(true);
-        const { id, state, countryId } = form.getFieldValue();
-
+        const { id, state, countryMasterId, stateCode } = form.getFieldValue();
+        debugger
         if (!id) {
           CreateState(values).then(() => {
             getData(COMMON.getTableParams(tableParams));
@@ -73,8 +85,9 @@ export default function Product() {
         } else {
           const updateData = {
             id: id,
-            countryId: countryId,
-            state: state
+            countryMasterId: countryMasterId,
+            state: state,
+            stateCode: stateCode
           };
           UpdateState(updateData).then(() => {
             getData(COMMON.getTableParams(tableParams));
@@ -200,11 +213,15 @@ export default function Product() {
             showSearch
             defaultValue=""
             placeholder="Select Country"
-            // handleChange={handleChangeType}
+            onSearch={onCountrySearch}
             allowClear
           >
             <Option value="">Select Country</Option>
-
+            {
+              countries && countries.map((c) => (
+                <Option value={c.id} key={c.id}>{c.country}</Option>
+              ))
+            }
           </Select>
 
         </Form.Item>

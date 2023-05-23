@@ -2,15 +2,48 @@ import React from "react";
 import LayoutWrapper from "@iso/components/utility/layoutWrapper.js";
 import PageHeader from "@iso/components/utility/pageHeader";
 import Box from "@iso/components/utility/box";
-import ClientTabs, { TabPane } from "../../Client/Tabs/Tabs";
+
 import BasicTab from "./TabsForm/BasicTab";
+import TabPane from "antd/lib/tabs/TabPane";
+import ClientTabs from "../../Client/Tabs/Tabs";
+
 
 const AddInstructor = () => {
+    const tabsOptions = [
+        {
+            key: "1",
+            label: `BASIC INFORMATION`,
+            children: <BasicTab />
+        },
+        {
+            key: "2",
+            label: `SCHEDULE`,
+            //   children: <MembershipCreateOrUpdate />
+        },
+        {
+            key: "3",
+            label: `SALARY INFORMATION`,
+            //   children: '<AppointmentTab />',
+        },
+        {
+            key: "4",
+            label: `AVAILABILITY`,
+            //   children: "Content of Tab Pane 3",
+        },
+        {
+            key: "5",
+            label: `UNAVAILABILITY`,
+            //   children: "Content of Tab Pane 3",
+        }
+    ];
+
+
     return (
         <LayoutWrapper>
             <PageHeader>INSTRUCTOR</PageHeader>
             <Box>
-                <ClientTabs>
+                <ClientTabs tabsOptions={tabsOptions} />
+                {/* <ClientTabs>
                     <TabPane tab="BASIC INFORMATION" key="1">
                         <BasicTab />
                     </TabPane>
@@ -26,7 +59,7 @@ const AddInstructor = () => {
                     <TabPane tab="UNAVAILABILITY" key="5">
 
                     </TabPane>
-                </ClientTabs>
+                </ClientTabs> */}
             </Box>
         </LayoutWrapper>
     )
