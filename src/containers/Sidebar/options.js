@@ -29,14 +29,6 @@ const options = [
         key: "country",
         label: "sidebar.country",
       },
-      {
-        key: "state",
-        label: "sidebar.state",
-      },
-      {
-        key: "city",
-        label: "sidebar.city",
-      }
     ],
   },
   {
