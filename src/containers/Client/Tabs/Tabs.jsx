@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import './Tabs.css';
-const TabPane = Tabs.TabPane;
+const { TabPane } = Tabs;
 function callback(key) {}
 const ClientTabs = ({tabsOptions}) => {
     

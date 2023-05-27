@@ -93,13 +93,13 @@ const MembershipCreateOrUpdate = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Select Class Series / Membership!",
+                      message: "Enter Class Series / Membership Fees!",
                     },
                   ]}
                   className="elementWidth"
                 >
                   <Input
-                    prefix={<b>CLASS SERIES / MEMBERSHIP SERIES: $</b>}
+                    prefix={<b>CLASS SERIES / MEMBERSHIP FEES: $</b>}
                     placeholder="Username"
                   />
                 </Form.Item>
@@ -112,7 +112,7 @@ const MembershipCreateOrUpdate = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Select Class Series / Membership!",
+                      message: "Select Start Date!",
                     },
                   ]}
                   className="elementWidth"

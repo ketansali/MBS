@@ -1,14 +1,26 @@
 const options = [
   {
-		key: '',
-		label: 'sidebar.dashboard',
-		leftIcon: 'ion-bag',
-	},
+    key: '',
+    label: 'sidebar.dashboard',
+    leftIcon: 'ion-bag',
+  },
   {
     key: "master",
     label: "sidebar.master",
     leftIcon: "ion-bag",
     children: [
+      {
+        key: "country",
+        label: "sidebar.country",
+      },
+      {
+        key: "state",
+        label: "sidebar.state",
+      },
+      {
+        key: "city",
+        label: "sidebar.city",
+      },
       {
         key: "product",
         label: "sidebar.product",
@@ -22,20 +34,27 @@ const options = [
         label: "sidebar.designation",
       },
       {
-        key: "durationType",
+        key: "duration Type",
         label: "sidebar.durationType",
       },
       {
-        key: "country",
-        label: "sidebar.country",
+        key: "relation",
+        label: "sidebar.relation",
       },
+     
+      
     ],
   },
   {
-		key: 'client',
-		label: 'sidebar.client',
-		leftIcon: 'ion-bag',
-	},
+    key: 'client',
+    label: 'sidebar.client',
+    leftIcon: 'ion-bag',
+  },
+  {
+    key: 'Instructors',
+    label: 'Instructors',
+    leftIcon: 'ion-bag',
+  },
   // {
   //   key: "table",
   //   label: "sidebar.tables",

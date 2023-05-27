@@ -3,9 +3,7 @@ import {
   TwoElementWrapper,
   TwoElementInnerWrapper,
 } from "@iso/components/UI/Form/FormUI.style";
-import {
-  BottomButtonWrapper,
-} from "../../Membership/Membership.style";
+import { BottomButtonWrapper } from "../../Membership/Membership.style";
 import Button from "@iso/components/uielements/button";
 import Input from "@iso/components/uielements/input";
 import Datepicker from "@iso/components/uielements/datePicker";
@@ -39,10 +37,10 @@ const BasicInfoTab = () => {
     setCHData(onChangeVal);
   };
   const marketing = [
-    { label: 'EMAIL', value: 'EMAIL' },
-    { label: 'MAIL', value: 'MAIL' },
-    { label: 'SMS', value: 'SMS' },
-    { label: 'WHATSAPP', value: 'WHATSAPP' },
+    { label: "EMAIL", value: "EMAIL" },
+    { label: "MAIL", value: "MAIL" },
+    { label: "SMS", value: "SMS" },
+    { label: "WHATSAPP", value: "WHATSAPP" },
   ];
   const onCountrySearch = (name) => {
      GetCountry(name).then((res) => {
@@ -339,7 +337,9 @@ const BasicInfoTab = () => {
                 ]}
                 className="elementWidth"
               >
-                <Checkbox className="clsTextMe"><h4>TEXT ME</h4></Checkbox>
+                <Checkbox className="clsTextMe">
+                  <h4>TEXT ME</h4>
+                </Checkbox>
               </Form.Item>
             </TwoElementInnerWrapper>
           </div>
@@ -515,6 +515,51 @@ const BasicInfoTab = () => {
           >
            <Checkbox><h4>Is Vaccinated</h4></Checkbox>
           </Form.Item>
+          <div className="elementWidth">
+            <TwoElementInnerWrapper>
+              <Form.Item
+                name="isVaccinated"
+                // label="Select Class Series / Membership"
+                valuePropName="checked"
+                rules={[
+                  {
+                    required: true,
+                    message: "Check Is Vaccinated!",
+                  },
+                ]}
+                className="elementWidth"
+              >
+                <Checkbox >
+                  <h4>Is Vaccinated</h4>
+                </Checkbox>
+              </Form.Item>
+              <div
+                className="elementWidth"
+                style={{ display: "flex", alignItems: "baseline" }}
+              >
+                <div style={{ marginLeft: "10px", paddingRight: "10px" }}>
+                  <h4>Proof :</h4>{" "}
+                </div>
+                <Form.Item
+                  name="Proof"
+                  // label="Select Class Series / Membership"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Select Proof!",
+                    },
+                  ]}
+                  className="elementWidth"
+                >
+                  <Upload>
+                    <Button>
+                      <UploadOutlined /> Click to Upload
+                    </Button>
+                  </Upload>
+                </Form.Item>
+              </div>
+            </TwoElementInnerWrapper>
+          </div>
         </TwoElementWrapper>
         <TwoElementWrapper>
             <Form.Item
@@ -531,8 +576,11 @@ const BasicInfoTab = () => {
           >
            <Checkbox><h4>CLIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
           </Form.Item>
-          <div style={{ display: "flex", alignItems: "baseline" }} className="elementWidth">
-            <h4 style={{marginRight:"20px"}}>Status :</h4>
+          <div
+            style={{ display: "flex", alignItems: "baseline" }}
+            className="elementWidth"
+          >
+            <h4 style={{ marginRight: "20px" }}>Status :</h4>
             <Form.Item
               //   label="Gender :"
               name="status"
@@ -542,7 +590,7 @@ const BasicInfoTab = () => {
                   message: "Please Select Status!",
                 },
               ]}
-              style={{width:"70%"}}
+              style={{ width: "70%" }}
             >
               <Radio.Group>
                 <Radio value="male">ACTIVE</Radio>
