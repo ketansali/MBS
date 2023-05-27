@@ -23,10 +23,14 @@ import {
 } from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { COMMON } from "../../Constant/Index";
 import { Option } from "antd/lib/mentions";
+import { GetCountry, GetCountryByState } from "../Country/actions";
+
 export default function Product() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState({});
+  const [countries, setCountries] = useState([]);
+  const [state, setState] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -39,10 +43,39 @@ export default function Product() {
   const handleModal = () => {
     form.resetFields();
     if (!modalActive) {
-      form.setFieldsValue({ category: "", id: "" });
+      setState([]);
+      form.setFieldsValue({ category: "", id: "", countryMasterId: "", stateMasterId: "", city: "" });
     }
     setModalActive(!modalActive);
   };
+
+  useEffect(() => {
+    onCountrySearch();
+  }, []);
+
+  const onCountrySearch = (name) => {
+    GetCountry(name).then((res) => {
+      setCountries([]);
+      setCountries(res?.responseData);
+    });
+  }
+
+
+  const countryChange = (id, name, stateId = null) => {
+    if (id != undefined && id != "") {
+      GetCountryByState(id, "").then((res) => {
+        setState([]);
+        setState(res?.responseData);
+        if (stateId != null) {
+          form.setFieldsValue({ stateMasterId: stateId });
+        }
+      });
+    }
+    else {
+      setState([]);
+    }
+  }
+
   const getData = () => {
     setLoading(true);
     GetAllCity(COMMON.getTableParams(tableParams)).then((res) => {
@@ -101,7 +134,8 @@ export default function Product() {
     });
   };
   const handleUpdate = (record) => {
-    form.setFieldsValue({ category: record.category, id: record.id });
+    form.setFieldsValue({ category: record.category, id: record.id, countryMasterId: record.countryId, city: record.city });
+    countryChange(record.countryId, '', record.stateId);
     setModalActive(!modalActive);
   };
   const handleSearch = (e) => {
@@ -206,10 +240,16 @@ export default function Product() {
             showSearch
             defaultValue=""
             placeholder="Select Country"
-            // handleChange={handleChangeType}
+            onSearch={onCountrySearch}
+            onChange={countryChange}
             allowClear
           >
             <Option value="">Select Country</Option>
+            {
+              countries && countries.map((c) => (
+                <Option value={c.id} key={c.id}>{c.country}</Option>
+              ))
+            }
 
           </Select>
 
@@ -234,6 +274,11 @@ export default function Product() {
             allowClear
           >
             <Option value="">Select State</Option>
+            {
+              state && state.map((c) => (
+                <Option value={c.id} key={c.id}>{c.state}</Option>
+              ))
+            }
 
           </Select>
 
@@ -250,7 +295,7 @@ export default function Product() {
         >
           <Input placeholder="Enter City" />
         </Form.Item>
-       
+
       </Form>
 
     </Modal>

@@ -41,6 +41,10 @@ const options = [
         key: "relation",
         label: "sidebar.relation",
       },
+      {
+        key: "location",
+        label: "sidebar.contract",
+      },
      
       
     ],
