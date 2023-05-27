@@ -14,6 +14,8 @@ import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
 import { UploadOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
 import { GetCountry, GetCountryByState, GetStateByCity } from "../../../Masters/Country/actions";
+import moment from "moment";
+import { CreateClient } from "../../actions";
 const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
@@ -90,15 +92,29 @@ const BasicInfoTab = () => {
         });
       }
   }
+  const submitBasicInfo = ()=>{
+    
+  form
+      .validateFields()
+      .then(async (values) => {
+        const {
+          firstName,lastName, birthDay,address,country,state,city,zip,email,phone,refferedBy,isApplicant18, status    
+      } = form.getFieldValue();
+        CreateClient({firstName,lastName, birthDay:moment(birthDay).format('YYYY-MM-DD'),address,country,state,city,zip,email,phone,refferedBy,isApplicant18,status  }).then(()=>{
+
+        });
+      })
+
+  }
   return (
-      <Form form={form} name="currency" layout="vertical" scrollToFirstError>
+      <Form form={form} name="currency" layout="vertical" scrollToFirstError onFinish={submitBasicInfo}>
         <TwoElementWrapper>
           <Form.Item
             name="firstName"
             // label="First Name"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter First Name!",
               },
             ]}
@@ -111,7 +127,7 @@ const BasicInfoTab = () => {
             // label="Last Name"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Last Name!",
               },
             ]}
@@ -128,8 +144,8 @@ const BasicInfoTab = () => {
               name="gender"
               rules={[
                 {
-                  required: true,
-                  message: "Please Enter Gender!",
+                  required: false,
+                  message: "Please Select Gender!",
                 },
               ]}
               labelCol={{ span: 6 }}
@@ -142,17 +158,17 @@ const BasicInfoTab = () => {
             </Form.Item>
           </div>
           <Form.Item
-            name="membership"
+            name="birthDay"
             // label="Select Class Series / Membership"
             rules={[
               {
-                required: true,
-                message: "Select Class Series / Membership!",
+                required: false,
+                message: "Select Birthday!",
               },
             ]}
             className="elementWidth"
           >
-            <Datepicker placeholder="Birthday" />
+            <Datepicker placeholder="Birthday" format={'YYYY/MM/DD'} />
           </Form.Item>
         </TwoElementWrapper>
 
@@ -162,7 +178,7 @@ const BasicInfoTab = () => {
             // label="Select Class Series / Membership"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Address!",
               },
             ]}
@@ -178,7 +194,7 @@ const BasicInfoTab = () => {
                 // label="Select Start And End Date"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Select Country!",
                   },
                 ]}
@@ -204,7 +220,7 @@ const BasicInfoTab = () => {
                 // label="Select Start And End Date"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Select State!",
                   },
                 ]}
@@ -238,7 +254,7 @@ const BasicInfoTab = () => {
                 // label="Select Class Series / Membership"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Select city!",
                   },
                 ]}
@@ -263,7 +279,7 @@ const BasicInfoTab = () => {
                 // label="Select Class Series / Membership"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "ZIP!",
                   },
                 ]}
@@ -279,7 +295,7 @@ const BasicInfoTab = () => {
             // label="Select Start And End Date"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Email!",
               },
             ]}
@@ -295,7 +311,7 @@ const BasicInfoTab = () => {
             // label="Select Start And End Date"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Phone!",
               },
             ]}
@@ -310,7 +326,7 @@ const BasicInfoTab = () => {
                 // label="Select Class Series / Membership"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Enter Mobile!",
                   },
                 ]}
@@ -326,12 +342,12 @@ const BasicInfoTab = () => {
                 onClick={handleMobileAndTypeField}
               />
               <Form.Item
-                name="textMe"
+                name="sendTxtMsg"
                 // label="TEXT ME"
                 valuePropName="checked"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Text Me!",
                   },
                 ]}
@@ -354,7 +370,7 @@ const BasicInfoTab = () => {
                   // label="Select Class Series / Membership"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Enter Mobile!",
                     },
                   ]}
@@ -367,7 +383,7 @@ const BasicInfoTab = () => {
                   // label="Type"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Select Type!",
                     },
                   ]}
@@ -397,11 +413,11 @@ const BasicInfoTab = () => {
         ))}
         <TwoElementWrapper>
           <Form.Item
-            name="referredBy"
+            name="refferedBy"
             // label="Select Start And End Date"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Referred By!",
               },
             ]}
@@ -414,7 +430,7 @@ const BasicInfoTab = () => {
             // label="Pref Location"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Select Pref Location!",
               },
             ]}
@@ -441,7 +457,7 @@ const BasicInfoTab = () => {
               valuePropName="fileList"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Select Image!",
                 },
               ]}
@@ -462,7 +478,7 @@ const BasicInfoTab = () => {
             // label="Contract"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Select Contract!",
               },
             ]}
@@ -491,7 +507,7 @@ const BasicInfoTab = () => {
             valuePropName="checked"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Select Contract!",
               }  
             ]}
@@ -507,7 +523,7 @@ const BasicInfoTab = () => {
             valuePropName="checked"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Check Is Vaccinated!",
               },
             ]}
@@ -523,7 +539,7 @@ const BasicInfoTab = () => {
                 valuePropName="checked"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Check Is Vaccinated!",
                   },
                 ]}
@@ -545,7 +561,7 @@ const BasicInfoTab = () => {
                   // label="Select Class Series / Membership"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Select Proof!",
                     },
                   ]}
@@ -563,12 +579,12 @@ const BasicInfoTab = () => {
         </TwoElementWrapper>
         <TwoElementWrapper>
             <Form.Item
-            name="age"
+            name="isApplicant18"
             // label="Photo"
             valuePropName="checked"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "CHECK CLIENT IS UNDER 18 YEARS OLD!",
               },
             ]}
@@ -586,7 +602,7 @@ const BasicInfoTab = () => {
               name="status"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please Select Status!",
                 },
               ]}
@@ -606,7 +622,7 @@ const BasicInfoTab = () => {
             valuePropName="checked"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "MARKETING PREFERENCE!",
               },
             ]}
@@ -617,11 +633,11 @@ const BasicInfoTab = () => {
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
-            name="name"
+            name="emergencyName"
             label="EMERGENCY CONTACT"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Name!",
               },
             ]}
@@ -654,11 +670,11 @@ const BasicInfoTab = () => {
         </TwoElementWrapper>
         <TwoElementWrapper>
           <Form.Item
-            name="phone"
+            name="emergencyPhone"
             // label=""
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Enter Phone!",
               },
             ]}
