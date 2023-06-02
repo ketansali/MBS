@@ -5,59 +5,48 @@ import LayoutContentWrapper from "@iso/components/utility/layoutWrapper";
 import Box from "@iso/components/utility/box";
 import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
-import { Form, Select, Spin } from "antd";
+import { Form, Spin } from "antd";
 import Input from "@iso/components/uielements/input";
-import { StatusTag } from "@iso/components/uielements/styles/Statustag.style";
+
 import {
-  CreateState,
-  DeleteState,
-  GetAllState,
-  UpdateState,
+  CreateContract,
+  DeleteContract,
+  GetAllContract,
+  UpdateContract,
 } from "./actions";
-import InputNumber from "@iso/components/uielements/InputNumber";
+
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
 import {
   AddItemButtonWrapper,
   ActionWrapper,
 } from "@iso/components/uielements/DataTableStyle/DataTable.Style";
+import Select, { SelectOption } from '@iso/components/uielements/select';
 import { COMMON } from "../../Constant/Index";
-import { Option } from "antd/lib/mentions";
-import { GetCountry } from "../Country/actions";
-export default function Product() {
+const Option = SelectOption;
+export default function DurationType() {
   const [modalActive, setModalActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState({});
-  const [countries, setCountries] = useState([]);
+  const [durationType, setDurationType] = useState({});
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
       pageSize: 10,
     },
   });
-  let sortArray = [];
   const [form] = Form.useForm();
 
   const handleModal = () => {
     form.resetFields();
     if (!modalActive) {
-      form.setFieldsValue({ category: "", id: "", state: "", stateCode: "", countryMasterId: "" });
+      form.setFieldsValue({ id: "", name: "", value: "", type: "" });
     }
     setModalActive(!modalActive);
   };
-  useEffect(() => {
-    onCountrySearch();
-  }, []);
-  const onCountrySearch = (name) => {
-    GetCountry(name).then((res) => {
-      setCountries([]);
-      setCountries(res?.responseData);
-    });
-  }
   const getData = () => {
     setLoading(true);
-    GetAllState(COMMON.getTableParams(tableParams)).then((res) => {
-      setCategories(res?.responseData);
+    GetAllContract(COMMON.getTableParams(tableParams)).then((res) => {
+      setDurationType(res?.responseData);
       setTableParams({
         ...tableParams,
         pagination: {
@@ -67,7 +56,7 @@ export default function Product() {
       });
       setLoading(false);
     }).catch(() => {
-      setLoading(false)
+      setLoading(false);
     });
   };
   const handleSubmit = () => {
@@ -75,19 +64,20 @@ export default function Product() {
       .validateFields()
       .then(async (values) => {
         setLoading(true);
-        const { id, state, countryMasterId, stateCode } = form.getFieldValue();
+        const { id, name, value, type } = form.getFieldValue();
+
         if (!id) {
-          CreateState(values).then(() => {
+          CreateContract(values).then(() => {
             getData(COMMON.getTableParams(tableParams));
           });
         } else {
           const updateData = {
             id: id,
-            countryMasterId: countryMasterId,
-            state: state,
-            stateCode: stateCode
+            name: name,
+            value: value,
+            type: type,
           };
-          UpdateState(updateData).then(() => {
+          UpdateContact(updateData).then(() => {
             getData(COMMON.getTableParams(tableParams));
           });
         }
@@ -105,57 +95,34 @@ export default function Product() {
   const handleDelete = (id) => {
     Swal().then((willDelete) => {
       if (willDelete) {
-        DeleteState(id).then(() => {
+        DeleteContract(id).then(() => {
           getData();
         });
       }
     });
   };
   const handleUpdate = (record) => {
-    form.setFieldsValue({ category: record.category, id: record.id, state: record.state, stateCode: record.stateCode, countryMasterId: record.countryId });
+    form.setFieldsValue({ id: record.id, name: record.name, value: record.value, type: record.type });
     setModalActive(!modalActive);
   };
   const handleSearch = (e) => {
-    GetAllState(COMMON.getTableParams(e)).then((res) => {
-      setCategories(res?.responseData);
+    GetAllContracts(COMMON.getTableParams(e)).then((res) => {
+      setDurationType(res?.responseData);
       setLoading(false);
     });
   };
 
-  const handleSortOrder = (Order, id) => {
-    const orderData = sortArray.filter((e, index) => {
-      if (e && e.id === id) {
-        return {
-          e, index
-        }
-      }
-    });
-    if (orderData.length !== 0) {
-      sortArray.splice(orderData.index, 1);
-      sortArray.push({ id: id, sortOrder: Order });
-    }
-    if (orderData.length === 0) {
-      sortArray.push({ id: id, sortOrder: Order });
-    }
-  };
-
   const columns = [
     {
-      title: "Date",
-      dataIndex: "createdOn",
-      key: "createdOn",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
       sorter: true,
     },
     {
-      title: "State",
-      dataIndex: "state",
-      key: "state",
-      sorter: true,
-    },
-    {
-      title: "Country",
-      dataIndex: "country",
-      key: "country",
+      title: "Validity",
+      dataIndex: "validity",
+      key: "validity",
       sorter: true,
     },
     {
@@ -182,98 +149,106 @@ export default function Product() {
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setCategories([]);
+      setDurationType([]);
     }
   };
+  const handleChangeType = (value) => {
+    form.setFieldsValue({ type: value });
+  }
   const modal = () => (
     <Modal
       open={modalActive}
       onClose={handleModal}
-      title={form.getFieldValue().id ? "Update State" : "Add New State"}
+      title={
+        form.getFieldValue().id ? "Update DurationType" : "Add New DurationType"
+      }
       okText={form.getFieldValue().id ? "Update" : "Add"}
       onOk={handleSubmit}
       onCancel={handleModal}
-      bodyStyle={{ borderRadius: "50px" }}
     >
-      <Form form={form} name="product" layout="vertical" scrollToFirstError>
+      <Form
+        form={form}
+        name="durationType"
+        layout="vertical"
+        scrollToFirstError
+      >
         <Form.Item
-          name="countryMasterId"
-          label="Country"
+          name="name"
+          label="Name"
+          placeholder="Enter Name"
           rules={[
             {
               required: true,
-              message: "Select Country!",
+              message: "Enter Name!",
             },
           ]}
-          className="elementWidth"
+        >
+          <Input placeholder="Enter Name" />
+        </Form.Item>
+        <Form.Item
+          name="value"
+          label="Value"
+          placeholder="Enter Value"
+          rules={[
+            {
+              required: true,
+              message: "Enter Value!",
+            },
+          ]}
+        >
+          <Input placeholder="Enter Value" />
+        </Form.Item>
+        <Form.Item
+          name="type"
+          label="Type"
+          rules={[
+            {
+              required: true,
+              message: "Select Type"
+            },
+          ]}
         >
           <Select
-            showSearch
-            defaultValue=""
-            placeholder="Select Country"
-            onSearch={onCountrySearch}
+            defaultValue="Days"
+            placeholder="Select Type"
+            handleChange={handleChangeType}
             allowClear
           >
-            <Option value="">Select Country</Option>
-            {
-              countries && countries.map((c) => (
-                <Option value={c.id} key={c.id}>{c.country}</Option>
-              ))
-            }
+            <Option value="Days">Days</Option>
+            <Option value="Months">Months</Option>
+            <Option value="Years">Years</Option>
           </Select>
-
-        </Form.Item>
-
-        <Form.Item
-          name="state"
-          label="State"
-          rules={[
-            {
-              required: true,
-              message: "Enter State!",
-            },
-          ]}
-        >
-          <Input placeholder="Enter State" />
-        </Form.Item>
-        <Form.Item
-          name="stateCode"
-          label="State Code"
-
-        >
-          <Input placeholder="Enter State Code" />
         </Form.Item>
       </Form>
-
     </Modal>
   );
   return (
     <LayoutContentWrapper>
       <AddItemButtonWrapper>
         <div></div>
-        <div>
-          <ActionBtn type="primary" onClick={handleModal}>
-            ADD STATE
-          </ActionBtn>
-        </div>
+        <ActionBtn type="primary" onClick={handleModal}>
+          Add DurationType
+        </ActionBtn>
       </AddItemButtonWrapper>
 
       <Box>
         <ContentHolder style={{ marginTop: 0, overflow: "hidden" }}>
           {modal()}
-          <Spin spinning={loading}>
-            {categories && (
-              <DataTable
-                columns={columns}
-                data={categories.data}
-                title="State"
-                handleSearch={handleSearch}
-                handlePage={handlePage}
-                pagination={tableParams.pagination}
-                rowKey="id"
-              />
-            )}
-          </Spin>
+          {
+            <Spin spinning={loading}>
+              {durationType && (
+                <DataTable
+                  columns={columns}
+                  data={durationType.data}
+                  title="DurationType"
+                  handleSearch={handleSearch}
+                  handlePage={handlePage}
+                  pagination={tableParams.pagination}
+                  rowKey="id"
+                />
+              )}
+            </Spin>
+          }
         </ContentHolder>
       </Box>
     </LayoutContentWrapper>

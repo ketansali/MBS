@@ -63,7 +63,6 @@ export default function DurationType() {
     form
       .validateFields()
       .then(async (values) => {
-        debugger
         setLoading(true);
         const { id, name, value, type } = form.getFieldValue();
 
