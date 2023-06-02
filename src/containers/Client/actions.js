@@ -24,3 +24,14 @@ export const GetAllClients = (body) => {
       notification("error", err.message);
     });
 };
+
+export const GetAllContract = (body) => {
+  return axios
+    .post("/Master/GetAllContracts", body)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      notification("error", err.message);
+    });
+};

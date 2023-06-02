@@ -52,7 +52,7 @@ const options = [
   },
   {
     key: 'Instructors',
-    label: 'Instructors',
+    label: 'sidebar.instructors',
     leftIcon: 'ion-bag',
   },
   // {

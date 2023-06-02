@@ -8,6 +8,11 @@ const COMMON = {
           sortColumn: params?.columnKey ? params?.columnKey : "",
           sortOrder: params?.order ? params?.order : "",
         };
+      },
+      convertToBase64 : (image) =>{
+        const render = new FileReader();
+       return render.readAsDataURL(image);
+        
       }
 };
 export default COMMON

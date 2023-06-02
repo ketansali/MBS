@@ -15,7 +15,10 @@ import "./Styles/BasicInfo.css";
 import { UploadOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
 import { GetCountry, GetCountryByState, GetStateByCity } from "../../../Masters/Country/actions";
 import moment from "moment";
-import { CreateClient } from "../../actions";
+import { CreateClient, GetAllContract } from "../../actions";
+import { GetAllRelation } from "../../../Masters/Relation/actions";
+import { GetAllLocation } from "../../../Masters/Location/actions";
+import { COMMON } from "../../../Constant/Index";
 const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
@@ -23,6 +26,11 @@ const BasicInfoTab = () => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [city, setCity] = useState([]);
+  const [relations, setRelations] = useState([]);
+  const [contract, setContract] = useState([]);
+  const [location, setLocation] = useState([]);
+  const [isVaccinated, setIsVaccinated] = useState(false);
+  const [base64Image, setBase64Image] = useState(null);
 
   const handleMobileAndTypeField = () => {
     setCHData([...chData, { contact: "", contactType: "" }]);
@@ -45,24 +53,40 @@ const BasicInfoTab = () => {
     { label: "WHATSAPP", value: "WHATSAPP" },
   ];
   const onCountrySearch = (name) => {
-     GetCountry(name).then((res) => {
+    GetCountry(name).then((res) => {
       setCountries([]);
       setCountries(res?.responseData);
     });
   }
   const onStateSearch = (name) => {
-    const {country } = form.getFieldValue();
-     GetCountryByState(country,name).then((res) => {
+    const { country } = form.getFieldValue();
+    GetCountryByState(country, name).then((res) => {
       setStates([]);
       setStates(res?.responseData);
     });
   }
   const onCitySearch = (name) => {
-    const {state } = form.getFieldValue();
-     GetStateByCity(state,name).then((res) => {
-       setCity([]);
-       setCity(res?.responseData);
+    const { state } = form.getFieldValue();
+    GetStateByCity(state, name).then((res) => {
+      setCity([]);
+      setCity(res?.responseData);
     });
+  }
+  const getAllRelations = (value) => {
+    GetAllRelation({ pageNo: 1, searchValue: value, length: 0, sortColumn: "", sortOrder: "" }).then((res) => {
+      setRelations(res?.responseData.data);
+    })
+  }
+  const getAllContracts = (value) => {
+    GetAllContract({ pageNo: 1, searchValue: value, length: 0, sortColumn: "", sortOrder: "" }).then((res) => {
+      setContract(res?.responseData.data);
+    })
+  }
+
+  const getAllLocation = (value) => {
+    GetAllLocation({ pageNo: 1, searchValue: value, length: 0, sortColumn: "", sortOrder: "" }).then((res) => {
+      setLocation(res?.responseData.data);
+    })
   }
   useEffect(() => {
     GetCountry("").then((res) => {
@@ -70,259 +94,324 @@ const BasicInfoTab = () => {
       setStates([]);
       setCity([]);
     });
+    getAllRelations();
+    getAllContracts();
+    getAllLocation();
   }, [])
 
-  const handleChangeCountryByState = (id)=>{
-      if(id){
-        GetCountryByState(id,"").then(res=> {
-          form.resetFields(['state']);
-          form.resetFields(['city']);
-          setStates([]);
-          setCity([]);
-          setStates(res?.responseData);
-        });
-      }
+  const handleChangeCountryByState = (id) => {
+    if (id) {
+      GetCountryByState(id, "").then(res => {
+        form.resetFields(['state']);
+        form.resetFields(['city']);
+        setStates([]);
+        setCity([]);
+        setStates(res?.responseData);
+      });
+    }
   }
-  const handleChangeStateByCity = (id)=>{
-      if(id){
-        GetStateByCity(id).then(res=> {
-          form.resetFields(['city']);
-          setCity([]);
-          setCity(res?.responseData);
-        });
-      }
+  const handleChangeStateByCity = (id) => {
+    if (id) {
+      GetStateByCity(id).then(res => {
+        form.resetFields(['city']);
+        setCity([]);
+        setCity(res?.responseData);
+      });
+    }
   }
-  const submitBasicInfo = ()=>{
+  const handleImageUpload = (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      form.setFieldsValue({studentPhotoaaaaa:event.target.result})
+
+    };
+    reader.readAsDataURL(file);
+  };
+  const handleClientImage = (image)=>{
+    const {thumbUrl}= image.file
+    console.log(image.file.thumbUrl);
+    // form.setFieldsValue({studentPhotoa:image.file})
     
-  form
+  }
+  const submitBasicInfo = () => {
+    console.log(form.getFieldValue());
+    form
       .validateFields()
       .then(async (values) => {
         const {
-          firstName,lastName, birthDay,address,country,state,city,zip,email,phone,refferedBy,isApplicant18, status    
-      } = form.getFieldValue();
-        CreateClient({firstName,lastName, birthDay:moment(birthDay).format('YYYY-MM-DD'),address,country,state,city,zip,email,phone,refferedBy,isApplicant18,status  }).then(()=>{
+          firstName, lastName, birthDay, address, country, state, city, zip, email, phone, refferedBy, isApplicant18, status, isCovidvaccinated, gender, sendTxtMsg,emergencyPhone, emergencyRelationId, emergencyName,studentPhoto
+        } = form.getFieldValue();
+        console.log({ firstName, lastName, birthDay, address, country, state, city, zip, email, phone, refferedBy, isApplicant18, status, isCovidvaccinated, gender,sendTxtMsg,emergencyPhone, emergencyRelationId, emergencyName, studentPhoto });
+        // CreateClient({firstName,lastName, birthDay:moment(birthDay).format('YYYY-MM-DD'),address,country,state,city,zip,email,phone,refferedBy,isApplicant18,status,isCovidvaccinated  }).then(()=>{
 
-        });
+        // });
       })
 
   }
+  const handleIsVaccinated = (e) => {
+    setIsVaccinated(e.target.checked);
+  }
   return (
-      <Form form={form} name="currency" layout="vertical" scrollToFirstError onFinish={submitBasicInfo}>
-        <TwoElementWrapper>
+    <Form form={form} name="currency" layout="vertical" scrollToFirstError onFinish={submitBasicInfo}>
+      <TwoElementWrapper>
+        <Form.Item
+          name="firstName"
+          // label="First Name"
+          rules={[
+            {
+              required: true,
+              message: "Enter First Name!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="First Name" />
+        </Form.Item>
+        <Form.Item
+          name="lastName"
+          // label="Last Name"
+          rules={[
+            {
+              required: true,
+              message: "Enter Last Name!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Last Name" />
+        </Form.Item>
+      </TwoElementWrapper>
+      <TwoElementWrapper>
+        <div style={{ display: "flex", alignItems: "baseline" }}>
+          <h4 style={{ marginRight: "20px" }}>Gender :</h4>
           <Form.Item
-            name="firstName"
-            // label="First Name"
+            //   label="Gender :"
+            name="gender"
             rules={[
               {
                 required: false,
-                message: "Enter First Name!",
+                message: "Please Select Gender!",
               },
             ]}
-            className="elementWidth"
+            labelCol={{ span: 6 }}
           >
-            <Input placeholder="First Name" />
+            <Radio.Group>
+              <Radio value="male">MALE</Radio>
+              <Radio value="female">FEMALE</Radio>
+              <Radio value="nonBinary">NON BINARY</Radio>
+            </Radio.Group>
           </Form.Item>
-          <Form.Item
-            name="lastName"
-            // label="Last Name"
-            rules={[
-              {
-                required: false,
-                message: "Enter Last Name!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Last Name" />
-          </Form.Item>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
-          <div style={{ display: "flex", alignItems: "baseline" }}>
-            <h4 style={{ marginRight: "20px" }}>Gender :</h4>
+        </div>
+        <Form.Item
+          name="birthDay"
+          // label="Select Class Series / Membership"
+          rules={[
+            {
+              required: false,
+              message: "Select Birthday!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Datepicker placeholder="Birthday" format={'YYYY/MM/DD'} />
+        </Form.Item>
+      </TwoElementWrapper>
+
+      <TwoElementWrapper>
+        <Form.Item
+          name="address"
+          // label="Select Class Series / Membership"
+          rules={[
+            {
+              required: false,
+              message: "Enter Address!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Address" />
+        </Form.Item>
+
+        <div className="elementWidth">
+          <TwoElementInnerWrapper>
             <Form.Item
-              //   label="Gender :"
-              name="gender"
+              name="country"
+              // label="Select Start And End Date"
               rules={[
                 {
                   required: false,
-                  message: "Please Select Gender!",
+                  message: "Select Country!",
                 },
               ]}
-              labelCol={{ span: 6 }}
+              className="elementWidth"
             >
-              <Radio.Group>
-                <Radio value="male">MALE</Radio>
-                <Radio value="female">FEMALE</Radio>
-                <Radio value="nonBinary">NON BINARY</Radio>
-              </Radio.Group>
+              <Select
+                showSearch
+                placeholder="Select Country"
+                onChange={handleChangeCountryByState}
+                onSearch={onCountrySearch}
+                allowClear
+                filterOption={false}
+              >
+                {
+                  countries && countries.map((c) => (
+                    <Option value={c.id} key={c.id}>{c.country}</Option>
+                  ))
+                }
+              </Select>
             </Form.Item>
-          </div>
-          <Form.Item
-            name="birthDay"
-            // label="Select Class Series / Membership"
-            rules={[
-              {
-                required: false,
-                message: "Select Birthday!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Datepicker placeholder="Birthday" format={'YYYY/MM/DD'} />
-          </Form.Item>
-        </TwoElementWrapper>
+            <Form.Item
+              name="state"
+              // label="Select Start And End Date"
+              rules={[
+                {
+                  required: false,
+                  message: "Select State!",
+                },
+              ]}
+              className="elementWidth"
+            >
+              <Select
+                showSearch
+                placeholder="Select State"
+                onChange={handleChangeStateByCity}
+                onSearch={onStateSearch}
+                allowClear
+                filterOption={false}
+              >
+                {
+                  states.map((e) => (
+                    <Option value={e.id} key={e.id}>{e.state}</Option>
+                  ))
+                }
+              </Select>
+            </Form.Item>
+          </TwoElementInnerWrapper>
+        </div>
 
-        <TwoElementWrapper>
-          <Form.Item
-            name="address"
-            // label="Select Class Series / Membership"
-            rules={[
-              {
-                required: false,
-                message: "Enter Address!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Address" />
-          </Form.Item>
+      </TwoElementWrapper>
 
+      <TwoElementWrapper>
+        <div className="elementWidth">
+          <TwoElementInnerWrapper>
+            <Form.Item
+              name="city"
+              // label="Select Class Series / Membership"
+              rules={[
+                {
+                  required: false,
+                  message: "Select city!",
+                },
+              ]}
+              className="elementWidth"
+            >
+              <Select
+                showSearch
+                placeholder="Select City"
+                allowClear
+                onSearch={onCitySearch}
+                filterOption={false}
+              >
+                {
+                  city.map((e) => (
+                    <Option value={e.id} key={e.id}>{e.city}</Option>
+                  ))
+                }
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name="zip"
+              // label="Select Class Series / Membership"
+              rules={[
+                {
+                  required: false,
+                  message: "ZIP!",
+                },
+              ]}
+              className="elementWidth"
+            >
+              <Input placeholder="Zip" />
+            </Form.Item>
+
+          </TwoElementInnerWrapper>
+        </div>
+        <Form.Item
+          name="email"
+          // label="Select Start And End Date"
+          rules={[
+            {
+              required: false,
+              message: "Enter Email!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Email" />
+        </Form.Item>
+      </TwoElementWrapper>
+
+      <TwoElementWrapper>
+        <Form.Item
+          name="phone"
+          // label="Select Start And End Date"
+          rules={[
+            {
+              required: false,
+              message: "Enter Phone!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Phone" />
+        </Form.Item>
+        <div className="elementWidth">
+          <TwoElementInnerWrapper>
+            <Form.Item
+              name="contact"
+              // label="Select Class Series / Membership"
+              rules={[
+                {
+                  required: false,
+                  message: "Enter Mobile!",
+                },
+              ]}
+              className="clsMobileElement"
+            >
+              <InputNumber placeholder="Mobile" />
+            </Form.Item>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="primary"
+              icon={<PlusOutlined />}
+              shape="circle"
+              onClick={handleMobileAndTypeField}
+            />
+            <Form.Item
+              name="sendTxtMsg"
+              // label="TEXT ME"
+              valuePropName="checked"
+              rules={[
+                {
+                  required: false,
+                  message: "Text Me!",
+                },
+              ]}
+              className="elementWidth"
+            >
+              <Checkbox className="clsTextMe">
+                <h4>TEXT ME</h4>
+              </Checkbox>
+            </Form.Item>
+          </TwoElementInnerWrapper>
+        </div>
+      </TwoElementWrapper>
+      {chData.map((val, i) => (
+        <TwoElementWrapper key={i}>
+          <div className="elementWidth"></div>
           <div className="elementWidth">
             <TwoElementInnerWrapper>
               <Form.Item
-                name="country"
-                // label="Select Start And End Date"
-                rules={[
-                  {
-                    required: false,
-                    message: "Select Country!",
-                  },
-                ]}
-                className="elementWidth"
-              >
-                <Select
-                  showSearch
-                  placeholder="Select Country"
-                  onChange={handleChangeCountryByState}
-                  onSearch={onCountrySearch}
-                  allowClear
-                  filterOption={false}
-                >
-                  {
-                    countries && countries.map((c) => (
-                      <Option value={c.id} key={c.id}>{c.country}</Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name="state"
-                // label="Select Start And End Date"
-                rules={[
-                  {
-                    required: false,
-                    message: "Select State!",
-                  },
-                ]}
-                className="elementWidth"
-              >
-                <Select
-                  showSearch
-                  placeholder="Select State"
-                  onChange={handleChangeStateByCity}
-                  onSearch={onStateSearch}
-                  allowClear
-                  filterOption={false}
-                >
-                  {
-                    states.map((e)=>(
-                      <Option value={e.id} key={e.id}>{e.state}</Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-            </TwoElementInnerWrapper>
-          </div>
-
-        </TwoElementWrapper>
-
-        <TwoElementWrapper>
-          <div className="elementWidth">
-            <TwoElementInnerWrapper>
-              <Form.Item
-                name="city"
-                // label="Select Class Series / Membership"
-                rules={[
-                  {
-                    required: false,
-                    message: "Select city!",
-                  },
-                ]}
-                className="elementWidth"
-              >
-                <Select
-                  showSearch
-                  placeholder="Select City"
-                  allowClear
-                  onSearch={onCitySearch}
-                  filterOption={false}
-                >
-                  {
-                    city.map((e)=>(
-                      <Option value={e.id} key={e.id}>{e.city}</Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name="zip"
-                // label="Select Class Series / Membership"
-                rules={[
-                  {
-                    required: false,
-                    message: "ZIP!",
-                  },
-                ]}
-                className="elementWidth"
-              >
-                <Input placeholder="Zip" />
-              </Form.Item>
-
-            </TwoElementInnerWrapper>
-          </div>
-          <Form.Item
-            name="email"
-            // label="Select Start And End Date"
-            rules={[
-              {
-                required: false,
-                message: "Enter Email!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Email" />
-          </Form.Item>
-        </TwoElementWrapper>
-
-        <TwoElementWrapper>
-          <Form.Item
-            name="phone"
-            // label="Select Start And End Date"
-            rules={[
-              {
-                required: false,
-                message: "Enter Phone!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Phone" />
-          </Form.Item>
-          <div className="elementWidth">
-            <TwoElementInnerWrapper>
-              <Form.Item
-                name="contact"
+                name="econtact"
                 // label="Select Class Series / Membership"
                 rules={[
                   {
@@ -330,149 +419,111 @@ const BasicInfoTab = () => {
                     message: "Enter Mobile!",
                   },
                 ]}
-                className="clsMobileElement"
+                className="clsEcontact"
               >
                 <InputNumber placeholder="Mobile" />
               </Form.Item>
-              <Button
-                style={{ marginLeft: "10px" }}
-                type="primary"
-                icon={<PlusOutlined />}
-                shape="circle"
-                onClick={handleMobileAndTypeField}
-              />
               <Form.Item
-                name="sendTxtMsg"
-                // label="TEXT ME"
-                valuePropName="checked"
+                name="Mobile Type"
+                // label="Type"
                 rules={[
                   {
                     required: false,
-                    message: "Text Me!",
+                    message: "Select Type!",
                   },
                 ]}
-                className="elementWidth"
+                style={{ width: "30%" }}
               >
-                <Checkbox className="clsTextMe">
-                  <h4>TEXT ME</h4>
-                </Checkbox>
+                <Select
+                  showSearch
+                  placeholder="Select Type"
+                  // handleChange={handleChangeType}
+                  allowClear
+                >
+                  <Option value="Home">Home</Option>
+                  <Option value="Office">Office</Option>
+                  <Option value="Mobile">Mobile</Option>
+                  <Option value="Fax">Fax</Option>
+                </Select>
               </Form.Item>
+              <Button
+                type="danger"
+                icon={<CloseOutlined />}
+                shape="circle"
+                onClick={() => handleDeleteMobileAndTypeField(i)}
+              />
             </TwoElementInnerWrapper>
           </div>
         </TwoElementWrapper>
-        {chData.map((val, i) => (
-          <TwoElementWrapper key={i}>
-            <div className="elementWidth"></div>
-            <div className="elementWidth">
-              <TwoElementInnerWrapper>
-                <Form.Item
-                  name="econtact"
-                  // label="Select Class Series / Membership"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Enter Mobile!",
-                    },
-                  ]}
-                  className="clsEcontact"
-                >
-                  <InputNumber placeholder="Mobile" />
-                </Form.Item>
-                <Form.Item
-                  name="Mobile Type"
-                  // label="Type"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Select Type!",
-                    },
-                  ]}
-                  style={{ width: "30%" }}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Select Type"
-                    // handleChange={handleChangeType}
-                    allowClear
-                  >
-                    <Option value="Home">Home</Option>
-                    <Option value="Office">Office</Option>
-                    <Option value="Mobile">Mobile</Option>
-                    <Option value="Fax">Fax</Option>
-                  </Select>
-                </Form.Item>
-                <Button
-                  type="danger"
-                  icon={<CloseOutlined />}
-                  shape="circle"
-                  onClick={() => handleDeleteMobileAndTypeField(i)}
-                />
-              </TwoElementInnerWrapper>
-            </div>
-          </TwoElementWrapper>
-        ))}
-        <TwoElementWrapper>
-          <Form.Item
-            name="refferedBy"
-            // label="Select Start And End Date"
-            rules={[
-              {
-                required: false,
-                message: "Enter Referred By!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Referred By" />
-          </Form.Item>
-          <Form.Item
-            name="prefLocation"
-            // label="Pref Location"
-            rules={[
-              {
-                required: false,
-                message: "Select Pref Location!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Select
-              showSearch
-              placeholder="Select Pref Location"
-              // handleChange={handleChangeType}
+      ))}
+      <TwoElementWrapper>
+        <Form.Item
+          name="refferedBy"
+          // label="Select Start And End Date"
+          rules={[
+            {
+              required: false,
+              message: "Enter Referred By!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Referred By" />
+        </Form.Item>
+        <Form.Item
+          name="prefLocation"
+          // label="Pref Location"
+          rules={[
+            {
+              required: false,
+              message: "Select Pref Location!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Select
+            showSearch
+            placeholder="Select Pref Location"
+            onSearch={getAllLocation}
               allowClear
-            >
-              <Option value="TEXAS">TEXAS</Option>
-              <Option value="Los Angeles">Los Angeles</Option>
-            </Select>
-          </Form.Item>
-        </TwoElementWrapper>
-        <TwoElementWrapper style={{marginBottom:'24px'}}>
-          <div  className="elementWidth">
-            <div style={{ display: "flex", alignItems: "baseline" }}>
+              filterOption={false}
+          >
+            {location && location.map((e) => (
+                <Option value={e.id} key={e.id}>{e.name}</Option>
+              ))}
+          </Select>
+        </Form.Item>
+      </TwoElementWrapper>
+      <TwoElementWrapper style={{ marginBottom: '24px' }}>
+        <div className="elementWidth">
+          <div style={{ display: "flex", alignItems: "baseline" }}>
             <div><h4 style={{ marginRight: "10px" }}>Photo :</h4></div>
             <Form.Item
-              name="image"
+              name="studentPhoto"
               // label="Photo"
               valuePropName="fileList"
+              // getValueFromEvent={handleClientImage}
               rules={[
                 {
                   required: false,
                   message: "Select Image!",
                 },
               ]}
-              style={{ width: "70%" , marginBottom:"5px" }}
+              style={{ width: "70%", marginBottom: "5px" }}
             >
-              <Upload style={{ width: "70%" }}>
+              <Upload style={{ width: "70%" }}  maxCount={1} listType="picture" beforeUpload={(file) => {
+            handleImageUpload(file);
+            return false; // Prevent default upload behavior
+          }}>
                 <Button>
                   <UploadOutlined /> Click to Upload
                 </Button>
               </Upload>
             </Form.Item>
-            </div>
-            <div style={{fontSize:"13px", fontWeight:"300"}} >(File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)</div>
           </div>
-          <div className="elementWidth">
+          <div style={{ fontSize: "13px", fontWeight: "300" }} >(File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)</div>
+        </div>
+        <div className="elementWidth">
           <Form.Item
             name="contract"
             // label="Contract"
@@ -482,25 +533,25 @@ const BasicInfoTab = () => {
                 message: "Select Contract!",
               },
             ]}
-            style={{width:"100%", marginBottom:"5px"}}
+            style={{ width: "100%", marginBottom: "5px" }}
           >
             <Select
               showSearch
               placeholder="Select Contract"
-              // handleChange={handleChangeType}
+              onSearch={getAllContracts}
               allowClear
+              filterOption={false}
             >
-              <Option value="Cancelation Policy">Cancelation Policy</Option>
-              <Option value="Liability Waiver">Liability Waiver</Option>
-              <Option value="Paper Contract">Paper Contract</Option>
-              <Option value="Studio Policy">Studio Policy</Option>
+              {contract && contract.map((e) => (
+                <Option value={e.id} key={e.id}>{e.contractName}</Option>
+              ))}
             </Select>
           </Form.Item>
-            <Checkbox><span style={{fontSize:"13px", fontWeight:"300"}}> I agree to all the terms and conditions</span></Checkbox>
-          </div>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
-          <div className="elementWidth">
+          <Checkbox><span style={{ fontSize: "13px", fontWeight: "300" }}> I agree to all the terms and conditions</span></Checkbox>
+        </div>
+      </TwoElementWrapper>
+      <TwoElementWrapper>
+        <div className="elementWidth">
           <Form.Item
             name="clientNotification"
             // label="CLIENT NOTIFICATION"
@@ -509,47 +560,36 @@ const BasicInfoTab = () => {
               {
                 required: false,
                 message: "Select Contract!",
-              }  
+              }
             ]}
-            style={{marginBottom:"2px"}}
+            style={{ marginBottom: "2px" }}
           >
             <Checkbox><h4>CLIENT NOTIFICATION</h4></Checkbox>
           </Form.Item>
-            <div><span style={{fontSize:"13px", fontWeight:"300", marginLeft:"25px"}}>Select this option to enable email and text.</span></div>
-          </div>
+          <div><span style={{ fontSize: "13px", fontWeight: "300", marginLeft: "25px" }}>Select this option to enable email and text.</span></div>
+        </div>
+
+        <div className="elementWidth" >
+          <TwoElementInnerWrapper>
             <Form.Item
-            name="isVaccinated"
-            // label="Photo"
-            valuePropName="checked"
-            rules={[
-              {
-                required: false,
-                message: "Check Is Vaccinated!",
-              },
-            ]}
-            className="elementWidth"
-          >
-           <Checkbox><h4>Is Vaccinated</h4></Checkbox>
-          </Form.Item>
-          <div className="elementWidth">
-            <TwoElementInnerWrapper>
-              <Form.Item
-                name="isVaccinated"
-                // label="Select Class Series / Membership"
-                valuePropName="checked"
-                rules={[
-                  {
-                    required: false,
-                    message: "Check Is Vaccinated!",
-                  },
-                ]}
-                className="elementWidth"
-              >
-                <Checkbox >
-                  <h4>Is Vaccinated</h4>
-                </Checkbox>
-              </Form.Item>
-              <div
+              name="isCovidvaccinated"
+              // label="Select Class Series / Membership"
+              valuePropName="checked"
+              onChange={handleIsVaccinated}
+              rules={[
+                {
+                  required: false,
+                  message: "Check Is Vaccinated!",
+                },
+              ]}
+              className="elementWidth"
+            >
+              <Checkbox >
+                <h4>Is Vaccinated</h4>
+              </Checkbox>
+            </Form.Item>
+            {
+              isVaccinated && <div
                 className="elementWidth"
                 style={{ display: "flex", alignItems: "baseline" }}
               >
@@ -574,125 +614,128 @@ const BasicInfoTab = () => {
                   </Upload>
                 </Form.Item>
               </div>
-            </TwoElementInnerWrapper>
-          </div>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
-            <Form.Item
-            name="isApplicant18"
-            // label="Photo"
-            valuePropName="checked"
-            rules={[
-              {
-                required: false,
-                message: "CHECK CLIENT IS UNDER 18 YEARS OLD!",
-              },
-            ]}
-            className="elementWidth"
-          >
-           <Checkbox><h4>CLIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
-          </Form.Item>
-          <div
-            style={{ display: "flex", alignItems: "baseline" }}
-            className="elementWidth"
-          >
-            <h4 style={{ marginRight: "20px" }}>Status :</h4>
-            <Form.Item
-              //   label="Gender :"
-              name="status"
-              rules={[
-                {
-                  required: false,
-                  message: "Please Select Status!",
-                },
-              ]}
-              style={{ width: "70%" }}
-            >
-              <Radio.Group>
-                <Radio value="male">ACTIVE</Radio>
-                <Radio value="female">INACTIVE</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </div>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
+            }
+          </TwoElementInnerWrapper>
+        </div>
+      </TwoElementWrapper>
+      <TwoElementWrapper>
+        <Form.Item
+          name="isApplicant18"
+          // label="isApplicant18"
+          valuePropName="checked"
+          rules={[
+            {
+              required: false,
+              message: "CHECK CLIENT IS UNDER 18 YEARS OLD!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Checkbox><h4>CLIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
+        </Form.Item>
+        <div
+          style={{ display: "flex", alignItems: "baseline" }}
+          className="elementWidth"
+        >
+          <h4 style={{ marginRight: "20px" }}>Status :</h4>
           <Form.Item
-            name="marketingPreference"
-            label={<h4>MARKETING PREFERENCE</h4>}
-            valuePropName="checked"
+            //   label="Gender :"
+            name="status"
             rules={[
               {
                 required: false,
-                message: "MARKETING PREFERENCE!",
+                message: "Please Select Status!",
               },
             ]}
-            className="elementWidth"
+            style={{ width: "70%" }}
           >
-            <CheckboxGroup options={marketing}/>
+            <Radio.Group>
+              <Radio value="male">ACTIVE</Radio>
+              <Radio value="female">INACTIVE</Radio>
+            </Radio.Group>
           </Form.Item>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
-          <Form.Item
-            name="emergencyName"
-            label="EMERGENCY CONTACT"
-            rules={[
-              {
-                required: false,
-                message: "Enter Name!",
-              },
-            ]}
-            className="elementWidth"
+        </div>
+      </TwoElementWrapper>
+      <TwoElementWrapper>
+        <Form.Item
+          name="marketingPreference"
+          label={<h4>MARKETING PREFERENCE</h4>}
+          valuePropName="checked"
+          rules={[
+            {
+              required: false,
+              message: "MARKETING PREFERENCE!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <CheckboxGroup options={marketing} />
+        </Form.Item>
+      </TwoElementWrapper>
+      <TwoElementWrapper>
+        <Form.Item
+          name="emergencyName"
+          label="EMERGENCY CONTACT"
+          rules={[
+            {
+              required: false,
+              message: "Enter Name!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Name" />
+        </Form.Item>
+        <Form.Item
+          name="emergencyRelationId"
+          label="                    "
+          rules={[
+            {
+              required: false,
+              message: "Select Relation!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Select
+            showSearch
+            // defaultValue="Cancelation Policy"
+            placeholder="Select Relation"
+            onSearch={getAllRelations}
+            allowClear
+            filterOption={false}
           >
-            <Input placeholder="Name" />
-          </Form.Item>
-          <Form.Item
-            name="relation"
-            label="                    "
-            rules={[
-              {
-                required: false,
-                message: "Select Relation!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Select
-              showSearch
-              // defaultValue="Cancelation Policy"
-              placeholder="Select Relation"
-              // handleChange={handleChangeType}
-              allowClear
-            >
-              <Option value="Brother">Brother</Option>
-              <Option value="Father">Father</Option>
-            </Select>
-          </Form.Item>
-        </TwoElementWrapper>
-        <TwoElementWrapper>
-          <Form.Item
-            name="emergencyPhone"
-            // label=""
-            rules={[
-              {
-                required: false,
-                message: "Enter Phone!",
-              },
-            ]}
-            className="elementWidth"
-          >
-            <Input placeholder="Phone" />
-          </Form.Item>
-        </TwoElementWrapper>
-        <BottomButtonWrapper>
-          <Button>
-            <span>Cancel</span>
-          </Button>
+            {relations && relations.map((e) => (
+              <Option value={e.id} key={e.id}>{e.name}</Option>
+            ))}
+          </Select>
+        </Form.Item>
+      </TwoElementWrapper>
+      <TwoElementWrapper>
+        <Form.Item
+          name="emergencyPhone"
+          // label=""
+          rules={[
+            {
+              required: false,
+              message: "Enter Phone!",
+            },
+          ]}
+          className="elementWidth"
+        >
+          <Input placeholder="Phone" />
+        </Form.Item>
+      </TwoElementWrapper>
+      <BottomButtonWrapper>
+        <Button>
+          <span>Cancel</span>
+        </Button>
 
-          <Button type="primary" className="saveBtn" htmlType="submit">
-            <span>Save</span>
-          </Button>
-        </BottomButtonWrapper>
-      </Form>
+        <Button type="primary" className="saveBtn" htmlType="submit">
+          <span>Save</span>
+        </Button>
+      </BottomButtonWrapper>
+    </Form>
   );
 };
 
