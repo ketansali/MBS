@@ -43,10 +43,9 @@ const options = [
       },
       {
         key: "location",
-        label: "sidebar.contract",
-      },
-     
-      
+        // label: "sidebar.contract",
+        label: "sidebar.location",
+      },      
     ],
   },
   {

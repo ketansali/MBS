@@ -52,6 +52,10 @@ const routes = [
     path: "relation",
     component: lazy(() => import("@iso/containers/Masters/Relation/Relation")),
   },
+  {
+    path: "location",
+    component: lazy(() => import("@iso/containers/Masters/Location/Location")),
+  },
 ];
 
 export default function AppRouter() {
