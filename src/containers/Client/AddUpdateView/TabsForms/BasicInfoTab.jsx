@@ -12,16 +12,23 @@ import { Form, Radio, Upload } from "antd";
 import Checkbox, { CheckboxGroup } from "@iso/components/uielements/checkbox";
 import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
-import { UploadOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
-import { GetCountry, GetCountryByState, GetStateByCity } from "../../../Masters/Country/actions";
+import { UploadOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  GetCountry,
+  GetCountryByState,
+  GetStateByCity,
+} from "../../../Masters/Country/actions";
 import moment from "moment";
 import { CreateClient, GetAllContract } from "../../actions";
 import { GetAllRelation } from "../../../Masters/Relation/actions";
 import { GetAllLocation } from "../../../Masters/Location/actions";
 import { COMMON } from "../../../Constant/Index";
+import { useHistory, useRouteMatch } from "react-router-dom";
 const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
+  const match = useRouteMatch();
   const [chData, setCHData] = useState([]);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -30,7 +37,6 @@ const BasicInfoTab = () => {
   const [contract, setContract] = useState([]);
   const [location, setLocation] = useState([]);
   const [isVaccinated, setIsVaccinated] = useState(false);
-  const [base64Image, setBase64Image] = useState(null);
 
   const handleMobileAndTypeField = () => {
     setCHData([...chData, { contact: "", contactType: "" }]);
@@ -57,37 +63,55 @@ const BasicInfoTab = () => {
       setCountries([]);
       setCountries(res?.responseData);
     });
-  }
+  };
   const onStateSearch = (name) => {
     const { country } = form.getFieldValue();
     GetCountryByState(country, name).then((res) => {
       setStates([]);
       setStates(res?.responseData);
     });
-  }
+  };
   const onCitySearch = (name) => {
     const { state } = form.getFieldValue();
     GetStateByCity(state, name).then((res) => {
       setCity([]);
       setCity(res?.responseData);
     });
-  }
+  };
   const getAllRelations = (value) => {
-    GetAllRelation({ pageNo: 1, searchValue: value, length: 0, sortColumn: "", sortOrder: "" }).then((res) => {
+    GetAllRelation({
+      pageNo: 1,
+      searchValue: value,
+      length: 0,
+      sortColumn: "",
+      sortOrder: "",
+    }).then((res) => {
       setRelations(res?.responseData.data);
-    })
-  }
+    });
+  };
   const getAllContracts = (value) => {
-    GetAllContract({ pageNo: 1, searchValue: value, length: 0, sortColumn: "", sortOrder: "" }).then((res) => {
+    GetAllContract({
+      pageNo: 1,
+      searchValue: value,
+      length: 0,
+      sortColumn: "",
+      sortOrder: "",
+    }).then((res) => {
       setContract(res?.responseData.data);
-    })
-  }
+    });
+  };
 
   const getAllLocation = (value) => {
-    GetAllLocation({ pageNo: 1, searchValue: value, length: 0, sortColumn: "", sortOrder: "" }).then((res) => {
+    GetAllLocation({
+      pageNo: 1,
+      searchValue: value,
+      length: 0,
+      sortColumn: "",
+      sortOrder: "",
+    }).then((res) => {
       setLocation(res?.responseData.data);
-    })
-  }
+    });
+  };
   useEffect(() => {
     GetCountry("").then((res) => {
       setCountries(res?.responseData);
@@ -97,62 +121,138 @@ const BasicInfoTab = () => {
     getAllRelations();
     getAllContracts();
     getAllLocation();
-  }, [])
+  }, []);
 
   const handleChangeCountryByState = (id) => {
     if (id) {
-      GetCountryByState(id, "").then(res => {
-        form.resetFields(['state']);
-        form.resetFields(['city']);
+      GetCountryByState(id, "").then((res) => {
+        form.resetFields(["state"]);
+        form.resetFields(["city"]);
         setStates([]);
         setCity([]);
         setStates(res?.responseData);
       });
     }
-  }
+  };
   const handleChangeStateByCity = (id) => {
     if (id) {
-      GetStateByCity(id).then(res => {
-        form.resetFields(['city']);
+      GetStateByCity(id).then((res) => {
+        form.resetFields(["city"]);
         setCity([]);
         setCity(res?.responseData);
       });
     }
-  }
-  const handleImageUpload = (file) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      form.setFieldsValue({studentPhotoaaaaa:event.target.result})
-
-    };
-    reader.readAsDataURL(file);
   };
-  const handleClientImage = (image)=>{
-    const {thumbUrl}= image.file
-    console.log(image.file.thumbUrl);
-    // form.setFieldsValue({studentPhotoa:image.file})
-    
-  }
+  const handleClientImage = (image) => {
+    COMMON.convertToBase64(image.file.originFileObj, (url) => {
+      form.setFieldsValue({ studentPhoto: url });
+    });
+  };
+  const handleVaccinatedImage = (image) => {
+    COMMON.convertToBase64(image.file.originFileObj, (url) => {
+      form.setFieldsValue({ proofCovidVaccinated: url });
+    });
+  };
+  const onChangeMarketing = (marketingPreference) => {
+    if (marketingPreference.includes("EMAIL")) {
+      form.setFieldsValue({ marketingEmail: true });
+    } else {
+      form.setFieldsValue({ marketingEmail: false });
+    }
+    if (marketingPreference.includes("MAIL")) {
+      form.setFieldsValue({ marketingMail: true });
+    } else {
+      form.setFieldsValue({ marketingMail: false });
+    }
+    if (marketingPreference.includes("SMS")) {
+      form.setFieldsValue({ marketingSMS: true });
+    } else {
+      form.setFieldsValue({ marketingSMS: false });
+    }
+    if (marketingPreference.includes("WHATSAPP")) {
+      form.setFieldsValue({ marketingWhatsapp: true });
+    } else {
+      form.setFieldsValue({ marketingWhatsapp: false });
+    }
+  };
   const submitBasicInfo = () => {
-    console.log(form.getFieldValue());
-    form
-      .validateFields()
-      .then(async (values) => {
-        const {
-          firstName, lastName, birthDay, address, country, state, city, zip, email, phone, refferedBy, isApplicant18, status, isCovidvaccinated, gender, sendTxtMsg,emergencyPhone, emergencyRelationId, emergencyName,studentPhoto
-        } = form.getFieldValue();
-        console.log({ firstName, lastName, birthDay, address, country, state, city, zip, email, phone, refferedBy, isApplicant18, status, isCovidvaccinated, gender,sendTxtMsg,emergencyPhone, emergencyRelationId, emergencyName, studentPhoto });
-        // CreateClient({firstName,lastName, birthDay:moment(birthDay).format('YYYY-MM-DD'),address,country,state,city,zip,email,phone,refferedBy,isApplicant18,status,isCovidvaccinated  }).then(()=>{
+    form.validateFields().then(async (values) => {
+      const {
+        firstName,
+        lastName,
+        birthDay,
+        address,
+        countryId,
+        stateId,
+        cityId,
+        zip,
+        email,
+        phone,
+        refferedBy,
+        isApplicant18,
+        status,
+        isCovidvaccinated,
+        gender,
+        sendTxtMsg,
+        emergencyPhone,
+        emergencyRelationId,
+        emergencyName,
+        studentPhoto,
+        proofCovidVaccinated,
+        marketingEmail,
+        marketingMail,
+        marketingSMS,
+        marketingWhatsapp,
+        locationId,
+        SubscribeNow,
+        ContactId,
+      } = form.getFieldValue();
 
-        // });
-      })
-
-  }
+      CreateClient({
+        firstName,
+        lastName,
+        birthDay: moment(birthDay).format("YYYY-MM-DD"),
+        address,
+        countryId,
+        stateId,
+        cityId,
+        zip,
+        email,
+        phone,
+        refferedBy,
+        isApplicant18,
+        status,
+        isCovidvaccinated,
+        gender,
+        sendTxtMsg,
+        emergencyPhone,
+        emergencyRelationId,
+        emergencyName,
+        studentPhoto,
+        proofCovidVaccinated,
+        marketingEmail,
+        marketingMail,
+        marketingSMS,
+        marketingWhatsapp,
+        locationId,
+        SubscribeNow,
+        ContactId,
+      }).then(() => {
+        history.push(`/dashboard/client`);
+      });
+    });
+  };
   const handleIsVaccinated = (e) => {
     setIsVaccinated(e.target.checked);
-  }
+  };
   return (
-    <Form form={form} name="currency" layout="vertical" scrollToFirstError onFinish={submitBasicInfo}>
+    <Form
+      form={form}
+      name="currency"
+      layout="vertical"
+      scrollToFirstError
+      onFinish={submitBasicInfo}
+    >
       <TwoElementWrapper>
         <Form.Item
           name="firstName"
@@ -213,7 +313,7 @@ const BasicInfoTab = () => {
           ]}
           className="elementWidth"
         >
-          <Datepicker placeholder="Birthday" format={'YYYY/MM/DD'} />
+          <Datepicker placeholder="Birthday" format={"YYYY/MM/DD"} />
         </Form.Item>
       </TwoElementWrapper>
 
@@ -235,7 +335,7 @@ const BasicInfoTab = () => {
         <div className="elementWidth">
           <TwoElementInnerWrapper>
             <Form.Item
-              name="country"
+              name="countryId"
               // label="Select Start And End Date"
               rules={[
                 {
@@ -253,15 +353,16 @@ const BasicInfoTab = () => {
                 allowClear
                 filterOption={false}
               >
-                {
-                  countries && countries.map((c) => (
-                    <Option value={c.id} key={c.id}>{c.country}</Option>
-                  ))
-                }
+                {countries &&
+                  countries.map((c) => (
+                    <Option value={c.id} key={c.id}>
+                      {c.country}
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
             <Form.Item
-              name="state"
+              name="stateId"
               // label="Select Start And End Date"
               rules={[
                 {
@@ -279,23 +380,22 @@ const BasicInfoTab = () => {
                 allowClear
                 filterOption={false}
               >
-                {
-                  states.map((e) => (
-                    <Option value={e.id} key={e.id}>{e.state}</Option>
-                  ))
-                }
+                {states.map((e) => (
+                  <Option value={e.id} key={e.id}>
+                    {e.state}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           </TwoElementInnerWrapper>
         </div>
-
       </TwoElementWrapper>
 
       <TwoElementWrapper>
         <div className="elementWidth">
           <TwoElementInnerWrapper>
             <Form.Item
-              name="city"
+              name="cityId"
               // label="Select Class Series / Membership"
               rules={[
                 {
@@ -312,11 +412,11 @@ const BasicInfoTab = () => {
                 onSearch={onCitySearch}
                 filterOption={false}
               >
-                {
-                  city.map((e) => (
-                    <Option value={e.id} key={e.id}>{e.city}</Option>
-                  ))
-                }
+                {city.map((e) => (
+                  <Option value={e.id} key={e.id}>
+                    {e.city}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item
@@ -332,7 +432,6 @@ const BasicInfoTab = () => {
             >
               <Input placeholder="Zip" />
             </Form.Item>
-
           </TwoElementInnerWrapper>
         </div>
         <Form.Item
@@ -340,7 +439,7 @@ const BasicInfoTab = () => {
           // label="Select Start And End Date"
           rules={[
             {
-              required: false,
+              required: true,
               message: "Enter Email!",
             },
           ]}
@@ -356,7 +455,7 @@ const BasicInfoTab = () => {
           // label="Select Start And End Date"
           rules={[
             {
-              required: false,
+              required: true,
               message: "Enter Phone!",
             },
           ]}
@@ -471,7 +570,7 @@ const BasicInfoTab = () => {
           <Input placeholder="Referred By" />
         </Form.Item>
         <Form.Item
-          name="prefLocation"
+          name="locationId"
           // label="Pref Location"
           rules={[
             {
@@ -485,47 +584,51 @@ const BasicInfoTab = () => {
             showSearch
             placeholder="Select Pref Location"
             onSearch={getAllLocation}
-              allowClear
-              filterOption={false}
+            allowClear
+            filterOption={false}
           >
-            {location && location.map((e) => (
-                <Option value={e.id} key={e.id}>{e.name}</Option>
+            {location &&
+              location.map((e) => (
+                <Option value={e.id} key={e.id}>
+                  {e.name}
+                </Option>
               ))}
           </Select>
         </Form.Item>
       </TwoElementWrapper>
-      <TwoElementWrapper style={{ marginBottom: '24px' }}>
+      <TwoElementWrapper style={{ marginBottom: "24px" }}>
         <div className="elementWidth">
           <div style={{ display: "flex", alignItems: "baseline" }}>
-            <div><h4 style={{ marginRight: "10px" }}>Photo :</h4></div>
+            <div>
+              <h4 style={{ marginRight: "10px" }}>Photo :</h4>
+            </div>
             <Form.Item
-              name="studentPhoto"
+              name="studentImage"
               // label="Photo"
               valuePropName="fileList"
-              // getValueFromEvent={handleClientImage}
+              getValueFromEvent={handleClientImage}
               rules={[
                 {
                   required: false,
-                  message: "Select Image!",
+                  message: "Select Student Image!",
                 },
               ]}
               style={{ width: "70%", marginBottom: "5px" }}
             >
-              <Upload style={{ width: "70%" }}  maxCount={1} listType="picture" beforeUpload={(file) => {
-            handleImageUpload(file);
-            return false; // Prevent default upload behavior
-          }}>
+              <Upload style={{ width: "70%" }} maxCount={1}>
                 <Button>
                   <UploadOutlined /> Click to Upload
                 </Button>
               </Upload>
             </Form.Item>
           </div>
-          <div style={{ fontSize: "13px", fontWeight: "300" }} >(File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)</div>
+          <div style={{ fontSize: "13px", fontWeight: "300" }}>
+            (File Size Max 2MB, allowed formats: jpg, jpeg, png, gif)
+          </div>
         </div>
         <div className="elementWidth">
           <Form.Item
-            name="contract"
+            name="ContactId"
             // label="Contract"
             rules={[
               {
@@ -542,34 +645,67 @@ const BasicInfoTab = () => {
               allowClear
               filterOption={false}
             >
-              {contract && contract.map((e) => (
-                <Option value={e.id} key={e.id}>{e.contractName}</Option>
-              ))}
+              {contract &&
+                contract.map((e) => (
+                  <Option value={e.id} key={e.id}>
+                    {e.contractName}
+                  </Option>
+                ))}
             </Select>
           </Form.Item>
-          <Checkbox><span style={{ fontSize: "13px", fontWeight: "300" }}> I agree to all the terms and conditions</span></Checkbox>
+          <Form.Item
+            name="ContractAgree"
+            // label="Contract"
+            valuePropName="checked"
+            rules={[
+              {
+                required: false,
+                message: "Please Agree Term and condition!",
+              },
+            ]}
+            style={{ width: "100%", marginBottom: "5px" }}
+          >
+            <Checkbox>
+              <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                {" "}
+                I agree to all the terms and conditions
+              </span>
+            </Checkbox>
+          </Form.Item>
         </div>
       </TwoElementWrapper>
       <TwoElementWrapper>
         <div className="elementWidth">
           <Form.Item
-            name="clientNotification"
+            name="SubscribeNow"
             // label="CLIENT NOTIFICATION"
             valuePropName="checked"
             rules={[
               {
                 required: false,
-                message: "Select Contract!",
-              }
+                message: "Select CLIENT NOTIFICATION!",
+              },
             ]}
             style={{ marginBottom: "2px" }}
           >
-            <Checkbox><h4>CLIENT NOTIFICATION</h4></Checkbox>
+            <Checkbox>
+              <h4>CLIENT NOTIFICATION</h4>
+            </Checkbox>
           </Form.Item>
-          <div><span style={{ fontSize: "13px", fontWeight: "300", marginLeft: "25px" }}>Select this option to enable email and text.</span></div>
+          <div>
+            <span
+              style={{
+                fontSize: "13px",
+                fontWeight: "300",
+                marginLeft: "25px",
+              }}
+            >
+              Select this option to enable email and text.
+            </span>
+          </div>
         </div>
 
-        <div className="elementWidth" >
+        <div className="elementWidth">
           <TwoElementInnerWrapper>
             <Form.Item
               name="isCovidvaccinated"
@@ -584,12 +720,12 @@ const BasicInfoTab = () => {
               ]}
               className="elementWidth"
             >
-              <Checkbox >
+              <Checkbox>
                 <h4>Is Vaccinated</h4>
               </Checkbox>
             </Form.Item>
-            {
-              isVaccinated && <div
+            {isVaccinated && (
+              <div
                 className="elementWidth"
                 style={{ display: "flex", alignItems: "baseline" }}
               >
@@ -597,24 +733,26 @@ const BasicInfoTab = () => {
                   <h4>Proof :</h4>{" "}
                 </div>
                 <Form.Item
-                  name="Proof"
-                  // label="Select Class Series / Membership"
+                  name="proofVaccinated"
+                  // label="Select Vaccinated Proof"
+                  valuePropName="fileList"
+                  getValueFromEvent={handleVaccinatedImage}
                   rules={[
                     {
                       required: false,
-                      message: "Select Proof!",
+                      message: "Select Vaccinated Proof!",
                     },
                   ]}
                   className="elementWidth"
                 >
                   <Upload>
                     <Button>
-                      <UploadOutlined /> Click to Upload
+                      <UploadOutlined maxCount={1} /> Click to Upload
                     </Button>
                   </Upload>
                 </Form.Item>
               </div>
-            }
+            )}
           </TwoElementInnerWrapper>
         </div>
       </TwoElementWrapper>
@@ -631,7 +769,9 @@ const BasicInfoTab = () => {
           ]}
           className="elementWidth"
         >
-          <Checkbox><h4>CLIENT IS UNDER 18 YEARS OLD</h4></Checkbox>
+          <Checkbox>
+            <h4>CLIENT IS UNDER 18 YEARS OLD</h4>
+          </Checkbox>
         </Form.Item>
         <div
           style={{ display: "flex", alignItems: "baseline" }}
@@ -650,8 +790,8 @@ const BasicInfoTab = () => {
             style={{ width: "70%" }}
           >
             <Radio.Group>
-              <Radio value="male">ACTIVE</Radio>
-              <Radio value="female">INACTIVE</Radio>
+              <Radio value={true}>ACTIVE</Radio>
+              <Radio value={false}>INACTIVE</Radio>
             </Radio.Group>
           </Form.Item>
         </div>
@@ -669,7 +809,7 @@ const BasicInfoTab = () => {
           ]}
           className="elementWidth"
         >
-          <CheckboxGroup options={marketing} />
+          <CheckboxGroup options={marketing} onChange={onChangeMarketing} />
         </Form.Item>
       </TwoElementWrapper>
       <TwoElementWrapper>
@@ -705,9 +845,12 @@ const BasicInfoTab = () => {
             allowClear
             filterOption={false}
           >
-            {relations && relations.map((e) => (
-              <Option value={e.id} key={e.id}>{e.name}</Option>
-            ))}
+            {relations &&
+              relations.map((e) => (
+                <Option value={e.id} key={e.id}>
+                  {e.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
       </TwoElementWrapper>

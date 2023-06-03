@@ -13,11 +13,13 @@ export default function AntTable({
   handleSearch,
   handlePage,
   pagination,
-  rowKey
+  rowKey,
+  header
 }) {
   return (
     <>
-      <TitleWrapper>
+      {
+        !header? <TitleWrapper>
         <ComponentTitle>{title}</ComponentTitle>
         <div>
           <SearchInput
@@ -25,7 +27,8 @@ export default function AntTable({
             onChange={handleSearch}
           />
         </div>
-      </TitleWrapper>
+      </TitleWrapper>:null
+      }
       <AntTables columns={columns} data={data} pagination={pagination} handlePage={handlePage} rowKey={rowKey}/>
     </>
   );
