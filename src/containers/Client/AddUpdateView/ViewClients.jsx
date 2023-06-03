@@ -139,6 +139,7 @@ const ViewClients = () => {
                 data={clients.data}
                 title="Clients"
                 // handleSearch={handleSearch}
+                header={true}
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"

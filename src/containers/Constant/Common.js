@@ -9,9 +9,10 @@ const COMMON = {
           sortOrder: params?.order ? params?.order : "",
         };
       },
-      convertToBase64 : (image) =>{
-        const render = new FileReader();
-       return render.readAsDataURL(image);
+      convertToBase64 : (img, callback) =>{
+        const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
         
       }
 };
