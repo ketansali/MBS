@@ -22,7 +22,7 @@ const AddClients = () => {
     {
       key: "3",
       label: `APPOINTMENT`,
-      children: '<AppointmentTab />',
+      children: <AppointmentTab />,
     },
     {
       key: "4",
