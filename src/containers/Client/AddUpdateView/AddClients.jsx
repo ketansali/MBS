@@ -7,6 +7,7 @@ import PageHeader from "@iso/components/utility/pageHeader";
 import MembershipCreateOrUpdate from "./TabsForms/MembershipTab";
 import BasicInfoTab from "./TabsForms/BasicInfoTab";
 import AppointmentTab from "./TabsForms/AppointmentTab";
+import NetworkTab from "./TabsForms/NetworkTab";
 const AddClients = () => {
   const tabsOptions = [
     {
@@ -27,7 +28,7 @@ const AddClients = () => {
     {
       key: "4",
       label: `NETWORK`,
-      children: "Content of Tab Pane 3",
+      children: <NetworkTab />,
     },
   ];
 
@@ -49,7 +50,7 @@ const AddClients = () => {
             Content of Tab Pane 3
           </TabPane>
         </Tabs> */}
-        <Tabs tabsOptions={tabsOptions}/>
+        <Tabs tabsOptions={tabsOptions} />
       </Box>
     </LayoutWrapper>
   );
