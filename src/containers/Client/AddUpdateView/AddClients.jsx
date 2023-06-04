@@ -28,7 +28,7 @@ const AddClients = () => {
     {
       key: "4",
       label: `NETWORK`,
-      children: '<NetworkTab />',
+      children: <NetworkTab />,
     },
   ];
 
