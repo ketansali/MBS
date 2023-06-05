@@ -197,7 +197,8 @@ const MembershipCreateOrUpdate = () => {
                     <Form.Item
                       // label="GST"
                       name="noTax"
-                      valuePropName="Checked"
+                      // valuePropName="Checked"
+                      valuePropName="checked"
                       rules={[
                         {
                           required: true,
@@ -228,7 +229,8 @@ const MembershipCreateOrUpdate = () => {
                     <Form.Item
                       // label="GST"
                       name="cc"
-                      valuePropName="Checked"
+                      // valuePropName="Checked"
+                      valuePropName="checked"
                       rules={[
                         {
                           required: true,
