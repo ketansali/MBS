@@ -3,11 +3,9 @@ import notification from "@iso/components/Notification";
 
 
 export const CreateClient = (data) => {
-    debugger
     return axios
       .post("/Client/CreateClient", data)
       .then((res) => {
-        debugger
         notification("success", res.data.message);
       })
       .catch((err) => {

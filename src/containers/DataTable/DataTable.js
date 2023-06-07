@@ -13,20 +13,27 @@ export default function AntTable({
   handleSearch,
   handlePage,
   pagination,
-  rowKey
+  rowKey,
+  header,
+  searchHide
 }) {
   return (
     <>
-      <TitleWrapper>
-        <ComponentTitle>{title}</ComponentTitle>
-        <div>
-          <SearchInput
-            placeholder="search..."
-            onChange={handleSearch}
-          />
-        </div>
-      </TitleWrapper>
-      <AntTables columns={columns} data={data} pagination={pagination} handlePage={handlePage} rowKey={rowKey}/>
+      {
+        !header ? <TitleWrapper>
+          <ComponentTitle>{title}</ComponentTitle>
+          {
+            !searchHide && (
+              <div>
+                <SearchInput
+                  placeholder="search..."
+                  onChange={handleSearch}
+                />
+              </div>
+            )
+          }
+        </TitleWrapper> : null}
+      <AntTables columns={columns} data={data} pagination={pagination} handlePage={handlePage} rowKey={rowKey} />
     </>
   );
 }

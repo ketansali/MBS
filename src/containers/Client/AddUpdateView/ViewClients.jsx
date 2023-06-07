@@ -113,11 +113,11 @@ const ViewClients = () => {
               // onChange={this.handleChange}
               style={{ width: "160px" }}
             >
-              <Option value="Days">All CLIENTS</Option>
-              <Option value="Months">CURRENT CLIENTS</Option>
-              <Option value="Years">ARCHIVED CLIENTS</Option>
-              <Option value="Years">INACTIVE CLIENTS</Option>
-              <Option value="RECENTLY VIEWED">RECENTLY VIEWED</Option>
+              <Option value="AllCLIENTS">All CLIENTS</Option>
+              <Option value="CURRENTCLIENTS">CURRENT CLIENTS</Option>
+              <Option value="ARCHIVEDCLIENTS">ARCHIVED CLIENTS</Option>
+              <Option value="INACTIVECLIENTS">INACTIVE CLIENTS</Option>
+              <Option value="RECENTLYVIEWED">RECENTLY VIEWED</Option>
             </Select>
           </div>
           <Select
@@ -126,8 +126,8 @@ const ViewClients = () => {
             style={{ width: "150px" }}
           >
             <Option value="ALL LOCATION">ALL LOCATION</Option>
-            <Option value="Months">LOS ANGELES</Option>
-            <Option value="Years">TEXAS</Option>
+            <Option value="ANGELES">LOS ANGELES</Option>
+            <Option value="TEXAS">TEXAS</Option>
           </Select>
         </Filters>
       </HeaderSecondary>
@@ -139,6 +139,7 @@ const ViewClients = () => {
                 data={clients.data}
                 title="Clients"
                 // handleSearch={handleSearch}
+                header={true}
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"
