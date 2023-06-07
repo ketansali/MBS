@@ -26,6 +26,7 @@ import { BottomButtonWrapper } from "./Styles/Membership.style";
 
 const Option = SelectOption;
 const NetworkTab = () => {
+    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState({});
     const [chData, setCHData] = useState([]);
@@ -105,59 +106,13 @@ const NetworkTab = () => {
                     </Spin>
                 </ContentHolder>
                 <Divider />
-                <TwoElementInnerWrapper style={{ marginTop: '30px' }}>
-                    <Checkbox >Member</Checkbox>
-                    <Checkbox >Own</Checkbox>
-                    <Checkbox >Member</Checkbox>
-                    <Checkbox >Own</Checkbox>
-                    <Form.Item
-                        name="econtact"
-                        // label="Select Class Series / Membership"
-                        rules={[
-                            {
-                                required: false,
-                                message: "Enter Name!",
-                            },
-                        ]}
-                        // className="clsEcontact"
-                        style={{ width: "30%" }}
-                    >
-                        <Input placeholder="Name" />
-                    </Form.Item>
-                    <Form.Item
-                        name="Mobile Type"
-                        // label="Type"
-                        rules={[
-                            {
-                                required: false,
-                                message: "Select Type!",
-                            },
-                        ]}
-                        style={{ width: "30%" }}
-                    >
-                        <Select
-                            showSearch
-                            placeholder="Select"
-                            // handleChange={handleChangeType}
-                            allowClear
-                        >
-                            <Option value="Home">Home</Option>
-                            <Option value="Office">Office</Option>
-                            <Option value="Mobile">Mobile</Option>
-                            <Option value="Fax">Fax</Option>
-                        </Select>
-                    </Form.Item>
-                    <Button
-                        style={{ marginLeft: "10px" }}
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        shape="circle"
-                        onClick={handleMobileAndTypeField}
-                    />
-                </TwoElementInnerWrapper>
-
-                {chData.map((val, i) => (
-                    <TwoElementInnerWrapper key={i}>
+                <Form
+                    form={form}
+                    name="currency"
+                    layout="vertical"
+                    scrollToFirstError
+                >
+                    <TwoElementInnerWrapper style={{ marginTop: '30px' }}>
                         <Checkbox >Member</Checkbox>
                         <Checkbox >Own</Checkbox>
                         <Checkbox >Member</Checkbox>
@@ -200,13 +155,67 @@ const NetworkTab = () => {
                             </Select>
                         </Form.Item>
                         <Button
-                            type="danger"
-                            icon={<CloseOutlined />}
+                            style={{ marginLeft: "10px" }}
+                            type="primary"
+                            icon={<PlusOutlined />}
                             shape="circle"
-                            onClick={() => handleDeleteMobileAndTypeField(i)}
+                            onClick={handleMobileAndTypeField}
                         />
                     </TwoElementInnerWrapper>
-                ))}
+
+                    {chData.map((val, i) => (
+                        <TwoElementInnerWrapper key={i}>
+                            <Checkbox >Member</Checkbox>
+                            <Checkbox >Own</Checkbox>
+                            <Checkbox >Member</Checkbox>
+                            <Checkbox >Own</Checkbox>
+                            <Form.Item
+                                name="econtact"
+                                // label="Select Class Series / Membership"
+                                rules={[
+                                    {
+                                        required: false,
+                                        message: "Enter Name!",
+                                    },
+                                ]}
+                                // className="clsEcontact"
+                                style={{ width: "30%" }}
+                            >
+                                <Input placeholder="Name" />
+                            </Form.Item>
+                            <Form.Item
+                                name="Mobile Type"
+                                // label="Type"
+                                rules={[
+                                    {
+                                        required: false,
+                                        message: "Select Type!",
+                                    },
+                                ]}
+                                style={{ width: "30%" }}
+                            >
+                                <Select
+                                    showSearch
+                                    placeholder="Select"
+                                    // handleChange={handleChangeType}
+                                    allowClear
+                                >
+                                    <Option value="Home">Home</Option>
+                                    <Option value="Office">Office</Option>
+                                    <Option value="Mobile">Mobile</Option>
+                                    <Option value="Fax">Fax</Option>
+                                </Select>
+                            </Form.Item>
+                            <Button
+                                type="danger"
+                                icon={<CloseOutlined />}
+                                shape="circle"
+                                onClick={() => handleDeleteMobileAndTypeField(i)}
+                            />
+                        </TwoElementInnerWrapper>
+                    ))}
+                </Form>
+
 
                 <BottomButtonWrapper>
                     <Button>
