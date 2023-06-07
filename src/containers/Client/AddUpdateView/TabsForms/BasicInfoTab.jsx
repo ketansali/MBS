@@ -8,11 +8,15 @@ import Button from "@iso/components/uielements/button";
 import Input from "@iso/components/uielements/input";
 import Datepicker from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
-import { Form, Radio, Upload } from "antd";
+import { Form, Radio, Upload, Tooltip } from "antd";
 import Checkbox, { CheckboxGroup } from "@iso/components/uielements/checkbox";
 import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
-import { UploadOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  PlusOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 import {
   GetCountry,
   GetCountryByState,
@@ -28,8 +32,6 @@ const Option = SelectOption;
 const BasicInfoTab = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const match = useRouteMatch();
-  const [chData, setCHData] = useState([]);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [city, setCity] = useState([]);
@@ -38,20 +40,7 @@ const BasicInfoTab = () => {
   const [location, setLocation] = useState([]);
   const [isVaccinated, setIsVaccinated] = useState(false);
 
-  const handleMobileAndTypeField = () => {
-    setCHData([...chData, { contact: "", contactType: "" }]);
-  };
-  const handleDeleteMobileAndTypeField = (i) => {
-    const deleteField = [...chData];
-    deleteField.splice(i, 1);
-    setCHData(deleteField);
-  };
-  const handleChangeMobileAndTypeField = (e, i) => {
-    const { name, value } = e.target;
-    const onChangeVal = [...chData];
-    onChangeVal[i][name] = value;
-    setCHData(onChangeVal);
-  };
+ 
   const marketing = [
     { label: "EMAIL", value: "EMAIL" },
     { label: "MAIL", value: "MAIL" },
@@ -206,6 +195,8 @@ const BasicInfoTab = () => {
         locationId,
         SubscribeNow,
         ContactId,
+        mobile,
+        clientMobiles
       } = form.getFieldValue();
 
       CreateClient({
@@ -237,6 +228,8 @@ const BasicInfoTab = () => {
         locationId,
         SubscribeNow,
         ContactId,
+        mobile,
+        clientMobiles
       }).then(() => {
         history.push(`/dashboard/client`);
       });
@@ -466,7 +459,7 @@ const BasicInfoTab = () => {
         <div className="elementWidth">
           <TwoElementInnerWrapper>
             <Form.Item
-              name="contact"
+              name="mobile"
               // label="Select Class Series / Membership"
               rules={[
                 {
@@ -476,15 +469,8 @@ const BasicInfoTab = () => {
               ]}
               className="clsMobileElement"
             >
-              <InputNumber placeholder="Mobile" />
+              <Input placeholder="Mobile" />
             </Form.Item>
-            <Button
-              style={{ marginLeft: "10px" }}
-              type="primary"
-              icon={<PlusOutlined />}
-              shape="circle"
-              onClick={handleMobileAndTypeField}
-            />
             <Form.Item
               name="sendTxtMsg"
               // label="TEXT ME"
@@ -504,57 +490,85 @@ const BasicInfoTab = () => {
           </TwoElementInnerWrapper>
         </div>
       </TwoElementWrapper>
-      {chData.map((val, i) => (
-        <TwoElementWrapper key={i}>
-          <div className="elementWidth"></div>
-          <div className="elementWidth">
-            <TwoElementInnerWrapper>
-              <Form.Item
-                name="econtact"
-                // label="Select Class Series / Membership"
-                rules={[
-                  {
-                    required: false,
-                    message: "Enter Mobile!",
-                  },
-                ]}
-                className="clsEcontact"
-              >
-                <InputNumber placeholder="Mobile" />
+      <TwoElementWrapper>
+      <div className="elementWidth"></div>
+      <div className="elementWidth">
+        <Form.List name="clientMobiles">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field) => (
+                
+                  <TwoElementInnerWrapper key={field.key} style={{display:"flex", alignItems:"baseline"}}>
+                  <Form.Item
+                    noStyle
+                    shouldUpdate={(prevValues, curValues) =>
+                      prevValues.area !== curValues.area ||
+                      prevValues.sights !== curValues.sights
+                    }
+                  >
+                    {() => (
+                      <Form.Item
+                        {...field}
+                        // label="emobile"
+                        name={[field.name, "mobile"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Enter Mobile!",
+                          },
+                        ]}
+                        className="clsEcontact"
+                      >
+                      <Input/>
+                      </Form.Item>
+                    )}
+                  </Form.Item>
+                  <Form.Item
+                    {...field}
+                    // label="Price"
+                    name={[field.name, "mobileType"]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Select Mobile Type!",
+                      },
+                    ]}
+                    style={{ width: "30%" }}
+                  >
+                      <Select
+                          showSearch
+                          placeholder="Select Type"
+                          // handleChange={handleChangeType}
+                          allowClear
+                        >
+                          <Option value="Home">Home</Option>
+                          <Option value="Office">Office</Option>
+                          <Option value="Mobile">Mobile</Option>
+                          <Option value="Fax">Fax</Option>
+                        </Select>
+                  </Form.Item>
+                  <Tooltip title="Remove"><MinusCircleOutlined onClick={() => remove(field.name)} /></Tooltip>
+                  
+                  </TwoElementInnerWrapper>
+                 
+              ))}
+
+              <Form.Item>
+              <Tooltip title="Add Mobile and Type"><Button
+                  // style={{ marginLeft: "10px" }}
+                  onClick={() => add()}
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  shape="circle"
+                /></Tooltip>
+                
               </Form.Item>
-              <Form.Item
-                name="Mobile Type"
-                // label="Type"
-                rules={[
-                  {
-                    required: false,
-                    message: "Select Type!",
-                  },
-                ]}
-                style={{ width: "30%" }}
-              >
-                <Select
-                  showSearch
-                  placeholder="Select Type"
-                  // handleChange={handleChangeType}
-                  allowClear
-                >
-                  <Option value="Home">Home</Option>
-                  <Option value="Office">Office</Option>
-                  <Option value="Mobile">Mobile</Option>
-                  <Option value="Fax">Fax</Option>
-                </Select>
-              </Form.Item>
-              <Button
-                type="danger"
-                icon={<CloseOutlined />}
-                shape="circle"
-                onClick={() => handleDeleteMobileAndTypeField(i)}
-              />
-            </TwoElementInnerWrapper>
-          </div>
-        </TwoElementWrapper>
-      ))}
+            </>
+          )}
+        </Form.List>
+        </div>
+      </TwoElementWrapper>
+
       <TwoElementWrapper>
         <Form.Item
           name="refferedBy"
