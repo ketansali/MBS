@@ -6,6 +6,7 @@ import Box from "@iso/components/utility/box";
 import BasicTab from "./TabsForm/BasicTab";
 import TabPane from "antd/lib/tabs/TabPane";
 import ClientTabs from "../../Client/Tabs/Tabs";
+import Salary from "./TabsForm/Salary";
 
 
 const AddInstructor = () => {
@@ -18,7 +19,7 @@ const AddInstructor = () => {
         {
             key: "2",
             label: `SCHEDULE`,
-            //   children: <MembershipCreateOrUpdate />
+              children: <Salary />
         },
         {
             key: "3",
