@@ -6,7 +6,8 @@ import Box from "@iso/components/utility/box";
 import BasicTab from "./TabsForm/BasicTab";
 import TabPane from "antd/lib/tabs/TabPane";
 import ClientTabs from "../../Client/Tabs/Tabs";
-import Salary from "./TabsForm/Salary";
+import ScheduleTab from "./TabsForm/ScheduleTab";
+import SalaryTab from "./TabsForm/SalaryTab";
 
 
 const AddInstructor = () => {
@@ -19,12 +20,12 @@ const AddInstructor = () => {
         {
             key: "2",
             label: `SCHEDULE`,
-              children: <Salary />
+            children: <ScheduleTab />
         },
         {
             key: "3",
             label: `SALARY INFORMATION`,
-            //   children: '<AppointmentTab />',
+            children: <SalaryTab />,
         },
         {
             key: "4",
