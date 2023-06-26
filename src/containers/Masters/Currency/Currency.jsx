@@ -334,6 +334,7 @@ export default function Currency() {
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"
+                header={true}
               />
             )}
           </Spin>

@@ -16,10 +16,12 @@ import Select, { SelectOption } from "@iso/components/uielements/select";
 import { Form, Radio } from "antd";
 import Checkbox from "@iso/components/uielements/checkbox";
 import { GetAllClients } from "../../actions";
+import { useHistory } from "react-router-dom";
 const Option = SelectOption;
-const MembershipCreateOrUpdate = () => {
+const MembershipCreateOrUpdate = ({updateClientFormValues,addClient}) => {
   const [form] = Form.useForm();
   const [clients, setClients] = useState([]);
+  const history = useHistory();
 
   const getAllClients = (value) => {
     GetAllClients({
@@ -39,6 +41,21 @@ const MembershipCreateOrUpdate = () => {
     getAllClients();
   }, []);
 
+  const submitMembershipvalues = (changedValues, allValues)=>{
+    
+      const {clientId, startAndEndDate } = allValues;
+      const clientMembership = {
+        id: 0,
+        clientId,
+        startDate: startAndEndDate? startAndEndDate['0']:undefined,
+        endDate: startAndEndDate? startAndEndDate['1']:undefined,
+      }
+      updateClientFormValues({clientMembership});
+  
+  }
+  const submitMembership = () => {
+    addClient();
+  };
   return (
     <>
       <div className="PageContent">
@@ -48,6 +65,8 @@ const MembershipCreateOrUpdate = () => {
             name="currency"
             layout="vertical"
             scrollToFirstError
+            onFinish={submitMembership}
+            onValuesChange={submitMembershipvalues}
           >
             <TwoElementWrapper>
               <Form.Item
@@ -55,7 +74,7 @@ const MembershipCreateOrUpdate = () => {
                 // label="Client"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Select Client!",
                   },
                 ]}
@@ -81,7 +100,7 @@ const MembershipCreateOrUpdate = () => {
                 // label="Select Class Series / Membership"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Select Class Series / Membership!",
                   },
                 ]}
@@ -104,20 +123,20 @@ const MembershipCreateOrUpdate = () => {
                 // label="Select Start And End Date"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Select Start And End Date!",
                   },
                 ]}
                 className="elementWidth"
               >
-                <DateRangepicker />
+                <DateRangepicker format="YYYY-MM-DD"/>
               </Form.Item>
               <Form.Item
                 name="membershipFees"
                 // label="Class Series / Membership Fees"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Enter Class Series / Membership Fees!",
                   },
                 ]}
@@ -125,7 +144,7 @@ const MembershipCreateOrUpdate = () => {
               >
                 <Input
                   prefix={<b>CLASS SERIES / MEMBERSHIP FEES: $</b>}
-                  placeholder="Username"
+                  placeholder="CLASS SERIES / MEMBERSHIP FEES"
                 />
               </Form.Item>
             </TwoElementWrapper>
@@ -136,7 +155,7 @@ const MembershipCreateOrUpdate = () => {
                 // label="Select Class Series / Membership"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Enter Discount Type!",
                   },
                 ]}
@@ -157,7 +176,7 @@ const MembershipCreateOrUpdate = () => {
                 // label="Select Class Series / Membership"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Enter DISCOUNT!",
                   },
                 ]}
@@ -173,7 +192,7 @@ const MembershipCreateOrUpdate = () => {
                 // label="Select Start And End Date"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Enter ADJUSTMENT!",
                   },
                 ]}
@@ -186,7 +205,7 @@ const MembershipCreateOrUpdate = () => {
                 // label="ADJUSTMENT AMOUNT"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Enter ADJUSTMENT AMOUNT!",
                   },
                 ]}
@@ -207,7 +226,7 @@ const MembershipCreateOrUpdate = () => {
                     name="gst"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Please Enter GST!",
                       },
                     ]}
@@ -225,7 +244,7 @@ const MembershipCreateOrUpdate = () => {
                     valuePropName="Checked"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Please Check Tax!",
                       },
                     ]}
@@ -239,7 +258,7 @@ const MembershipCreateOrUpdate = () => {
                     name="ccfees"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Please Enter CC Fees!",
                       },
                     ]}
@@ -256,7 +275,7 @@ const MembershipCreateOrUpdate = () => {
                     valuePropName="Checked"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Please Check CC!",
                       },
                     ]}
@@ -293,7 +312,7 @@ const MembershipCreateOrUpdate = () => {
                       name="gst"
                       rules={[
                         {
-                          required: true,
+                          required: false,
                           message: "Please Enter GST!",
                         },
                       ]}
@@ -313,7 +332,7 @@ const MembershipCreateOrUpdate = () => {
                   name="notes"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Notes!",
                     },
                   ]}

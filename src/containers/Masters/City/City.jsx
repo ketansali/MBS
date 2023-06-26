@@ -7,7 +7,6 @@ import ContentHolder from "@iso/components/utility/contentHolder";
 import DataTable from "../../DataTable/DataTable";
 import { Form, Select, Spin } from "antd";
 import Input from "@iso/components/uielements/input";
-import { StatusTag } from "@iso/components/uielements/styles/Statustag.style";
 import {
   CreateCity,
   DeleteCity,
@@ -324,6 +323,7 @@ export default function Product() {
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"
+                header={true}
               />
             )}
           </Spin>

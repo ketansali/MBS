@@ -20,7 +20,7 @@ export default function AntTable({
   return (
     <>
       {
-        !header ? <TitleWrapper>
+        header ? <TitleWrapper>
           <ComponentTitle>{title}</ComponentTitle>
           {
             !searchHide && (

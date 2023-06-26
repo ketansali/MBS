@@ -8,7 +8,8 @@ import { useHistory, useRouteMatch } from "react-router";
 import DataTable from "../../DataTable/DataTable";
 import { Spin } from "antd";
 import { COMMON } from "../../Constant/Index";
-import { GetAllClients } from "../actions";
+import { DeleteClient, GetAllClients } from "../actions";
+import Swal from "@iso/components/UI/Swal/Swal";
 import {
   ActionWrapper,
 } from "@iso/components/uielements/DataTableStyle/DataTable.Style";
@@ -20,6 +21,7 @@ const ViewClients = () => {
   const match = useRouteMatch();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState([]);
+  
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -59,6 +61,21 @@ const ViewClients = () => {
       setClients([]);
     }
   };
+  const handleSearch = (e) => {
+    GetAllClients(COMMON.getTableParams(e)).then((res) => {
+      setClients(res?.responseData);
+      setLoading(false);
+    });
+  };
+  const handleDelete = (id) => {
+    Swal().then((willDelete) => {
+      if (willDelete) {
+        DeleteClient(id).then(() => {
+          getData();
+        });
+      }
+    });
+  };
   const columns = [
     {
       title: "Actions",
@@ -68,7 +85,7 @@ const ViewClients = () => {
       render: (text, record) => {
         return (
           <ActionWrapper>
-            <DeleteCell  />
+            <DeleteCell handleDelete={() => handleDelete(record.id)} />
             <EditCell />
           </ActionWrapper>
         );
@@ -105,7 +122,7 @@ const ViewClients = () => {
         </div>
       </Header>
       <HeaderSecondary>
-        <SearchInput placeholder="Search..." />
+        <SearchInput placeholder="Search..." onChange={handleSearch} />
         <Filters>
           <div style={{ marginRight: "10px" }}>
             <Select
@@ -139,7 +156,7 @@ const ViewClients = () => {
                 data={clients.data}
                 title="Clients"
                 // handleSearch={handleSearch}
-                header={true}
+                header={false}
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"

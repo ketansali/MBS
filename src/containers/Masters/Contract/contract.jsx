@@ -245,6 +245,7 @@ export default function DurationType() {
                   handlePage={handlePage}
                   pagination={tableParams.pagination}
                   rowKey="id"
+                  header={true}
                 />
               )}
             </Spin>

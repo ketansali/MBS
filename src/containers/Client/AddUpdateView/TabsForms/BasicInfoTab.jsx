@@ -8,7 +8,7 @@ import Button from "@iso/components/uielements/button";
 import Input from "@iso/components/uielements/input";
 import Datepicker from "@iso/components/uielements/datePicker";
 import Select, { SelectOption } from "@iso/components/uielements/select";
-import { Form, Radio, Upload, Tooltip } from "antd";
+import { Form, Radio, Upload, Tooltip,Space } from "antd";
 import Checkbox, { CheckboxGroup } from "@iso/components/uielements/checkbox";
 import InputNumber from "@iso/components/uielements/InputNumber";
 import "./Styles/BasicInfo.css";
@@ -22,16 +22,16 @@ import {
   GetCountryByState,
   GetStateByCity,
 } from "../../../Masters/Country/actions";
-import moment from "moment";
-import { CreateClient, GetAllContract } from "../../actions";
+
+import { GetAllContract } from "../../actions";
 import { GetAllRelation } from "../../../Masters/Relation/actions";
 import { GetAllLocation } from "../../../Masters/Location/actions";
 import { COMMON } from "../../../Constant/Index";
-import { useHistory, useRouteMatch } from "react-router-dom";
+
 const Option = SelectOption;
-const BasicInfoTab = () => {
+const BasicInfoTab = ({updateClientFormValues, addClient}) => {
   const [form] = Form.useForm();
-  const history = useHistory();
+  
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [city, setCity] = useState([]);
@@ -164,76 +164,11 @@ const BasicInfoTab = () => {
       form.setFieldsValue({ marketingWhatsapp: false });
     }
   };
+  const submitBasicInfovalues = (changedValues, allValues) => {
+    updateClientFormValues(changedValues, allValues); 
+  };
   const submitBasicInfo = () => {
-    form.validateFields().then(async (values) => {
-      const {
-        firstName,
-        lastName,
-        birthDay,
-        address,
-        countryId,
-        stateId,
-        cityId,
-        zip,
-        email,
-        phone,
-        refferedBy,
-        isApplicant18,
-        status,
-        isCovidvaccinated,
-        gender,
-        sendTxtMsg,
-        emergencyPhone,
-        emergencyRelationId,
-        emergencyName,
-        studentPhoto,
-        proofCovidVaccinated,
-        marketingEmail,
-        marketingMail,
-        marketingSMS,
-        marketingWhatsapp,
-        locationId,
-        SubscribeNow,
-        ContactId,
-        mobile,
-        clientMobiles
-      } = form.getFieldValue();
-
-      CreateClient({
-        firstName,
-        lastName,
-        birthDay: moment(birthDay).format("YYYY-MM-DD"),
-        address,
-        countryId,
-        stateId,
-        cityId,
-        zip,
-        email,
-        phone,
-        refferedBy,
-        isApplicant18,
-        status,
-        isCovidvaccinated,
-        gender,
-        sendTxtMsg,
-        emergencyPhone,
-        emergencyRelationId,
-        emergencyName,
-        studentPhoto,
-        proofCovidVaccinated,
-        marketingEmail,
-        marketingMail,
-        marketingSMS,
-        marketingWhatsapp,
-        locationId,
-        SubscribeNow,
-        ContactId,
-        mobile,
-        clientMobiles
-      }).then(() => {
-        history.push(`/dashboard/client`);
-      });
-    });
+    addClient();
   };
   const handleIsVaccinated = (e) => {
     setIsVaccinated(e.target.checked);
@@ -245,6 +180,7 @@ const BasicInfoTab = () => {
       layout="vertical"
       scrollToFirstError
       onFinish={submitBasicInfo}
+      onValuesChange={submitBasicInfovalues}
     >
       <TwoElementWrapper>
         <Form.Item
@@ -306,7 +242,7 @@ const BasicInfoTab = () => {
           ]}
           className="elementWidth"
         >
-          <Datepicker placeholder="Birthday" format={"YYYY/MM/DD"} />
+          <Datepicker placeholder="Birthday" format="YYYY-MM-DD" />
         </Form.Item>
       </TwoElementWrapper>
 
@@ -496,21 +432,13 @@ const BasicInfoTab = () => {
         <Form.List name="clientMobiles">
           {(fields, { add, remove }) => (
             <>
-              {fields.map((field) => (
+              {fields.map(({ key, name, ...restField }) => (
                 
-                  <TwoElementInnerWrapper key={field.key} style={{display:"flex", alignItems:"baseline"}}>
+                  <TwoElementInnerWrapper key={key} style={{display:"flex", alignItems:"baseline"}}>
                   <Form.Item
-                    noStyle
-                    shouldUpdate={(prevValues, curValues) =>
-                      prevValues.area !== curValues.area ||
-                      prevValues.sights !== curValues.sights
-                    }
-                  >
-                    {() => (
-                      <Form.Item
-                        {...field}
+                        {...restField}
                         // label="emobile"
-                        name={[field.name, "mobile"]}
+                        name={[name, "mobile"]}
                         rules={[
                           {
                             required: true,
@@ -521,12 +449,10 @@ const BasicInfoTab = () => {
                       >
                       <Input/>
                       </Form.Item>
-                    )}
-                  </Form.Item>
                   <Form.Item
-                    {...field}
+                    {...restField}
                     // label="Price"
-                    name={[field.name, "mobileType"]}
+                    name={[name, "mobileType"]}
                     rules={[
                       {
                         required: true,
@@ -547,7 +473,7 @@ const BasicInfoTab = () => {
                           <Option value="Fax">Fax</Option>
                         </Select>
                   </Form.Item>
-                  <Tooltip title="Remove"><MinusCircleOutlined onClick={() => remove(field.name)} /></Tooltip>
+                  <Tooltip title="Remove"><MinusCircleOutlined onClick={() => remove(name)} /></Tooltip>
                   
                   </TwoElementInnerWrapper>
                  
@@ -561,11 +487,11 @@ const BasicInfoTab = () => {
                   icon={<PlusOutlined />}
                   shape="circle"
                 /></Tooltip>
-                
               </Form.Item>
             </>
           )}
         </Form.List>
+         
         </div>
       </TwoElementWrapper>
 

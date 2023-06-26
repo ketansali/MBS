@@ -246,6 +246,7 @@ export default function Product() {
                 handlePage={handlePage}
                 pagination={tableParams.pagination}
                 rowKey="id"
+                header={true}
               />
             )}
           </Spin>
