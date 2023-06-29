@@ -148,6 +148,7 @@ export default function Country() {
       okText={form.getFieldValue().id ? "Update" : "Add"}
       onOk={handleSubmit}
       onCancel={handleModal}
+      header={true}
       bodyStyle={{ borderRadius: "50px" }}
     >
       <Form form={form} name="Country" layout="vertical" scrollToFirstError>
@@ -189,6 +190,7 @@ export default function Country() {
                 title="Country"
                 handleSearch={handleSearch}
                 handlePage={handlePage}
+                header={true}
                 pagination={tableParams.pagination}
                 rowKey="id"
               />

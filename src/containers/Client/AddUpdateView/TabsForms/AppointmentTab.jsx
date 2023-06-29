@@ -26,6 +26,7 @@ const AppointmentTab = () => {
       name="currency"
       layout="vertical"
       scrollToFirstError
+      
     >
       <TwoElementWrapper>
         <Form.Item

@@ -1,34 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@iso/components/utility/box";
 import LayoutWrapper from "@iso/components/utility/layoutWrapper.js";
-import IntlMessages from "@iso/components/utility/intlMessages";
 import Tabs from "../Tabs/Tabs";
 import PageHeader from "@iso/components/utility/pageHeader";
 import MembershipCreateOrUpdate from "./TabsForms/MembershipTab";
 import BasicInfoTab from "./TabsForms/BasicInfoTab";
 import AppointmentTab from "./TabsForms/AppointmentTab";
 import NetworkTab from "./TabsForms/NetworkTab";
+import { CreateClient } from "../actions";
+import { useHistory } from "react-router-dom";
+
 const AddClients = () => {
+  
+  const history = useHistory();
+  const [clientFormValue,setClientFormValue] = useState({});
+  const updateClientFormValues  = (changedValues, allValues)=>{
+      setClientFormValue((prevFormValues)=>({
+        ...prevFormValues,
+        ...allValues
+      }));
+  }
+  const addClient = ()=>{
+    CreateClient(clientFormValue).then(()=>{
+      history.push(`/dashboard/client`);
+    });
+  }
   const tabsOptions = [
     {
       key: "1",
       label: `BASIC INFORMATION`,
-      children: <BasicInfoTab />
+      children: <BasicInfoTab updateClientFormValues={updateClientFormValues} addClient={addClient} />
     },
     {
       key: "2",
       label: `CLASS SERIES/MEMBERSHIP`,
-      children: <MembershipCreateOrUpdate />
+      children: <MembershipCreateOrUpdate updateClientFormValues={updateClientFormValues} addClient={addClient} />
     },
     {
       key: "3",
       label: `APPOINTMENT`,
-      children: <AppointmentTab />,
+      children: <AppointmentTab updateClientFormValues={updateClientFormValues}/>,
     },
     {
       key: "4",
       label: `NETWORK`,
-      children: <NetworkTab />,
+      children: <NetworkTab updateClientFormValues={updateClientFormValues}/>,
     },
   ];
 

@@ -219,6 +219,7 @@ export default function Designation() {
                     handlePage={handlePage}
                     pagination={tableParams.pagination}
                     rowKey="id"
+                    header={true}
                   />
                 )
               }
