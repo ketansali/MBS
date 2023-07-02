@@ -3,7 +3,7 @@ import {
     TwoElementWrapper,
     TwoElementInnerWrapper,
 } from "@iso/components/UI/Form/FormUI.style";
-import { Col, Divider, Form, Modal, Row, Select, TimePicker, Tooltip } from "antd";
+import { Col, DatePicker, Divider, Form, Modal, Row, Select, TimePicker, Tooltip } from "antd";
 import Box from "@iso/components/utility/box";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import moment from "moment";
@@ -25,42 +25,37 @@ import DateRangFormCommon from "../../../../components/FormListCommon/DateRangFo
 const format = 'HH:mm';
 const Availablity = () => {
     const [form] = Form.useForm();
-    const [modal1Open, setModal1Open] = useState(false);
-    const [monData, setMonData] = useState([]);
-    const [tueData, setTueData] = useState([]);
-    const [wedData, setWedData] = useState([]);
-    const [thuData, setThuData] = useState([]);
-    const [friData, setFriData] = useState([]);
-    const [satData, setSatData] = useState([]);
-    const [sunData, setSunData] = useState([]);
+    const initialForm = { onStartTime: "", onEndTime: "", onSelectLocation: "" }
     const [ongoingData, setOngoingData] = useState({
-        onMonData: [],
-        onTueData: [],
-        onWedData: [],
-        onThuData: [],
-        onFriData: [],
-        onSatData: [],
-        onSunData: [],
+        onMonData: [initialForm],
+        onTueData: [initialForm],
+        onWedData: [initialForm],
+        onThuData: [initialForm],
+        onFriData: [initialForm],
+        onSatData: [initialForm],
+        onSunData: [initialForm],
     });
-    const [moreSchedulerFiled, setMoreSchedulerFiled] = useState([]);
+    const [dateRangeData, setdateRangeData] = useState({
+        drMonData: [initialForm],
+        drTueData: [initialForm],
+        drWedData: [initialForm],
+        drThuData: [initialForm],
+        drFriData: [initialForm],
+        drSatData: [initialForm],
+        drSunData: [initialForm],
+    });
+    const [moreSchedulerFiled, setMoreSchedulerFiled] = useState([{ contact: "", contactType: "" }]);
 
+    const [perticulardate, setPerticulardate] = useState([
+        {
+            selectLocation: '',
+            startDate: '',
+            startAndEndTime: [{ startTime: '', endTime: '' }]
+        }
+    ])
     // for days add
-    const handleDaysAndField = (instrctDay) => {
-        if (instrctDay === "MON") {
-            setMonData([...monData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "TUE") {
-            setTueData([...tueData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "WED") {
-            setWedData([...wedData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "THU") {
-            setThuData([...thuData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "FRI") {
-            setFriData([...friData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "SAT") {
-            setSatData([...satData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "SUN") {
-            setSunData([...sunData, { contact: "", contactType: "" }]);
-        } else if (instrctDay === "MORE_SCHEDULER") {
+    const handleDaysAndField = (instrctDay, index) => {
+        if (instrctDay === "MORE_SCHEDULER") {
             setMoreSchedulerFiled([...moreSchedulerFiled, { contact: "", contactType: "" }]);
         } else if (instrctDay === "ONGOINGMON") {
             ongoingData.onMonData = [...ongoingData.onMonData, { contact: "", contactType: "" }]
@@ -83,39 +78,42 @@ const Availablity = () => {
         } else if (instrctDay === "ONGOINGSUN") {
             ongoingData.onSunData = [...ongoingData.onSunData, { contact: "", contactType: "" }]
             setOngoingData({ ...ongoingData });
+        } else if (instrctDay === "DRMON") {
+            dateRangeData.drMonData = [...dateRangeData.drMonData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === "DRTUE") {
+            dateRangeData.drTueData = [...dateRangeData.drTueData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === "DRWED") {
+            dateRangeData.drWedData = [...dateRangeData.drWedData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === "DRTHU") {
+            dateRangeData.drThuData = [...dateRangeData.drThuData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === "DRFRID") {
+            dateRangeData.drFriData = [...dateRangeData.drFriData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === "DRSAT") {
+            dateRangeData.drSatData = [...dateRangeData.drSatData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === "DRSUN") {
+            dateRangeData.drSunData = [...dateRangeData.drSunData, { drStartTime: "", drEndTime: "" }]
+            setdateRangeData({ ...dateRangeData });
+        } else if (instrctDay === 'ADDNEWPERTICULAR') {
+            const tempObj = {
+                selectLocation: '',
+                startDate: '',
+                startAndEndTime: [{ startTime: '', endTime: '' }]
+            }
+            setPerticulardate([...perticulardate, tempObj]);
+        } else if (instrctDay === 'ADDNEWPERTICULAR_TIME') {
+            perticulardate[index].startAndEndTime = [...perticulardate[index].startAndEndTime, { startTime: '', endTime: '' }]
+            setPerticulardate([...perticulardate]);
         }
     };
 
     const handleDeleteDaysAndField = (instrctDay, i) => {
-        if (instrctDay === "MON") {
-            const deleteField = [...monData];
-            deleteField.splice(i, 1);
-            setMonData(deleteField);
-        } else if (instrctDay === "TUE") {
-            const deleteField = [...tueData];
-            deleteField.splice(i, 1);
-            setTueData(deleteField);
-        } else if (instrctDay === "WED") {
-            const deleteField = [...wedData];
-            deleteField.splice(i, 1);
-            setWedData(deleteField);
-        } else if (instrctDay === "THU") {
-            const deleteField = [...thuData];
-            deleteField.splice(i, 1);
-            setThuData(deleteField);
-        } else if (instrctDay === "FRI") {
-            const deleteField = [...friData];
-            deleteField.splice(i, 1);
-            setFriData(deleteField);
-        } else if (instrctDay === "SAT") {
-            const deleteField = [...satData];
-            deleteField.splice(i, 1);
-            setSatData(deleteField);
-        } else if (instrctDay === "SUN") {
-            const deleteField = [...sunData];
-            deleteField.splice(i, 1);
-            setSunData(deleteField);
-        } else if (instrctDay === "MORE_SCHEDULER") {
+        if (instrctDay === "MORE_SCHEDULER") {
             const deleteField = [...moreSchedulerFiled];
             deleteField.splice(i, 1);
             setMoreSchedulerFiled(deleteField);
@@ -147,6 +145,41 @@ const Availablity = () => {
             const deleteField = [...ongoingData.onSunData];
             deleteField.splice(i, 1);
             setOngoingData({ ...ongoingData, onSunData: deleteField });
+        } else if (instrctDay === "DRMON") {
+            const deleteField = [...dateRangeData.drMonData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drMonData: deleteField });
+        } else if (instrctDay === "DRTUE") {
+            const deleteField = [...dateRangeData.drTueData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drTueData: deleteField });
+        } else if (instrctDay === "DRWED") {
+            const deleteField = [...dateRangeData.drWedData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drWedData: deleteField });
+        } else if (instrctDay === "DRTHU") {
+            const deleteField = [...dateRangeData.drThuData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drThuData: deleteField });
+        } else if (instrctDay === "DRFRID") {
+            const deleteField = [...dateRangeData.drFriData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drFriData: deleteField });
+        } else if (instrctDay === "DRSAT") {
+            const deleteField = [...dateRangeData.drSatData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drSatData: deleteField });
+        } else if (instrctDay === "DRSUN") {
+            const deleteField = [...dateRangeData.drSunData];
+            deleteField.splice(i, 1);
+            setdateRangeData({ ...dateRangeData, drSunData: deleteField });
+        } else if (instrctDay === "ADDNEWPERTICULAR") {
+            const deleteField = perticulardate.filter((item, indx) => indx !== i);
+            setPerticulardate(deleteField);
+        } else if (instrctDay === "ADDNEWPERTICULAR_TIME") {
+            const deleteField = perticulardate[i].startAndEndTime.filter((item, indx) => indx !== i);
+            perticulardate[i].startAndEndTime = deleteField
+            setPerticulardate([...perticulardate]);
         }
     };
 
@@ -157,6 +190,10 @@ const Availablity = () => {
             } = form.getFieldValue();
 
         });
+    };
+
+    const onDateChange = (date, dateString) => {
+        console.log(date, dateString);
     };
 
     return (
@@ -170,449 +207,438 @@ const Availablity = () => {
             >
                 <h3 style={{ marginBottom: '-20px' }}>ONGOING</h3>
                 <Divider />
-                {/* for mon and tue */}
-                <TwoElementWrapper>
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_1'}
-                        checkBoxLabel={'MON'}
-                        formItemInputName="ON_start_time1_1_1"
-                        formInputName="ON_start_time1_1_1"
-                        formItemInputName1="ON_end_time1_1_1"
-                        formInputName1="ON_end_time1_1_1"
-                        formItemSelectName="ON_location_id1_1_1"
-                        format={format}
-                        typeTodel="ONGOINGMON"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_2'}
-                        checkBoxLabel={'TUE'}
-                        formItemInputName="ON_start_time1_2_1"
-                        formInputName="ON_start_time1_2_1"
-                        formItemInputName1="ON_end_time1_2_1"
-                        formInputName1="ON_end_time1_2_1"
-                        formItemSelectName="ON_location_id1_2_1"
-                        format={format}
-                        typeTodel="ONGOINGTUE"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                <TwoElementWrapper>
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onMonData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_1_"
-                        formInputName1="ON_end_time1_1_"
-                        formItemSelectName="ON_location_id1_1_"
-                        format={format}
-                        typeTodel="ONGOINGMON"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onTueData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_2_"
-                        formInputName1="ON_end_time1_2_"
-                        formItemSelectName="ON_location_id1_2_"
-                        format={format}
-                        typeTodel="ONGOINGTUE"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                {/* for wed and thu */}
-                <TwoElementWrapper>
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_3'}
-                        checkBoxLabel={'WED'}
-                        formItemInputName="ON_start_time1_3_1"
-                        formInputName="ON_start_time1_3_1"
-                        formItemInputName1="ON_end_time1_3_1"
-                        formInputName1="ON_end_time1_3_1"
-                        formItemSelectName="ON_location_id1_3_1"
-                        format={format}
-                        typeTodel="ONGOINGWED"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_4'}
-                        checkBoxLabel={'THU'}
-                        formItemInputName="ON_start_time1_4_1"
-                        formInputName="ON_start_time1_4_1"
-                        formItemInputName1="ON_end_time1_4_1"
-                        formInputName1="ON_end_time1_4_1"
-                        formItemSelectName="ON_location_id1_4_1"
-                        format={format}
-                        typeTodel="ONGOINGTHU"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                <TwoElementWrapper>
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onWedData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_3_"
-                        formInputName1="ON_end_time1_3_"
-                        formItemSelectName="ON_location_id1_3_"
-                        format={format}
-                        typeTodel="ONGOINGWED"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onThuData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_4_"
-                        formInputName1="ON_end_time1_4_"
-                        formItemSelectName="ON_location_id1_4_"
-                        format={format}
-                        typeTodel="ONGOINGTHU"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                {/* for fri and sat */}
-                <TwoElementWrapper >
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_5'}
-                        checkBoxLabel={'FRID'}
-                        formItemInputName="ON_start_time1_5_1"
-                        formInputName="ON_start_time1_5_1"
-                        formItemInputName1="ON_end_time1_5_1"
-                        formInputName1="ON_end_time1_5_1"
-                        formItemSelectName="ON_location_id1_5_1"
-                        format={format}
-                        typeTodel="ONGOINGFRI"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_6'}
-                        checkBoxLabel={'SAT'}
-                        formItemInputName="ON_start_time1_6_1"
-                        formInputName="ON_start_time1_6_1"
-                        formItemInputName1="ON_end_time1_6_1"
-                        formInputName1="ON_end_time1_6_1"
-                        formItemSelectName="ON_location_id1_6_1"
-                        format={format}
-                        typeTodel="ONGOINGSAT"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                <TwoElementWrapper>
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onFriData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_5_"
-                        formInputName1="ON_end_time1_5_"
-                        formItemSelectName="ON_location_id1_5_"
-                        format={format}
-                        typeTodel="ONGOINGFRI"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onSatData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_6_"
-                        formInputName1="ON_end_time1_6_"
-                        formItemSelectName="ON_location_id1_6_"
-                        format={format}
-                        typeTodel="ONGOINGSAT"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                <TwoElementWrapper >
-                    <FormListCommonForInstractor
-                        formType="single"
-                        checkBoxName={'ON_WorkCounter1_7'}
-                        checkBoxLabel={'SUN'}
-                        formItemInputName="ON_start_time1_8_1"
-                        formInputName="ON_start_time1_8_1"
-                        formItemInputName1="ON_end_time1_8_1"
-                        formInputName1="ON_end_time1_8_1"
-                        formItemSelectName="ON_location_id1_8_1"
-                        format={format}
-                        typeTodel="ONGOINGSUN"
-                        handleDaysAndField={handleDaysAndField}
-                    />
-                </TwoElementWrapper>
-
-                <TwoElementWrapper>
-                    <FormListCommonForInstractor
-                        formList={ongoingData.onSunData}
-                        formItemInputName="ON_start_time1_1_"
-                        formInputName="ON_start_time1_7_"
-                        formInputName1="ON_end_time1_7_"
-                        formItemSelectName="ON_location_id1_7_"
-                        format={format}
-                        typeTodel="ONGOINGSUN"
-                        handleDeleteDaysAndField={handleDeleteDaysAndField}
-                    />
-                </TwoElementWrapper>
-                <Divider />
-
-                {/* for dateRenge section */}
-                <h3 style={{ marginBottom: '-20px' }}>DATE RANGE
-                </h3>
-                <Divider />
-
-                {/* for mon and tue */}
-                <Box style={{ marginTop: '10px' }}>
+                {/* for ongoing section */}
+                <div style={{ width: "92%", marginLeft: '20px' }}>
                     <TwoElementWrapper>
-                        <Form.Item
-                            name="DR_location_id1"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Select salary type!",
-                                },
-                            ]}
-                            className="elementWidth"
-                        >
-                            <Select
-                                showSearch
-                                placeholder="Select Location Type"
-                                optionFilterProp="children"
-                                // onChange={onChange}
-                                // onSearch={onSearch}
-                                filterOption={(input, option) =>
-                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                }
-                                options={[
-                                    {
-                                        value: 'salect',
-                                        label: 'Select Salary Type',
-                                    },
-                                    {
-                                        value: 'perClass',
-                                        label: 'Per Class',
-                                    },
-                                ]}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name="DR_start_date1" //DR_end_date1
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Select Start And End Date!",
-                                },
-                            ]}
-                            // className="elementWidth"
-                            style={{ width: '50%' }}
-                        >
-                            <DateRangepicker />
-                        </Form.Item>
-                    </TwoElementWrapper>
-
-                    <TwoElementWrapper>
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'DR_WorkCounter1_1'}
+                        <FormListCommonForInstractor
                             checkBoxLabel={'MON'}
-                            formItemInputName="DR_start_time1_1_1"
-                            formInputName="DR_start_time1_1_1"
-                            formItemInputName1="DR_end_time1_1_1"
-                            formInputName1="DR_end_time1_1_1"
-                            format={format}
-                            typeTodel="DRGOINGMON"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'DR_WorkCounter1_2'}
-                            checkBoxLabel={'TUE'}
-                            formItemInputName="DR_start_time1_2_1"
-                            formInputName="DR_start_time1_2_1"
-                            formItemInputName1="DR_end_time1_2_1"
-                            formInputName1="DR_end_time1_2_1"
-                            format={format}
-                            typeTodel="DRGOINGTUE"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-                    </TwoElementWrapper>
-
-                    <TwoElementWrapper>
-                        <DateRangFormCommon
                             formList={ongoingData.onMonData}
                             formItemInputName="ON_start_time1_1_"
                             formInputName="ON_start_time1_1_"
                             formInputName1="ON_end_time1_1_"
                             formItemSelectName="ON_location_id1_1_"
                             format={format}
-                            typeTodel="DRGOINGMON"
+                            typeTodel="ONGOINGMON"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
-                            formMarginLeft={"62px"}
                         />
 
-                        <DateRangFormCommon
+                        <FormListCommonForInstractor
+                            checkBoxLabel={'TUE'}
                             formList={ongoingData.onTueData}
                             formItemInputName="ON_start_time1_1_"
                             formInputName="ON_start_time1_2_"
                             formInputName1="ON_end_time1_2_"
                             formItemSelectName="ON_location_id1_2_"
                             format={format}
-                            typeTodel="DRGOINGTUE"
+                            typeTodel="ONGOINGTUE"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
-                            formMarginLeft={"57px"}
                         />
                     </TwoElementWrapper>
 
-                    {/* wed & thu */}
+                    {/* for wed and thu */}
                     <TwoElementWrapper>
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'ON_WorkCounter1_3'}
+                        <FormListCommonForInstractor
                             checkBoxLabel={'WED'}
-                            formItemInputName="ON_start_time1_3_1"
-                            formInputName="ON_start_time1_3_1"
-                            formItemInputName1="DR_end_time1_3_1"
-                            formInputName1="DR_end_time1_3_1"
-                            format={format}
-                            typeTodel="DRGOINGWED"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'DR_WorkCounter1_4'}
-                            checkBoxLabel={'THU'}
-                            formItemInputName="DR_start_time1_4_1"
-                            formInputName="DR_start_time1_4_1"
-                            formItemInputName1="DR_end_time1_4_1"
-                            formInputName1="DR_end_time1_4_1"
-                            format={format}
-                            typeTodel="DRGOINGTHU"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-                    </TwoElementWrapper>
-
-                    <TwoElementWrapper>
-                        <DateRangFormCommon
-                            formList={ongoingData.onMonData}
-                            formItemInputName="ON_start_time1_3_"
+                            formList={ongoingData.onWedData}
+                            formItemInputName="ON_start_time1_1_"
                             formInputName="ON_start_time1_3_"
                             formInputName1="ON_end_time1_3_"
                             formItemSelectName="ON_location_id1_3_"
                             format={format}
-                            typeTodel="DRGOINGWED"
+                            typeTodel="ONGOINGWED"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
-                            formMarginLeft={"62px"}
                         />
 
-                        <DateRangFormCommon
-                            formList={ongoingData.onTueData}
-                            formItemInputName="ON_start_time1_4_"
+                        <FormListCommonForInstractor
+                            checkBoxLabel={'THU'}
+                            formList={ongoingData.onThuData}
+                            formItemInputName="ON_start_time1_1_"
                             formInputName="ON_start_time1_4_"
                             formInputName1="ON_end_time1_4_"
                             formItemSelectName="ON_location_id1_4_"
                             format={format}
-                            typeTodel="DRGOINGTHU"
+                            typeTodel="ONGOINGTHU"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
-                            formMarginLeft={"57px"}
                         />
                     </TwoElementWrapper>
 
-                    {/* FRID & SAT */}
+                    {/* for fri and sat */}
                     <TwoElementWrapper>
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'ON_WorkCounter1_5'}
+                        <FormListCommonForInstractor
                             checkBoxLabel={'FRID'}
-                            formItemInputName="ON_start_time1_5_1"
-                            formInputName="ON_start_time1_5_1"
-                            formItemInputName1="DR_end_time1_5_1"
-                            formInputName1="DR_end_time1_5_1"
-                            format={format}
-                            typeTodel="DRGOINGFRID"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'DR_WorkCounter1_6'}
-                            checkBoxLabel={'SAT'}
-                            formItemInputName="DR_start_time1_6_1"
-                            formInputName="DR_start_time1_6_1"
-                            formItemInputName1="DR_end_time1_6_1"
-                            formInputName1="DR_end_time1_6_1"
-                            format={format}
-                            typeTodel="DRGOINGSAT"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-                    </TwoElementWrapper>
-
-                    <TwoElementWrapper>
-                        <DateRangFormCommon
-                            formList={ongoingData.onMonData}
-                            formItemInputName="ON_start_time1_5_"
+                            formList={ongoingData.onFriData}
+                            formItemInputName="ON_start_time1_1_"
                             formInputName="ON_start_time1_5_"
                             formInputName1="ON_end_time1_5_"
                             formItemSelectName="ON_location_id1_5_"
                             format={format}
-                            typeTodel="DRGOINGFRID"
+                            typeTodel="ONGOINGFRI"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
-                            formMarginLeft={"62px"}
                         />
 
-                        <DateRangFormCommon
-                            formList={ongoingData.onTueData}
-                            formItemInputName="ON_start_time1_6_"
+                        <FormListCommonForInstractor
+                            checkBoxLabel={'SAT'}
+                            formList={ongoingData.onSatData}
+                            formItemInputName="ON_start_time1_1_"
                             formInputName="ON_start_time1_6_"
                             formInputName1="ON_end_time1_6_"
                             formItemSelectName="ON_location_id1_6_"
                             format={format}
-                            typeTodel="DRGOINGSAT"
+                            typeTodel="ONGOINGSAT"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
-                            formMarginLeft={"57px"}
                         />
                     </TwoElementWrapper>
 
-                    {/* sun */}
-                    <TwoElementWrapper style={{ width: '50%' }}>
-                        <DateRangFormCommon
-                            formType="single"
-                            checkBoxName={'DR_WorkCounter1_7'}
+                    <TwoElementWrapper>
+                        <FormListCommonForInstractor
                             checkBoxLabel={'SUN'}
-                            formItemInputName="DR_start_time1_8_1"
-                            formInputName="DR_start_time1_8_1"
-                            formItemInputName1="DR_end_time1_8_1"
-                            formInputName1="DR_end_time1_8_1"
-                            format={format}
-                            typeTodel="DRGOINGSUN"
-                            handleDaysAndField={handleDaysAndField}
-                        />
-                    </TwoElementWrapper>
-                    <TwoElementWrapper style={{ width: '50%' }}>
-                        <DateRangFormCommon
                             formList={ongoingData.onSunData}
-                            formItemInputName="DR_start_time1_1_"
-                            formInputName="DR_start_time1_7_"
-                            formInputName1="DR_end_time1_7_"
+                            formItemInputName="ON_start_time1_1_"
+                            formInputName="ON_start_time1_7_"
+                            formInputName1="ON_end_time1_7_"
+                            formItemSelectName="ON_location_id1_7_"
                             format={format}
-                            typeTodel="DRGOINGSUN"
+                            typeTodel="ONGOINGSUN"
+                            handleDaysAndField={handleDaysAndField}
                             handleDeleteDaysAndField={handleDeleteDaysAndField}
                         />
                     </TwoElementWrapper>
-                </Box>
+                </div>
                 <Divider />
 
-            </Form>
+                {/* for dateRenge section */}
+                <h3 style={{ marginBottom: '-20px' }}>DATE RANGE
+                </h3>
+                <Divider />
+                {/* logic with morescheduler array*/}
+                {
+                    moreSchedulerFiled.map((item, index) => (
+                        <Box style={{ marginTop: '10px' }}>
+                            <TwoElementWrapper>
+                                <Form.Item
+                                    name={`DR_location_id1_${index}`}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Select salary type!",
+                                        },
+                                    ]}
+                                    className="elementWidth"
+                                >
+                                    <Select
+                                        showSearch
+                                        placeholder="Select Location Type"
+                                        optionFilterProp="children"
+                                        // onChange={onChange}
+                                        // onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                        }
+                                        options={[
+                                            {
+                                                value: 'salect',
+                                                label: 'Select Salary Type',
+                                            },
+                                            {
+                                                value: 'perClass',
+                                                label: 'Per Class',
+                                            },
+                                        ]}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name={`DR_start_date1_${index}`} //DR_end_date1
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Select Start And End Date!",
+                                        },
+                                    ]}
+                                    // className="elementWidth"
+                                    style={{ width: '50%' }}
+                                >
+                                    <DateRangepicker />
+                                </Form.Item>
+                            </TwoElementWrapper>
+
+                            <TwoElementWrapper>
+                                <DateRangFormCommon
+                                    checkBoxLabel={'MON'}
+                                    formList={dateRangeData.drMonData}
+                                    formItemInputName={`ON_start_time1_1_${index}`}
+                                    formInputName={`ON_start_time1_1_${index}`}
+                                    formInputName1={`ON_end_time1_1_${index}`}
+                                    format={format}
+                                    typeTodel="DRMON"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={"62px"}
+                                />
+
+                                <DateRangFormCommon
+                                    checkBoxLabel={'TUE'}
+                                    formList={dateRangeData.drTueData}
+                                    formItemInputName={`ON_start_time1_1_${index}`}
+                                    formInputName={`ON_start_time1_2_${index}`}
+                                    formInputName1={`ON_end_time1_2_${index}`}
+                                    format={format}
+                                    typeTodel="DRTUE"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={"57px"}
+                                />
+                            </TwoElementWrapper>
+
+                            {/* wed & thu */}
+                            <TwoElementWrapper>
+                                <DateRangFormCommon
+                                    checkBoxLabel={'WED'}
+                                    formList={dateRangeData.drWedData}
+                                    formItemInputName="ON_start_time1_3_"
+                                    formInputName="ON_start_time1_3_"
+                                    formInputName1="ON_end_time1_3_"
+                                    formItemSelectName="ON_location_id1_3_"
+                                    format={format}
+                                    typeTodel="DRWED"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={"62px"}
+                                />
+
+                                <DateRangFormCommon
+                                    checkBoxLabel={'THU'}
+                                    formList={dateRangeData.drThuData}
+                                    formItemInputName="ON_start_time1_4_"
+                                    formInputName="ON_start_time1_4_"
+                                    formInputName1="ON_end_time1_4_"
+                                    formItemSelectName="ON_location_id1_4_"
+                                    format={format}
+                                    typeTodel="DRTHU"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={"57px"}
+                                />
+                            </TwoElementWrapper>
+
+                            {/* FRID & SAT */}
+                            <TwoElementWrapper>
+                                <DateRangFormCommon
+                                    checkBoxLabel={'FRID'}
+                                    formList={dateRangeData.drFriData}
+                                    formItemInputName="ON_start_time1_5_"
+                                    formInputName="ON_start_time1_5_"
+                                    formInputName1="ON_end_time1_5_"
+                                    formItemSelectName="ON_location_id1_5_"
+                                    format={format}
+                                    typeTodel="DRFRID"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={"62px"}
+                                />
+
+                                <DateRangFormCommon
+                                    checkBoxLabel={'SAT'}
+                                    formList={dateRangeData.drSatData}
+                                    formItemInputName="ON_start_time1_6_"
+                                    formInputName="ON_start_time1_6_"
+                                    formInputName1="ON_end_time1_6_"
+                                    formItemSelectName="ON_location_id1_6_"
+                                    format={format}
+                                    typeTodel="DRSAT"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={"57px"}
+                                />
+                            </TwoElementWrapper>
+
+                            {/* sun */}
+                            <TwoElementWrapper style={{ width: '50%' }}>
+                                <DateRangFormCommon
+                                    checkBoxLabel={'SUN'}
+                                    formList={dateRangeData.drSunData}
+                                    formItemInputName="DR_start_time1_1_"
+                                    formInputName="DR_start_time1_7_"
+                                    formInputName1="DR_end_time1_7_"
+                                    format={format}
+                                    typeTodel="DRSUN"
+                                    handleDaysAndField={handleDaysAndField}
+                                    handleDeleteDaysAndField={handleDeleteDaysAndField}
+                                    formMarginLeft={'58px'}
+                                />
+                            </TwoElementWrapper>
+
+                            {
+                                index === 0 ? (
+                                    <BottomButtonWrapper>
+                                        <Button type="primary"
+                                            icon={<PlusOutlined />}
+                                            // className="saveBtn"
+                                            // htmlType="submit"
+                                            style={{ borderRadius: '18px' }}
+                                            onClick={() => handleDaysAndField('MORE_SCHEDULER')}
+                                        >
+                                            <span>More Scheduler</span>
+                                        </Button>
+                                    </BottomButtonWrapper>
+                                ) : (
+                                    <BottomButtonWrapper>
+                                        <Button
+                                            type="danger"
+                                            icon={<CloseOutlined />}
+                                            shape="circle"
+                                            onClick={() => handleDeleteDaysAndField('MORE_SCHEDULER', index)}
+                                            style={{ marginLeft: '4px', marginRight: '8px' }}
+                                        />
+                                    </BottomButtonWrapper>
+                                )
+                            }
+                        </Box>
+                    ))
+                }
+                <Divider />
+
+                {/* for PARTICULAR DATE section */}
+                <h3>
+                    PARTICULAR DATE
+                </h3>
+                {
+                    perticulardate?.map((item, i) => (
+                        <Box key={i} style={{ marginTop: '10px' }}>
+                            <TwoElementWrapper style={{ justifyContent: 'start' }}>
+                                {
+                                    i === 0 ? (
+                                        <Button type="secondary"
+                                            icon={<PlusOutlined />}
+                                            style={{ borderRadius: '18px' }}
+                                            onClick={() => handleDaysAndField('ADDNEWPERTICULAR')}
+                                        >
+                                            <span>Add New</span>
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            type="danger"
+                                            icon={<CloseOutlined />}
+                                            // shape="circle"
+                                            onClick={() => handleDeleteDaysAndField('ADDNEWPERTICULAR', i)}
+                                            style={{ borderRadius: '18px' }}
+                                        >
+                                            <span>Remove</span>
+                                        </Button>
+                                    )
+                                }
+
+                                <Form.Item
+                                    name={`DR_location_id1_${'index'}`}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Select salary type!",
+                                        },
+                                    ]}
+                                    style={{ marginLeft: '50px' }}
+                                >
+                                    <Select
+                                        showSearch
+                                        placeholder="Select Location Type"
+                                        optionFilterProp="children"
+                                        // onChange={onChange}
+                                        // onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                        }
+                                        options={[
+                                            {
+                                                value: 'salect',
+                                                label: 'Select Salary Type',
+                                            },
+                                            {
+                                                value: 'perClass',
+                                                label: 'Per Class',
+                                            },
+                                        ]}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name={`DR_start_date1_${'index'}`} //DR_end_date1
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Select Start And End Date!",
+                                        },
+                                    ]}
+                                    style={{ width: 'auto', marginLeft: '50px' }}
+                                >
+                                    <DatePicker onChange={onDateChange} />
+                                </Form.Item>
+                                <div>
+                                    {
+                                        perticulardate[i].startAndEndTime?.map((itemTiem, indexTime) => (
+                                            <TwoElementWrapper key={indexTime}>
+                                                <Form.Item
+                                                    name={'formItemInputName'}
+                                                    rules={[
+                                                        {
+                                                            required: false,
+                                                            message: "Enter Mon!",
+                                                        },
+                                                    ]}
+                                                    style={{ width: '100%', marginLeft: '200px' }}
+                                                >
+                                                    <TimePicker
+                                                        name={'formInputName'}
+                                                        format={format}
+                                                        style={{ width: '100%' }}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name={'formItemInputName1'}
+                                                    rules={[
+                                                        {
+                                                            required: false,
+                                                            message: "Enter Mon!",
+                                                        },
+                                                    ]}
+                                                    style={{ width: '100%', marginLeft: '50px' }}
+                                                >
+                                                    <TimePicker
+                                                        name={'formInputName1'}
+                                                        format={format}
+                                                        style={{ width: '100%' }}
+                                                    />
+                                                </Form.Item>
+                                                {
+                                                    indexTime === 0 ? (
+                                                        <Tooltip title="Add">
+                                                            <PlusCircleOutlined
+                                                                onClick={() => handleDaysAndField('ADDNEWPERTICULAR_TIME', i)} style={{ marginLeft: '20px', fontSize: "15px" }}
+                                                            />
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <Tooltip title="Remove">
+                                                            <MinusCircleOutlined
+                                                                onClick={() => handleDeleteDaysAndField('ADDNEWPERTICULAR_TIME', i)}
+                                                                style={{ marginLeft: '20px', fontSize: "15px" }}
+                                                            />
+                                                        </Tooltip>
+                                                    )
+                                                }
+                                            </TwoElementWrapper>
+                                        ))
+                                    }
+                                </div>
+                            </TwoElementWrapper>
+
+                        </Box>
+                    ))
+                }
+                <Divider />
+            </Form >
         </>
     )
 }

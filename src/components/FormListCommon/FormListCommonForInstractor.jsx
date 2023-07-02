@@ -19,6 +19,96 @@ const FormListCommonForInstractor = ({ formList, formItemInputName, formInputNam
     return (
         <div>
             {
+                formList.map((val, i) => (
+                    <TwoElementWrapper key={i} style={{ display: "flex", alignItems: "baseline", marginTop: '-18px' }}>
+                        {
+                            i === 0 && (
+                                <Checkbox name={checkBoxName}>{checkBoxLabel}</Checkbox>
+                            )
+                        }
+                        <Form.Item
+                            name={formItemInputName}
+                            rules={[
+                                {
+                                    required: false,
+                                    message: "Enter Mon!",
+                                },
+                            ]}
+                            style={{ marginLeft: i !== 0 && '62px' }}
+                        >
+                            <TimePicker
+                                name={formInputName}
+                                format={format}
+                                style={{ width: '90%' }}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="mon1"
+                            rules={[
+                                {
+                                    required: false,
+                                    message: "Enter Mon!",
+                                },
+                            ]}
+                        >
+                            <TimePicker
+                                name={formInputName1}
+                                format={format}
+                                style={{ width: '90%' }}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name={formItemSelectName}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Select Locations type!",
+                                },
+                            ]}
+                        >
+                            <Select
+                                showSearch
+                                placeholder="Select Location"
+                                optionFilterProp="children"
+                                // onChange={onChange}
+                                // onSearch={onSearch}
+                                filterOption={(input, option) =>
+                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                }
+                                options={[
+                                    {
+                                        value: 'salect',
+                                        label: 'Select Salary Type',
+                                    },
+                                    {
+                                        value: 'perClass',
+                                        label: 'Per Class',
+                                    },
+                                ]}
+                                style={{ width: '170px' }}
+                            />
+                        </Form.Item>
+                        {
+                            i === 0 ? (
+                                <Tooltip title="Add">
+                                    <PlusCircleOutlined
+                                        onClick={() => handleDaysAndField(typeTodel)}
+                                        style={{ marginLeft: '20px', fontSize: "15px" }}
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Remove">
+                                    <MinusCircleOutlined
+                                        onClick={() => handleDeleteDaysAndField(typeTodel, i)}
+                                        // style={{ marginLeft: '5px' }}
+                                        style={{ marginLeft: '20px', fontSize: "15px" }}
+                                    />
+                                </Tooltip>
+                            )
+                        }
+                    </TwoElementWrapper>
+                ))}
+            {/* {
                 formType === "single" ? (
                     <div style={{ display: 'flex' }}>
                         <Checkbox name={checkBoxName}>{checkBoxLabel}</Checkbox>
@@ -92,82 +182,10 @@ const FormListCommonForInstractor = ({ formList, formItemInputName, formInputNam
                     </div>
                 ) : (
                     <>
-                        {
-                            formList.map((val, i) => (
-                                <TwoElementWrapper key={i} style={{ display: "flex", alignItems: "baseline", marginTop: '-18px' }}>
-                                    <Form.Item
-                                        name={formItemInputName}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Mon!",
-                                            },
-                                        ]}
-                                        style={{ marginLeft: '62px' }}
-                                    >
-                                        <TimePicker
-                                            name={formInputName}
-                                            format={format}
-                                            style={{ width: '90%' }}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        name="mon1"
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Mon!",
-                                            },
-                                        ]}
-                                    >
-                                        <TimePicker
-                                            name={formInputName1}
-                                            format={format}
-                                            style={{ width: '90%' }}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        name={formItemSelectName}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: "Select Locations type!",
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            showSearch
-                                            placeholder="Select Location"
-                                            optionFilterProp="children"
-                                            // onChange={onChange}
-                                            // onSearch={onSearch}
-                                            filterOption={(input, option) =>
-                                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                            }
-                                            options={[
-                                                {
-                                                    value: 'salect',
-                                                    label: 'Select Salary Type',
-                                                },
-                                                {
-                                                    value: 'perClass',
-                                                    label: 'Per Class',
-                                                },
-                                            ]}
-                                            style={{ width: '170px' }}
-                                        />
-                                    </Form.Item>
-                                    <Tooltip title="Remove">
-                                        <MinusCircleOutlined
-                                            onClick={() => handleDeleteDaysAndField(typeTodel, i)}
-                                            style={{ marginLeft: '5px' }}
-                                        />
-                                    </Tooltip>
-                                </TwoElementWrapper>
-                            ))}
+                        
                     </>
                 )
-            }
+            } */}
             {/* <Button
                 type="danger"
                 icon={<CloseOutlined />}

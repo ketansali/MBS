@@ -9,6 +9,7 @@ import ClientTabs from "../../Client/Tabs/Tabs";
 import ScheduleTab from "./TabsForm/ScheduleTab";
 import SalaryTab from "./TabsForm/SalaryTab";
 import Availablity from "./TabsForm/Availablity";
+import Unavailablity from "./TabsForm/Unavailablity";
 
 
 const AddInstructor = () => {
@@ -37,6 +38,7 @@ const AddInstructor = () => {
         {
             key: "5",
             label: `UNAVAILABILITY`,
+            children: <Unavailablity />,
             //   children: "Content of Tab Pane 3",
         }
     ];
