@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchInput from "@iso/components/uielements/InputElement/SearchInput/SearchInput";
 import { ActionBtn } from "@iso/components/uielements/InputStyle/Input.style";
 import Select, { SelectOption } from "@iso/components/uielements/select";
@@ -15,13 +15,15 @@ import {
     ActionWrapper,
 } from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { DeleteCell, EditCell } from "@iso/components/UI/Table/HelperCells";
+import { GetAllInstructors } from "../actions";
+import COMMON from "../../Constant/Common";
 
 const Option = SelectOption;
 const ViewInstructor = () => {
     const history = useHistory();
     const match = useRouteMatch();
     const [loading, setLoading] = useState(false);
-    const [categories, setCategories] = useState({});
+    const [instructorList, setInstructorLit] = useState([]);
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -29,49 +31,84 @@ const ViewInstructor = () => {
         },
     });
 
+    const getData = () => {
+        setLoading(true);
+        GetAllInstructors(COMMON.getTableParams(tableParams)).then((res) => {
+            setInstructorLit(res?.responseData);
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams.pagination,
+                    total: res.responseData.totalRecords,
+                },
+            });
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false)
+        });
+    };
+
+    useEffect(() => {
+        getData();
+        // eslint-disable-next-line
+    }, [JSON.stringify(tableParams)]);
+
+    const handlePage = (pagination, filters, sorter) => {
+        setTableParams({
+            pagination,
+            filters,
+            ...sorter,
+        });
+
+        // `dataSource` is useless since `pageSize` changed
+        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+            setInstructorLit([]);
+        }
+    };
+
     const columns = [
         {
             title: "Status",
-            dataIndex: "createdOn",
-            key: "createdOn",
+            dataIndex: "status",
+            key: "status",
             sorter: true,
         },
         {
             title: "Sort Order",
-            dataIndex: "city",
-            key: "city",
+            dataIndex: "sortOrder",
+            key: "sortOrder",
             sorter: true,
         },
         {
             title: "Type",
-            dataIndex: "state",
-            key: "state",
+            dataIndex: "type",
+            key: "type",
             sorter: true,
         },
         {
             title: "Name",
-            dataIndex: "country",
-            key: "country",
+            dataIndex: "name",
+            key: "name",
             sorter: true,
         },
         {
             title: "Email",
-            dataIndex: "country",
-            key: "country",
+            dataIndex: "email",
+            key: "email",
             sorter: true,
         },
         {
             title: "Phone",
-            dataIndex: "country",
-            key: "country",
+            dataIndex: "phone",
+            key: "phone",
             sorter: true,
         },
-        {
-            title: "",
-            dataIndex: "country",
-            key: "country",
-            sorter: true,
-        },
+        // {
+        //     title: "",
+        //     dataIndex: "country",
+        //     key: "country",
+        //     sorter: true,
+        // },
         {
             title: "Actions",
             key: "action",
@@ -91,19 +128,6 @@ const ViewInstructor = () => {
             },
         },
     ];
-
-    const handlePage = (pagination, filters, sorter) => {
-        setTableParams({
-            pagination,
-            filters,
-            ...sorter,
-        });
-
-        // `dataSource` is useless since `pageSize` changed
-        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            setCategories([]);
-        }
-    };
 
     const handleSearch = (e) => {
         // GetAllCity(COMMON.getTableParams(e)).then((res) => {
@@ -140,10 +164,10 @@ const ViewInstructor = () => {
                 <Box>
                     <ContentHolder style={{ marginTop: 0, overflow: "hidden" }}>
                         <Spin spinning={loading}>
-                            {categories && (
+                            {instructorList && (
                                 <DataTable
                                     columns={columns}
-                                    data={categories.data}
+                                    data={instructorList.data}
                                     title="City"
                                     handleSearch={handleSearch}
                                     handlePage={handlePage}

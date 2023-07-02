@@ -8,6 +8,7 @@ import TabPane from "antd/lib/tabs/TabPane";
 import ClientTabs from "../../Client/Tabs/Tabs";
 import ScheduleTab from "./TabsForm/ScheduleTab";
 import SalaryTab from "./TabsForm/SalaryTab";
+import Availablity from "./TabsForm/Availablity";
 
 
 const AddInstructor = () => {
@@ -30,6 +31,7 @@ const AddInstructor = () => {
         {
             key: "4",
             label: `AVAILABILITY`,
+            children: <Availablity />,
             //   children: "Content of Tab Pane 3",
         },
         {
