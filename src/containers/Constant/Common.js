@@ -1,4 +1,4 @@
-//get API Params
+import jwt_decode from 'jwt-decode';
 const COMMON = {
      getTableParams : (params) => {
         return {
@@ -12,8 +12,10 @@ const COMMON = {
       convertToBase64 : (img, callback) =>{
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
-        
+        reader.readAsDataURL(img); 
+      },
+      getLoggedInUser : ()=>{
+        return jwt_decode(localStorage.getItem("authToken"));
       }
 };
 export default COMMON

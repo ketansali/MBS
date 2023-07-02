@@ -43,15 +43,28 @@ const options = [
       },
       {
         key: "location",
-        // label: "sidebar.contract",
         label: "sidebar.location",
-      },      
-    ],
+      }      
+    ]
   },
   {
     key: 'client',
     label: 'sidebar.client',
     leftIcon: 'ion-bag',
+    children:[
+      {
+        key: "client",
+        label: "sidebar.client",
+      },
+      {
+        key: "alerts",
+        label: "sidebar.alerts",
+      },
+      {
+        key: "notes",
+        label: "sidebar.notes",
+      }
+    ]
   },
   {
     key: 'Instructors',
