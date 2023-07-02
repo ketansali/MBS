@@ -69,7 +69,7 @@ const BasicInfoTab = ({updateClientFormValues, addClient}) => {
   };
   const getAllRelations = (value) => {
     GetAllRelation({
-      pageNo: 1,
+      pageNo: -1,
       searchValue: value,
       length: 0,
       sortColumn: "",
@@ -80,7 +80,7 @@ const BasicInfoTab = ({updateClientFormValues, addClient}) => {
   };
   const getAllContracts = (value) => {
     GetAllContract({
-      pageNo: 1,
+      pageNo: -1,
       searchValue: value,
       length: 0,
       sortColumn: "",
@@ -92,7 +92,7 @@ const BasicInfoTab = ({updateClientFormValues, addClient}) => {
 
   const getAllLocation = (value) => {
     GetAllLocation({
-      pageNo: 1,
+      pageNo: -1,
       searchValue: value,
       length: 0,
       sortColumn: "",

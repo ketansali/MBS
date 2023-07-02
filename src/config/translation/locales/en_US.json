@@ -1,6 +1,8 @@
 {
   "sidebar.dashboard": "Dashboard",
   "sidebar.client": "Client",
+  "sidebar.alerts": "Alerts",
+  "sidebar.notes": "Notes",
   "sidebar.email": "Email",
   "sidebar.chat": "Chat",
   "sidebar.ecommerce": "Ecommerce",
@@ -15,7 +17,6 @@
   "sidebar.googleMap": "Google Map",
   "sidebar.leafletMap": "Leaflet Map",
   "sidebar.calendar": "Calendar",
-  "sidebar.notes": "Notes",
   "sidebar.todos": "Todos",
   "sidebar.contacts": "Contacts",
   "sidebar.shuffle": "Shuffle",

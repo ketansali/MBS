@@ -25,7 +25,7 @@ const MembershipCreateOrUpdate = ({updateClientFormValues,addClient}) => {
 
   const getAllClients = (value) => {
     GetAllClients({
-      pageNo: 1,
+      pageNo: -1,
       searchValue: value,
       length: 0,
       sortColumn: "",

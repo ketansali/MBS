@@ -20,7 +20,7 @@ const NetworkTab = () => {
   const [form] = Form.useForm();
   const [relations, setRelations] = useState([]);
   useEffect(() => {
-    console.log(form.getFieldValue());
+    getAllRelations();
     form.setFieldsValue("networkFormInfo",[{useMember:false,useOwn:false,ShareOwn:false,ShareMember:false, name:null,clientId:null}])
   }, [form]);
   const submitNetworkInfo = ()=>{
@@ -28,7 +28,7 @@ const NetworkTab = () => {
   }
   const getAllRelations = (value) => {
     GetAllRelation({
-      pageNo: 1,
+      pageNo: -1,
       searchValue: value,
       length: 0,
       sortColumn: "",
@@ -61,14 +61,15 @@ const NetworkTab = () => {
           </div>   
       <Form.List name="networkFormInfo" style={{width:"100%"}}>
       {(fields, { add, remove }) => (
-        <>
+        <div style={{position:"relative", width:"100%", alignItems:"center"}}>
+          <div>
           {fields.map(({ key, name, ...restField }) => (
             <Space
               key={key}
               style={{
                 // display: 'flex',
                 // marginBottom: 8,
-                width:"100%"
+                width:"80%"
               }}
               align="baseline"
             >
@@ -171,26 +172,28 @@ const NetworkTab = () => {
               ))}
           </Select>
               </Form.Item>
-              
-              <div style={{paddingLeft:"37%"}}>
+              {/* style={{paddingLeft:"37%"}} */}
+              <div >
               <MinusCircleOutlined  onClick={() => remove(name)} />
               </div>
               </div>
             </Space>
           ))}
-          <Form.Item>
-            <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />} shape="circle"/>
-          </Form.Item>
-        </>
+          </div>
+          <div style={{position:"absolute", right:0}}>
+            {/* <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />} shape="circle"/> */}
+            <PlusOutlined onClick={() => add()}/> 
+          </div>
+        </div>
       )}
     </Form.List>
    
       </Form>
-      <div style={{width:"100%"}}>
+      {/* <div style={{width:"100%"}}>
         <div style={{float :"right"}}><Button type="primary"  htmlType="submit"  onClick={() => form.submit()}>
           <span>Save</span>
         </Button></div>
-      </div>
+      </div> */}
     </LayoutContentWrapper>
   );
 };

@@ -22,6 +22,7 @@ const PaginationWrapper = styled.div`
 const ActionWrapper = styled.div`
   display: flex;
   align-content: center;
+  align-items:baseline;
 
   div {
     margin-right: 12px;
@@ -47,6 +48,7 @@ const ActionWrapper = styled.div`
         }
       }
     }
+   
   }
 `;
 export {

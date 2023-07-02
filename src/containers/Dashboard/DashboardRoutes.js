@@ -45,6 +45,10 @@ const routes = [
     component: lazy(() => import("@iso/containers/Client/Index")),
   },
   {
+    path: "alerts",
+    component: lazy(() => import("@iso/containers/Client/Alert/Alert")),
+  },
+  {
     path: "instructors",
     component: lazy(() => import("@iso/containers/Instructor/Index")),
   },
