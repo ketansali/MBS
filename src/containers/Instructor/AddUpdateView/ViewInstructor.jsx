@@ -87,8 +87,8 @@ const ViewInstructor = () => {
         },
         {
             title: "Name",
-            dataIndex: "name",
-            key: "name",
+            dataIndex: "firstName",
+            key: "firstName",
             sorter: true,
         },
         {

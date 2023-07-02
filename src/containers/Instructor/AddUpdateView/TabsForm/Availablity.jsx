@@ -20,6 +20,7 @@ import Checkbox, { CheckboxGroup } from "@iso/components/uielements/checkbox";
 import FormListCommonForInstractor from "../../../../components/FormListCommon/FormListCommonForInstractor";
 import { DateRangepicker } from "@iso/components/uielements/datePicker";
 import { BottomButtonWrapper } from "../../../Client/Membership/Membership.style";
+import DateRangFormCommon from "../../../../components/FormListCommon/DateRangFormCommon";
 
 const format = 'HH:mm';
 const Availablity = () => {
@@ -334,7 +335,7 @@ const Availablity = () => {
                     />
                 </TwoElementWrapper>
 
-                <TwoElementWrapper style={{ width: '50%' }}>
+                <TwoElementWrapper >
                     <FormListCommonForInstractor
                         formType="single"
                         checkBoxName={'ON_WorkCounter1_7'}
@@ -364,1152 +365,251 @@ const Availablity = () => {
                 </TwoElementWrapper>
                 <Divider />
 
-                {/* for ongoing section */}
+                {/* for dateRenge section */}
                 <h3 style={{ marginBottom: '-20px' }}>DATE RANGE
                 </h3>
                 <Divider />
 
                 {/* for mon and tue */}
                 <Box style={{ marginTop: '10px' }}>
-                    <Form form={form} name="currency" layout="vertical" scrollToFirstError>
-                        <TwoElementWrapper>
-                            <Form.Item
-                                name="ON_location_id1_1_1"
-                                rules={[
+                    <TwoElementWrapper>
+                        <Form.Item
+                            name="DR_location_id1"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Select salary type!",
+                                },
+                            ]}
+                            className="elementWidth"
+                        >
+                            <Select
+                                showSearch
+                                placeholder="Select Location Type"
+                                optionFilterProp="children"
+                                // onChange={onChange}
+                                // onSearch={onSearch}
+                                filterOption={(input, option) =>
+                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                }
+                                options={[
                                     {
-                                        required: true,
-                                        message: "Select salary type!",
+                                        value: 'salect',
+                                        label: 'Select Salary Type',
+                                    },
+                                    {
+                                        value: 'perClass',
+                                        label: 'Per Class',
                                     },
                                 ]}
-                                className="elementWidth"
-                            >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Location Type"
-                                    optionFilterProp="children"
-                                    // onChange={onChange}
-                                    // onSearch={onSearch}
-                                    filterOption={(input, option) =>
-                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                    }
-                                    options={[
-                                        {
-                                            value: 'salect',
-                                            label: 'Select Salary Type',
-                                        },
-                                        {
-                                            value: 'perClass',
-                                            label: 'Per Class',
-                                        },
-                                    ]}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="startAndDate"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Select Start And End Date!",
-                                    },
-                                ]}
-                                // className="elementWidth"
-                                style={{ width: '50%' }}
-                            >
-                                <DateRangepicker />
-                            </Form.Item>
-                        </TwoElementWrapper>
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="DR_start_date1" //DR_end_date1
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Select Start And End Date!",
+                                },
+                            ]}
+                            // className="elementWidth"
+                            style={{ width: '50%' }}
+                        >
+                            <DateRangepicker />
+                        </Form.Item>
+                    </TwoElementWrapper>
 
-                        <Row>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox >MON</Checkbox>
-                                    <Form.Item
-                                        name="mon"
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Mon!",
-                                            },
-                                        ]}
-                                        style={{ width: '60%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            name="mon"
-                                            format={format}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('MON')}
+                    <TwoElementWrapper>
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'DR_WorkCounter1_1'}
+                            checkBoxLabel={'MON'}
+                            formItemInputName="DR_start_time1_1_1"
+                            formInputName="DR_start_time1_1_1"
+                            formItemInputName1="DR_end_time1_1_1"
+                            formInputName1="DR_end_time1_1_1"
+                            format={format}
+                            typeTodel="DRGOINGMON"
+                            handleDaysAndField={handleDaysAndField}
+                        />
 
-                                    />
-                                </div>
-                                {monData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%' }}>
-                                        <Form.Item
-                                            name={`monFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`monFirst_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'DR_WorkCounter1_2'}
+                            checkBoxLabel={'TUE'}
+                            formItemInputName="DR_start_time1_2_1"
+                            formInputName="DR_start_time1_2_1"
+                            formItemInputName1="DR_end_time1_2_1"
+                            formInputName1="DR_end_time1_2_1"
+                            format={format}
+                            typeTodel="DRGOINGTUE"
+                            handleDaysAndField={handleDaysAndField}
+                        />
+                    </TwoElementWrapper>
 
-                                        <Form.Item
-                                            name={`monSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                format={format}
-                                                name={`monSecond_${i}`}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('MON', i)}
-                                            style={{ marginLeft: '4px', marginRight: '8px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox style={{ marginLeft: '10px' }}>TUE</Checkbox>
-                                    <Form.Item
-                                        name={`tue`}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Name!",
-                                            },
-                                        ]}
-                                        style={{ width: '60%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            name={`tue`}
-                                            format={format}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('TUE')}
-                                    />
-                                </div>
-                                {tueData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                        <Form.Item
-                                            name={`tueFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                format={format}
-                                                name={`tueFirst_${i}`}
-                                            />
-                                        </Form.Item>
+                    <TwoElementWrapper>
+                        <DateRangFormCommon
+                            formList={ongoingData.onMonData}
+                            formItemInputName="ON_start_time1_1_"
+                            formInputName="ON_start_time1_1_"
+                            formInputName1="ON_end_time1_1_"
+                            formItemSelectName="ON_location_id1_1_"
+                            format={format}
+                            typeTodel="DRGOINGMON"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                            formMarginLeft={"62px"}
+                        />
 
-                                        <Form.Item
-                                            name={`tueSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                format={format}
-                                                name={`tueSecond_${i}`}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('TUE', i)}
-                                            style={{ marginLeft: '4px', marginRight: '14px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox style={{ marginLeft: '10px' }}> WED</Checkbox>
-                                    <Form.Item
-                                        name={`wed`}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Name!",
-                                            },
-                                        ]}
-                                        style={{ width: '60%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            name={`wed`}
-                                            format={format}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('WED')}
-                                    />
-                                </div>
-                                {wedData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                        <Form.Item
-                                            name={`wedFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                format={format}
-                                                name={`wedFirst_${i}`}
-                                            />
-                                        </Form.Item>
+                        <DateRangFormCommon
+                            formList={ongoingData.onTueData}
+                            formItemInputName="ON_start_time1_1_"
+                            formInputName="ON_start_time1_2_"
+                            formInputName1="ON_end_time1_2_"
+                            formItemSelectName="ON_location_id1_2_"
+                            format={format}
+                            typeTodel="DRGOINGTUE"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                            formMarginLeft={"57px"}
+                        />
+                    </TwoElementWrapper>
 
-                                        <Form.Item
-                                            name={`wedSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                format={format}
-                                                name={`wedSecond_${i}`}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('WED', i)}
-                                            style={{ marginLeft: '4px', marginRight: '13px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                        </Row>
+                    {/* wed & thu */}
+                    <TwoElementWrapper>
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'ON_WorkCounter1_3'}
+                            checkBoxLabel={'WED'}
+                            formItemInputName="ON_start_time1_3_1"
+                            formInputName="ON_start_time1_3_1"
+                            formItemInputName1="DR_end_time1_3_1"
+                            formInputName1="DR_end_time1_3_1"
+                            format={format}
+                            typeTodel="DRGOINGWED"
+                            handleDaysAndField={handleDaysAndField}
+                        />
 
-                        <Row>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox >THU</Checkbox>
-                                    <Form.Item
-                                        name={`thu`}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Name!",
-                                            },
-                                        ]}
-                                        style={{ width: '61.5%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            format={format}
-                                            name={`thu`}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('THU')}
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'DR_WorkCounter1_4'}
+                            checkBoxLabel={'THU'}
+                            formItemInputName="DR_start_time1_4_1"
+                            formInputName="DR_start_time1_4_1"
+                            formItemInputName1="DR_end_time1_4_1"
+                            formInputName1="DR_end_time1_4_1"
+                            format={format}
+                            typeTodel="DRGOINGTHU"
+                            handleDaysAndField={handleDaysAndField}
+                        />
+                    </TwoElementWrapper>
 
-                                    />
-                                </div>
-                                {thuData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%' }}>
-                                        <Form.Item
-                                            name={`thuFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`thuFirst_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
+                    <TwoElementWrapper>
+                        <DateRangFormCommon
+                            formList={ongoingData.onMonData}
+                            formItemInputName="ON_start_time1_3_"
+                            formInputName="ON_start_time1_3_"
+                            formInputName1="ON_end_time1_3_"
+                            formItemSelectName="ON_location_id1_3_"
+                            format={format}
+                            typeTodel="DRGOINGWED"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                            formMarginLeft={"62px"}
+                        />
 
-                                        <Form.Item
-                                            name={`thuSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`thuSecond_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('THU', i)}
-                                            style={{ marginLeft: '4px', marginRight: '12px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox style={{ marginLeft: '10px' }}>FRI</Checkbox>
-                                    <Form.Item
-                                        name={`fri`}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Name!",
-                                            },
-                                        ]}
-                                        style={{ width: '61.5%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            name={`fri`}
-                                            format={format}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('FRI')}
-                                    />
-                                </div>
-                                {friData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                        <Form.Item
-                                            name={`friFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`friFirst_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
+                        <DateRangFormCommon
+                            formList={ongoingData.onTueData}
+                            formItemInputName="ON_start_time1_4_"
+                            formInputName="ON_start_time1_4_"
+                            formInputName1="ON_end_time1_4_"
+                            formItemSelectName="ON_location_id1_4_"
+                            format={format}
+                            typeTodel="DRGOINGTHU"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                            formMarginLeft={"57px"}
+                        />
+                    </TwoElementWrapper>
 
-                                        <Form.Item
-                                            name={`friSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`friSecond_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('FRI', i)}
-                                            style={{ marginLeft: '4px', marginRight: '16px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox style={{ marginLeft: '10px' }}> SAT</Checkbox>
-                                    <Form.Item
-                                        name={`sat`}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Name!",
-                                            },
-                                        ]}
-                                        style={{ width: '61.5%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            format={format}
-                                            name={`sat`}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('SAT')}
-                                    />
-                                </div>
-                                {satData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                        <Form.Item
-                                            name={`satFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                format={format}
-                                                name={`satFirst_${i}`}
-                                            />
-                                        </Form.Item>
+                    {/* FRID & SAT */}
+                    <TwoElementWrapper>
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'ON_WorkCounter1_5'}
+                            checkBoxLabel={'FRID'}
+                            formItemInputName="ON_start_time1_5_1"
+                            formInputName="ON_start_time1_5_1"
+                            formItemInputName1="DR_end_time1_5_1"
+                            formInputName1="DR_end_time1_5_1"
+                            format={format}
+                            typeTodel="DRGOINGFRID"
+                            handleDaysAndField={handleDaysAndField}
+                        />
 
-                                        <Form.Item
-                                            name={`satSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`satSecond_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('SAT', i)}
-                                            style={{ marginLeft: '4px', marginRight: '13px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                        </Row>
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'DR_WorkCounter1_6'}
+                            checkBoxLabel={'SAT'}
+                            formItemInputName="DR_start_time1_6_1"
+                            formInputName="DR_start_time1_6_1"
+                            formItemInputName1="DR_end_time1_6_1"
+                            formInputName1="DR_end_time1_6_1"
+                            format={format}
+                            typeTodel="DRGOINGSAT"
+                            handleDaysAndField={handleDaysAndField}
+                        />
+                    </TwoElementWrapper>
 
-                        <Row>
-                            <Col span={8}>
-                                <div style={{ display: 'flex', width: '100%' }}>
-                                    <Checkbox >SUN</Checkbox>
-                                    <Form.Item
-                                        name={`sun`}
-                                        rules={[
-                                            {
-                                                required: false,
-                                                message: "Enter Name!",
-                                            },
-                                        ]}
-                                        style={{ width: '61%' }}
-                                    >
-                                        <TimePicker
-                                            style={{ width: '100%' }}
-                                            format={format}
-                                            name={`sun`}
-                                        />
-                                    </Form.Item>
-                                    <Button
-                                        style={{ marginLeft: "4px" }}
-                                        type="secondary"
-                                        icon={<PlusOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDaysAndField('SUN')}
+                    <TwoElementWrapper>
+                        <DateRangFormCommon
+                            formList={ongoingData.onMonData}
+                            formItemInputName="ON_start_time1_5_"
+                            formInputName="ON_start_time1_5_"
+                            formInputName1="ON_end_time1_5_"
+                            formItemSelectName="ON_location_id1_5_"
+                            format={format}
+                            typeTodel="DRGOINGFRID"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                            formMarginLeft={"62px"}
+                        />
 
-                                    />
-                                </div>
-                                {sunData.map((val, i) => (
-                                    <div style={{ display: 'flex', width: '100%' }}>
-                                        <Form.Item
-                                            name={`sunFirst_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`sunFirst_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
+                        <DateRangFormCommon
+                            formList={ongoingData.onTueData}
+                            formItemInputName="ON_start_time1_6_"
+                            formInputName="ON_start_time1_6_"
+                            formInputName1="ON_end_time1_6_"
+                            formItemSelectName="ON_location_id1_6_"
+                            format={format}
+                            typeTodel="DRGOINGSAT"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                            formMarginLeft={"57px"}
+                        />
+                    </TwoElementWrapper>
 
-                                        <Form.Item
-                                            name={`sunSecond_${i}`}
-                                            rules={[
-                                                {
-                                                    required: false,
-                                                    message: "Enter Name!",
-                                                },
-                                            ]}
-                                            style={{ marginLeft: '5px', width: '50%' }}
-                                        >
-                                            <TimePicker
-                                                style={{ width: '100%' }}
-                                                name={`sunSecond_${i}`}
-                                                format={format}
-                                            />
-                                        </Form.Item>
-                                        <Button
-                                            type="danger"
-                                            icon={<CloseOutlined />}
-                                            shape="circle"
-                                            onClick={() => handleDeleteDaysAndField('SUN', i)}
-                                            style={{ marginLeft: '8px' }}
-                                        />
-                                    </div>
-                                ))}
-                            </Col>
-                        </Row>
-
-                        <BottomButtonWrapper>
-                            <Button type="primary"
-                                icon={<PlusOutlined />}
-                                // className="saveBtn"
-                                // htmlType="submit"
-                                style={{ borderRadius: '18px' }}
-                                onClick={() => handleDaysAndField('MORE_SCHEDULER')}
-                            >
-                                <span>More Scheduler</span>
-                            </Button>
-                        </BottomButtonWrapper>
-                    </Form>
+                    {/* sun */}
+                    <TwoElementWrapper style={{ width: '50%' }}>
+                        <DateRangFormCommon
+                            formType="single"
+                            checkBoxName={'DR_WorkCounter1_7'}
+                            checkBoxLabel={'SUN'}
+                            formItemInputName="DR_start_time1_8_1"
+                            formInputName="DR_start_time1_8_1"
+                            formItemInputName1="DR_end_time1_8_1"
+                            formInputName1="DR_end_time1_8_1"
+                            format={format}
+                            typeTodel="DRGOINGSUN"
+                            handleDaysAndField={handleDaysAndField}
+                        />
+                    </TwoElementWrapper>
+                    <TwoElementWrapper style={{ width: '50%' }}>
+                        <DateRangFormCommon
+                            formList={ongoingData.onSunData}
+                            formItemInputName="DR_start_time1_1_"
+                            formInputName="DR_start_time1_7_"
+                            formInputName1="DR_end_time1_7_"
+                            format={format}
+                            typeTodel="DRGOINGSUN"
+                            handleDeleteDaysAndField={handleDeleteDaysAndField}
+                        />
+                    </TwoElementWrapper>
                 </Box>
-
-                {
-                    moreSchedulerFiled.map((i) => (
-                        <Box style={{ marginTop: '10px' }}>
-                            <Form form={form} name="currency" layout="vertical" scrollToFirstError>
-                                <TwoElementWrapper>
-                                    <Form.Item
-                                        name="class"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: "Enter Class!",
-                                            },
-                                        ]}
-                                        className="elementWidth"
-                                    >
-                                        <Input placeholder="Class" />
-                                    </Form.Item>
-                                    <Form.Item
-                                        name="startAndDate"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: "Select Start And End Date!",
-                                            },
-                                        ]}
-                                        // className="elementWidth"
-                                        style={{ width: '50%' }}
-                                    >
-                                        <DateRangepicker />
-                                    </Form.Item>
-                                </TwoElementWrapper>
-
-                                <Row>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox >MON</Checkbox>
-                                            <Form.Item
-                                                name="mon"
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Mon!",
-                                                    },
-                                                ]}
-                                                style={{ width: '60%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    name="mon"
-                                                    format={format}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('MON')}
-
-                                            />
-                                        </div>
-                                        {monData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%' }}>
-                                                <Form.Item
-                                                    name={`monFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`monFirst_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`monSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        format={format}
-                                                        name={`monSecond_${i}`}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('MON', i)}
-                                                    style={{ marginLeft: '4px', marginRight: '8px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox style={{ marginLeft: '10px' }}>TUE</Checkbox>
-                                            <Form.Item
-                                                name={`tue`}
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Name!",
-                                                    },
-                                                ]}
-                                                style={{ width: '60%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    name={`tue`}
-                                                    format={format}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('TUE')}
-                                            />
-                                        </div>
-                                        {tueData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                                <Form.Item
-                                                    name={`tueFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        format={format}
-                                                        name={`tueFirst_${i}`}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`tueSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        format={format}
-                                                        name={`tueSecond_${i}`}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('TUE', i)}
-                                                    style={{ marginLeft: '4px', marginRight: '14px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox style={{ marginLeft: '10px' }}> WED</Checkbox>
-                                            <Form.Item
-                                                name={`wed`}
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Name!",
-                                                    },
-                                                ]}
-                                                style={{ width: '60%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    name={`wed`}
-                                                    format={format}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('WED')}
-                                            />
-                                        </div>
-                                        {wedData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                                <Form.Item
-                                                    name={`wedFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        format={format}
-                                                        name={`wedFirst_${i}`}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`wedSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        format={format}
-                                                        name={`wedSecond_${i}`}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('WED', i)}
-                                                    style={{ marginLeft: '4px', marginRight: '13px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                </Row>
-
-                                <Row>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox >THU</Checkbox>
-                                            <Form.Item
-                                                name={`thu`}
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Name!",
-                                                    },
-                                                ]}
-                                                style={{ width: '61.5%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    format={format}
-                                                    name={`thu`}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('THU')}
-
-                                            />
-                                        </div>
-                                        {thuData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%' }}>
-                                                <Form.Item
-                                                    name={`thuFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`thuFirst_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`thuSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`thuSecond_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('THU', i)}
-                                                    style={{ marginLeft: '4px', marginRight: '12px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox style={{ marginLeft: '10px' }}>FRI</Checkbox>
-                                            <Form.Item
-                                                name={`fri`}
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Name!",
-                                                    },
-                                                ]}
-                                                style={{ width: '61.5%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    name={`fri`}
-                                                    format={format}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('FRI')}
-                                            />
-                                        </div>
-                                        {friData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                                <Form.Item
-                                                    name={`friFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`friFirst_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`friSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`friSecond_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('FRI', i)}
-                                                    style={{ marginLeft: '4px', marginRight: '16px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox style={{ marginLeft: '10px' }}> SAT</Checkbox>
-                                            <Form.Item
-                                                name={`sat`}
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Name!",
-                                                    },
-                                                ]}
-                                                style={{ width: '61.5%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    format={format}
-                                                    name={`sat`}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('SAT')}
-                                            />
-                                        </div>
-                                        {satData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%', marginLeft: '10px' }}>
-                                                <Form.Item
-                                                    name={`satFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        format={format}
-                                                        name={`satFirst_${i}`}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`satSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`satSecond_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('SAT', i)}
-                                                    style={{ marginLeft: '4px', marginRight: '13px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                </Row>
-
-                                <Row>
-                                    <Col span={8}>
-                                        <div style={{ display: 'flex', width: '100%' }}>
-                                            <Checkbox >SUN</Checkbox>
-                                            <Form.Item
-                                                name={`sun`}
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "Enter Name!",
-                                                    },
-                                                ]}
-                                                style={{ width: '61%' }}
-                                            >
-                                                <TimePicker
-                                                    style={{ width: '100%' }}
-                                                    format={format}
-                                                    name={`sun`}
-                                                />
-                                            </Form.Item>
-                                            <Button
-                                                style={{ marginLeft: "4px" }}
-                                                type="secondary"
-                                                icon={<PlusOutlined />}
-                                                shape="circle"
-                                                onClick={() => handleDaysAndField('SUN')}
-
-                                            />
-                                        </div>
-                                        {sunData.map((val, i) => (
-                                            <div style={{ display: 'flex', width: '100%' }}>
-                                                <Form.Item
-                                                    name={`sunFirst_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`sunFirst_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    name={`sunSecond_${i}`}
-                                                    rules={[
-                                                        {
-                                                            required: false,
-                                                            message: "Enter Name!",
-                                                        },
-                                                    ]}
-                                                    style={{ marginLeft: '5px', width: '50%' }}
-                                                >
-                                                    <TimePicker
-                                                        style={{ width: '100%' }}
-                                                        name={`sunSecond_${i}`}
-                                                        format={format}
-                                                    />
-                                                </Form.Item>
-                                                <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined />}
-                                                    shape="circle"
-                                                    onClick={() => handleDeleteDaysAndField('SUN', i)}
-                                                    style={{ marginLeft: '8px' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Col>
-                                </Row>
-
-                                <BottomButtonWrapper>
-                                    <Button
-                                        type="danger"
-                                        icon={<CloseOutlined />}
-                                        shape="circle"
-                                        onClick={() => handleDeleteDaysAndField('MORE_SCHEDULER', i)}
-                                        style={{ marginLeft: '4px', marginRight: '8px' }}
-                                    />
-                                </BottomButtonWrapper>
-                            </Form>
-                        </Box>
-                    ))
-                }
                 <Divider />
 
             </Form>
