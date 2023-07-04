@@ -19,8 +19,11 @@ import {
 } from "@iso/components/uielements/DataTableStyle/DataTable.Style";
 import { COMMON } from "../../Constant/Index";
 import { Option } from "antd/lib/mentions";
-import { GetCountry, GetCountryByState } from "../Country/actions";
-import { CreateLocation, DeleteLocation, GetAllLocation, UpdateLocation } from "./actions";
+import { GetCountry, GetCountryByState, GetStateByCity } from "../Country/actions";
+import { CreateLocation, DeleteLocation, GetAllLocation, GetLocationById, UpdateLocation } from "./actions";
+import {
+    TwoElementWrapper
+} from "@iso/components/UI/Form/FormUI.style";
 import './location.scss'
 
 const Location = () => {
@@ -28,7 +31,9 @@ const Location = () => {
     const [loading, setLoading] = useState(false);
     const [locationList, setLocationList] = useState({});
     const [countries, setCountries] = useState([]);
-    const [state, setState] = useState([]);
+    const [states, setStates] = useState([]);
+    const [city, setCity] = useState([]);
+
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
@@ -38,7 +43,34 @@ const Location = () => {
     let sortArray = [];
     const [form] = Form.useForm();
 
+    const onCountrySearch = (name) => {
+        GetCountry(name).then((res) => {
+            setCountries([]);
+            setCountries(res?.responseData);
+        });
+    };
+    const onStateSearch = (name) => {
+        const { countryId } = form.getFieldValue();
+        GetCountryByState(countryId, name).then((res) => {
+            setStates([]);
+            setStates(res?.responseData);
+        });
+    };
+    const onCitySearch = (name) => {
+        const { stateId } = form.getFieldValue();
+        GetStateByCity(stateId, name).then((res) => {
+            setCity([]);
+            setCity(res?.responseData);
+        });
+    };
+
     useEffect(() => {
+        GetCountry("").then((res) => {
+            setCountries(res?.responseData);
+            setStates([]);
+            setCity([]);
+        });
+
         getLocationData();
         onLocationSearch();
     }, []);
@@ -60,10 +92,47 @@ const Location = () => {
         });
     };
 
+    const handleChangeCountryByState = (id, name, stateId = null) => {
+        if (id != undefined && id != "") {
+            GetCountryByState(id, "").then((res) => {
+                setStates([]);
+                setCity([]);
+                setStates(res?.responseData);
+                if (stateId != null) {
+                    form.setFieldsValue({ stateId: stateId });
+                }
+            });
+        }
+        else {
+            setStates([]);
+        }
+    };
+    const handleChangeStateByCity = (id, name, cityId = null) => {
+        // if (id) {
+        //     GetStateByCity(id).then((res) => {
+        //         form.resetFields(["city"]);
+        //         setCity([]);
+        //         setCity(res?.responseData);
+        //     });
+        // }
+        if (id != undefined && id != "") {
+            GetStateByCity(id, "").then((res) => {
+                setCity([]);
+                setCity(res?.responseData);
+                if (cityId != null) {
+                    form.setFieldsValue({ cityId: cityId });
+                }
+            });
+        }
+        else {
+            setCity([]);
+        }
+    };
+
     const handleModal = () => {
         form.resetFields();
         if (!modalActive) {
-            setState([]);
+            setStates([]);
             form.setFieldsValue({ name: "", contactPerson: "", address: "", countryId: "", stateId: "", cityId: "", zip: "", contactNo: "", email: "", icon: "" });
         }
         setModalActive(!modalActive);
@@ -76,20 +145,20 @@ const Location = () => {
         });
     }
 
-    const countryChange = (id, name, stateId = null) => {
-        if (id != undefined && id != "") {
-            GetCountryByState(id, "").then((res) => {
-                setState([]);
-                setState(res?.responseData);
-                if (stateId != null) {
-                    form.setFieldsValue({ stateId: stateId });
-                }
-            });
-        }
-        else {
-            setState([]);
-        }
-    }
+    // `const countryChange = (id, name, stateId = null) => {
+    //     if (id != undefined && id != "") {
+    //         GetCountryByState(id, "").then((res) => {
+    //             setState([]);
+    //             setState(res?.responseData);
+    //             if (stateId != null) {
+    //                 form.setFieldsValue({ stateId: stateId });
+    //             }
+    //         });
+    //     }
+    //     else {
+    //         setState([]);
+    //     }
+    // }`
 
     const handleSubmit = () => {
         form
@@ -143,21 +212,28 @@ const Location = () => {
     };
 
     const handleUpdate = (record) => {
-        form.setFieldsValue({
-            id: record.id,
-            "name": record.name,
-            "address": record.address,
-            "countryId": record.countryId,
-            "stateId": record.stateId,
-            "city": record.city,
-            "zip": record.zip,
-            "contactPerson": record.contactPerson,
-            "contactNo": record.contactNo,
-            "email": record.email,
-            "icon": record.icon
+        GetLocationById(record.id).then((res) => {
+            console.log('res==', res);
+            if (res.data.responseData) {
+                form.setFieldsValue({
+                    id: res.data.responseData.id,
+                    "name": res.data.responseData.name,
+                    "address": res.data.responseData.address,
+                    "countryId": res.data.responseData.countryId,
+                    "stateId": res.data.responseData.stateId,
+                    "city": res.data.responseData.city,
+                    "zip": res.data.responseData.zip,
+                    "contactPerson": res.data.responseData.contactPerson,
+                    "contactNo": res.data.responseData.contactNo,
+                    "email": res.data.responseData.email,
+                    "icon": res.data.responseData.icon
+                });
+                // countryChange(record.countryId, '', record.stateId);
+                handleChangeCountryByState(res.data.responseData.countryId, '', res.data.responseData.stateId)
+                setModalActive(!modalActive);
+                handleChangeStateByCity(res.data.responseData.stateId, '', res.data.responseData.city)
+            }
         });
-        countryChange(record.countryId, '', record.stateId);
-        setModalActive(!modalActive);
     };
 
     const handleSearch = (e) => {
@@ -262,162 +338,192 @@ const Location = () => {
             bodyStyle={{ borderRadius: "50px" }}
         >
             <Form form={form} name="product" layout="vertical" scrollToFirstError>
-                <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter Name!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter Name" />
-                </Form.Item>
-
-                <Form.Item
-                    name="address"
-                    label="Address"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter Address!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter Address" />
-                </Form.Item>
-
-                <Form.Item
-                    name="countryId"
-                    label="Country"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Select Country!",
-                        },
-                    ]}
-                    className="elementWidth"
-                >
-                    <Select
-                        showSearch
-                        defaultValue=""
-                        placeholder="Select Country"
-                        onSearch={onLocationSearch}
-                        onChange={countryChange}
-                        allowClear
+                <TwoElementWrapper>
+                    <Form.Item
+                        name="name"
+                        label="Name"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter Name!",
+                            },
+                        ]}
+                        className="elementWidth"
                     >
-                        <Option value="">Select Country</Option>
-                        {
-                            countries && countries.map((c) => (
-                                <Option value={c.id} key={c.id}>{c.country}</Option>
-                            ))
-                        }
+                        <Input placeholder="Enter Name" />
+                    </Form.Item>
 
-                    </Select>
-
-                </Form.Item>
-
-                <Form.Item
-                    name="stateId"
-                    label="State"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Select State!",
-                        },
-                    ]}
-                    className="elementWidth"
-                >
-                    <Select
-                        showSearch
-                        defaultValue=""
-                        placeholder="Select State"
-                        // handleChange={handleChangeType}
-                        allowClear
+                    <Form.Item
+                        name="address"
+                        label="Address"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter Address!",
+                            },
+                        ]}
+                        className="elementWidth"
                     >
-                        <Option value="">Select State</Option>
-                        {
-                            state && state.map((c) => (
-                                <Option value={c.id} key={c.id}>{c.state}</Option>
-                            ))
-                        }
+                        <Input placeholder="Enter Address" />
+                    </Form.Item>
+                </TwoElementWrapper>
 
-                    </Select>
+                <TwoElementWrapper>
+                    <Form.Item
+                        name="countryId"
+                        label="Country"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Select Country!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Select Country"
+                            onChange={handleChangeCountryByState}
+                            onSearch={onCountrySearch}
+                            allowClear
+                            filterOption={false}
+                        >
+                            <Option value="">Select Country</Option>
+                            {countries &&
+                                countries.map((c) => (
+                                    <Option value={c.id} key={c.id}>
+                                        {c.country}
+                                    </Option>
+                                ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="stateId"
+                        label="State"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Select State!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Select State"
+                            onChange={handleChangeStateByCity}
+                            onSearch={onStateSearch}
+                            allowClear
+                            filterOption={false}
+                        >
+                            <Option value="">Select State</Option>
+                            {states.map((e) => (
+                                <Option value={e.id} key={e.id}>
+                                    {e.state}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                </TwoElementWrapper>
 
-                </Form.Item>
-                <Form.Item
-                    name="city"
-                    label="City"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter City!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter City" />
-                </Form.Item>
-                <Form.Item
-                    name="zip"
-                    label="Zip"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter Zip!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter Zip" />
-                </Form.Item>
-                <Form.Item
-                    name="contactPerson"
-                    label="contact Person"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter contact Person!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter contact Person" />
-                </Form.Item>
-                <Form.Item
-                    name="contactNo"
-                    label="Contact No"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter Contact No!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter ContactNo" />
-                </Form.Item>
-                <Form.Item
-                    name="email"
-                    label="Email"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter Email!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter Email" />
-                </Form.Item>
-                <Form.Item
-                    name="icon"
-                    label="Icon"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Enter Icon!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter Icon" />
-                </Form.Item>
+                <TwoElementWrapper>
+                    <Form.Item
+                        name="city"
+                        label="City"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter City!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Select City"
+                            allowClear
+                            onSearch={onCitySearch}
+                            filterOption={false}
+                        >
+                            <Option value="">Select City</Option>
+                            {city.map((e) => (
+                                <Option value={e.id} key={e.id}>
+                                    {e.city}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="zip"
+                        label="Zip"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter Zip!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Input placeholder="Enter Zip" />
+                    </Form.Item>
+                </TwoElementWrapper>
+                <TwoElementWrapper>
+                    <Form.Item
+                        name="contactPerson"
+                        label="contact Person"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter contact Person!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Input placeholder="Enter contact Person" />
+                    </Form.Item>
+                    <Form.Item
+                        name="contactNo"
+                        label="Contact No"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter Contact No!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Input placeholder="Enter ContactNo" />
+                    </Form.Item>
+                </TwoElementWrapper>
+
+                <TwoElementWrapper>
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter Email!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Input placeholder="Enter Email" />
+                    </Form.Item>
+                    <Form.Item
+                        name="icon"
+                        label="Icon"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Enter Icon!",
+                            },
+                        ]}
+                        className="elementWidth"
+                    >
+                        <Input placeholder="Enter Icon" />
+                    </Form.Item>
+                </TwoElementWrapper>
 
             </Form>
 
